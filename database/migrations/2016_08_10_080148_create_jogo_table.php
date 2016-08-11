@@ -1,0 +1,48 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateJogoTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        //
+         Schema::create('jogo', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('time_casa');
+            $table->string('time_fora');
+            $table->double('valor_casa', 3 , 2);
+            $table->double('valor_fora', 3 , 2);
+            $table->double('valor_gol', 3 , 2); 
+            $table->double('valor_empate', 3 , 2);
+            $table->double('valor_dupla', 3 , 2);
+            $table->double('max_gol_2', 3 , 2);
+            $table->double('min_gol_3', 3 , 2);
+            $table->double('ambas_gol', 3 , 2);
+
+            $table->integer('capeonatos_id')->unsigned();
+            $table->integer('times_id')->unsigned();
+            $table->integer('horario_id')->unsigned();
+            $table->timestamps();
+        });
+        Schema::table('times', function (Blueprint $table) {
+             $table->foreign('times_id')->references('id')->on('times');
+             });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
+    }
+}
