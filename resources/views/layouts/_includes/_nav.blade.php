@@ -30,6 +30,11 @@
                 </ul>
                 <ul class="nav navbar-nav">
                     @if (!Auth::guest())
+                    <li><a href="{{ route('horario.index') }}">horario</a></li>
+                    @endif
+                </ul>
+                <ul class="nav navbar-nav">
+                    @if (!Auth::guest())
                     <li><a href="{{ route('jogo.index') }}">Jogos</a></li>
                     @endif
                 </ul>
