@@ -9,8 +9,9 @@ class Time extends Model
 	protected $fillable = ['descricao_time','campeonato_id'];
 
     public function campeonatos(){
-    	return $this->hasMany('App\Campeonato');
+    	return $this->belongsTo('App\Campeonato','campeonato_id');
     }
+  
 
    public function addCampeonato(Campeonato $cam){
     	return $this->campeonatos()->save($cam);
