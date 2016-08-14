@@ -12,7 +12,13 @@ class CreateApostaTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('apostas', function (Blueprint $table) {
+            $table->increments('id');
+            $table->double('valor_aposta');
+            $table->string('nome_apostador');
+            $table->integer('cpf');            
+            $table->timestamps();
+        });
     }
 
     /**

@@ -15,12 +15,8 @@ class CreateTimesTable extends Migration
         Schema::create('times', function (Blueprint $table) {
             $table->increments('id');
             $table->string('descricao_time');
-            $table->integer('campeonato_id')->unsigned();
             $table->timestamps();
         });
-        Schema::table('times', function (Blueprint $table) {
-             $table->foreign('campeonato_id')->references('id')->on('campeonatos');
-             });
     }
 
     /**
