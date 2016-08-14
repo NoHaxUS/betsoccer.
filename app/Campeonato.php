@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Campeonato extends Model
 {
-	protected $fillable = ['id','descricao_campeonato'];
+	protected $fillable = ['descricao_campeonato'];
 	
    	public function time(){
-   		return $this->belongsTo('App\Time');
+   		return $this->hasMany('App\Time');
 
    	}
 
