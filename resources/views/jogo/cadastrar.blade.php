@@ -13,90 +13,120 @@
                 <div class="panel-body">
                     <form action="{{ route('jogo.salvar')}}" method="post">
                         {{ csrf_field() }}
-                        <div class="form-group {{ $errors->has('horario') ? 'has-error' : ''}}">
-                            <label for="horario">Horário</label>
-                            <input type="text" name="horario" class="form-control" placeholder="Insira o horário da partida">
-                            @if($errors->has('horario'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('horario') }} </strong>
-                            </span>
-                            @endif
+                        <label for="horarios_id">Horário</label>
+                        <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
+                        <select id="horarios_id"  name="horarios_id" class="form-control">
+                                <option valeu="null">Selecione</option>
+                                    @foreach (App\Horario::all() as $data)
+                                    <option valeu="{{ $data->id }}"> {{ $data->id }}</option>
+                                    @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="timecasa">Time Casa</label>
-                            <select id="timecasa"  name="timecasa" class="form-control">
+                            <label for="time_casa">Time Casa</label>
+                            <select id="time_casa"  name="time_casa" class="form-control">
                                 <option valeu="null">Selecione</option>
                                     @foreach (App\Time::all() as $time)
                                     <option valeu="{{ $time->descricao_time }}"> {{ $time->descricao_time }}</option>
                                     @endforeach
                             </select>
-                            <label for="timefora">Time Fora</label>
-                            <select id="timefora"  name="timefora" class="form-control">
+                            <label for="time_fora">Time Fora</label>
+                            <select id="time_fora"  name="time_fora" class="form-control">
                                 <option valeu="null">Selecione</option>
                                     @foreach (App\Time::all() as $time)
                                     <option valeu="{{ $time->descricao_time }}"> {{ $time->descricao_time }}</option>
                                     @endforeach
                             </select>
                         </div>
-                        <div class="input-group {{ $errors->has('valorcasa') ? 'has-error' : ''}}">
+                        <div class="input-group {{ $errors->has('valor_casa') ? 'has-error' : ''}}">
                         	<span class="input-group-addon" id="sizing-addon2">$</span>
-                            <label for="valorcasa">Valor Casa</label>
-                            <input type="text" name="valorcasa" class="form-control" placeholder="Insira o valor para o vencedor do time da casa" aria-describedby="sizing-addon2">
-                            @if($errors->has('valorcasa'))
+                            <label for="valor_casa">Valor Casa</label>
+                            <input type="text" name="valor_casa" class="form-control" placeholder="Insira o valor para o vencedor do time da casa" aria-describedby="sizing-addon2">
+                            @if($errors->has('valor_casa'))
                             <span class="help-block">
-                                <strong> {{ $errors->first('valorcasa') }} </strong>
+                                <strong> {{ $errors->first('valor_casa') }} </strong>
                             </span>
                             @endif
 
                        </div>
                        
-                        <div class="input-group {{ $errors->has('valoremp') ? 'has-error' : ''}}">
+                        <div class="input-group {{ $errors->has('valor_empate') ? 'has-error' : ''}}">
                         	<span class="input-group-addon" id="sizing-addon2">$</span>
-                        	<label for="valoremp">Valor Emp</label>
-                            <input type="text" name="valoremp" class="form-control" placeholder="Insira o valor para o empate" aria-describedby="sizing-addon2">
-                            @if($errors->has('valoremp'))
+                        	<label for="valor_empate">Valor Emp</label>
+                            <input type="text" name="valor_empate" class="form-control" placeholder="Insira o valor para o empate" aria-describedby="sizing-addon2">
+                            @if($errors->has('valor_empate'))
                             <span class="help-block">
-                                <strong> {{ $errors->first('valoremp') }} </strong>
+                                <strong> {{ $errors->first('valor_empate') }} </strong>
                             </span>
                             @endif
                         </div>
 
-                        <div class="input-group {{ $errors->has('valorfora') ? 'has-error' : ''}}">
+                        <div class="input-group {{ $errors->has('valor_fora') ? 'has-error' : ''}}">
                         	<span class="input-group-addon" id="sizing-addon2">$</span>
-                            <label for="valorfora">Valor Fora</label>
-                            <input type="text" name="valorfora" class="form-control" placeholder="Insira o valor para o vencedor do time de fora" aria-describedby="sizing-addon2">
-                            @if($errors->has('valorfora'))
+                            <label for="valor_fora">Valor Fora</label>
+                            <input type="text" name="valor_fora" class="form-control" placeholder="Insira o valor para o vencedor do time de fora" aria-describedby="sizing-addon2">
+                            @if($errors->has('valor_fora'))
                             <span class="help-block">
-                                <strong> {{ $errors->first('valorfora') }} </strong>
+                                <strong> {{ $errors->first('valor_fora') }} </strong>
                             </span>
                             @endif
                         </div>
-                        <div class="input-group {{ $errors->has('valorgoal') ? 'has-error' : ''}}">
+                        <div class="input-group {{ $errors->has('valor_gol') ? 'has-error' : ''}}">
                         	<span class="input-group-addon" id="sizing-addon2">$</span>
-                            <label for="valorgoal">Valor Gol</label>
-                            <input type="text" name="valorgoal" class="form-control" placeholder="Insira o valor para o vencedor de mais de um goal" aria-describedby="sizing-addon2">
-                            @if($errors->has('valorgoal'))
+                            <label for="valor_gol">Valor Gol</label>
+                            <input type="text" name="valor_gol" class="form-control" placeholder="Insira o valor para o vencedor de mais de um goal" aria-describedby="sizing-addon2">
+                            @if($errors->has('valor_gol'))
                             <span class="help-block">
-                                <strong> {{ $errors->first('valorgoal') }} </strong>
+                                <strong> {{ $errors->first('valor_gol') }} </strong>
                             </span>
                             @endif
                         </div>
-                        <div class="input-group {{ $errors->has('valordupla') ? 'has-error' : ''}}">
+                        <div class="input-group {{ $errors->has('valor_dupla') ? 'has-error' : ''}}">
                         	<span class="input-group-addon" id="sizing-addon2">$</span>
-                            <label for="valordupla">Valor Dupla</label>
-                            <input type="text" name="valordupla" class="form-control" placeholder="Insira o valor para o vencedor do time de fora ou empate" aria-describedby="sizing-addon2">
-                            @if($errors->has('valordupla'))
+                            <label for="valor_dupla">Valor Dupla</label>
+                            <input type="text" name="valor_dupla" class="form-control" placeholder="Insira o valor para o vencedor do time de fora ou empate" aria-describedby="sizing-addon2">
+                            @if($errors->has('valor_dupla'))
                             <span class="help-block">
-                                <strong> {{ $errors->first('valordupla') }} </strong>
+                                <strong> {{ $errors->first('valor_dupla') }} </strong>
+                            </span>
+                            @endif
+                        </div>
+                        <div class="input-group {{ $errors->has('max_gol_2') ? 'has-error' : ''}}">
+                            <span class="input-group-addon" id="sizing-addon2">$</span>
+                            <label for="max_gol_2">Valor -2.5</label>
+                            <input type="text" name="max_gol_2" class="form-control" placeholder="Insira o valor para se a partida tiver no maximo 2 gols" aria-describedby="sizing-addon2">
+                            @if($errors->has('max_gol_2'))
+                            <span class="help-block">
+                                <strong> {{ $errors->first('max_gol_2') }} </strong>
+                            </span>
+                            @endif
+                        </div>
+                        <div class="input-group {{ $errors->has('min_gol_3') ? 'has-error' : ''}}">
+                            <span class="input-group-addon" id="sizing-addon2">$</span>
+                            <label for="min_gol_3">Valor +2.5</label>
+                            <input type="text" name="min_gol_3" class="form-control" placeholder="Insira o valor para se a partida tiver no minimo 3 gols ou mais" aria-describedby="sizing-addon2">
+                            @if($errors->has('min_gol_3'))
+                            <span class="help-block">
+                                <strong> {{ $errors->first('min_gol_3') }} </strong>
+                            </span>
+                            @endif
+                        </div>
+                        <div class="input-group {{ $errors->has('ambas_gol') ? 'has-error' : ''}}">
+                            <span class="input-group-addon" id="sizing-addon2">$</span>
+                            <label for="ambas_gol">Valor Ambas</label>
+                            <input type="text" name="ambas_gol" class="form-control" placeholder="Insira o valor para se a duas equipes marcarem gol" aria-describedby="sizing-addon2">
+                            @if($errors->has('ambas_gol'))
+                            <span class="help-block">
+                                <strong> {{ $errors->first('ambas_gol') }} </strong>
                             </span>
                             @endif
                         </div>
                         <div class="form-group">
-                            <label for="campeonato_id">Descrição do Campeonato</label>
-                            <select id="campeonato_id"  name="campeonato_id" class="form-control">
-                                <option valeu="null">Selecione</option>
+                            <label for="campeonatos_id">Descrição do Campeonato</label>
+                            <select id="campeonatos_id"  name="campeonatos_id" class="form-control">
+                                <option value="null">Selecione</option>
                                     @foreach (App\Campeonato::all() as $campeonato)
-                                    <option valeu="{{ $campeonato->id }}"> {{ $campeonato->id }}</option>
+                                    <option value="{{ $campeonato->id }}"> {{ $campeonato->id }}</option>
                                     @endforeach
                             </select>
                         </div>

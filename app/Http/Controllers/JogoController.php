@@ -43,7 +43,7 @@ class JogoController extends Controller
     	$jogo = \App\Jogo::find($id);
     	if(!$jogo){
     		\Session::flash('flash_message',[
-    		'msg'=>"Não existe esse time cadastrado!!! Deseja cadastrar um novo time?",
+    		'msg'=>"Não existe esse jogo cadastrado!!! Deseja cadastrar um novo Jogo?",
     		'class'=>"alert-danger"
     		]);
     		return redirect()->route('jogo.cadastrar');

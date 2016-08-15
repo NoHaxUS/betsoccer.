@@ -29,6 +29,7 @@ class CampeonatoController extends Controller
    
     public function salvar(\App\Http\Requests\CampeonatoRequest $request){
     	\App\Campeonato::create($request->all());
+        
 
     	\Session::flash('flash_message',[
     		'msg'=>"Cadastro do campeonato realizado com sucesso!!!",
@@ -71,7 +72,7 @@ class CampeonatoController extends Controller
     		//'class'=>"alert-danger"
     		//]);
     		//return redirect()->route('time.index');
-    	//	}
+    	    //}
     		
     		$campeonato->delete();
     	

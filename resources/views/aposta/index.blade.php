@@ -8,7 +8,9 @@
                  <ol class="breadcrumb panel-heading">
                     <li class="active">Aposta</li>
                 </ol>
-
+                 <p>
+                        <a class="btn btn-info" href="{{ route('aposta.cadastrar') }}">Apostar</a>
+                 </p>
 
                 <div class="panel-body">
                    <div class="table-responsive"> 
@@ -16,44 +18,40 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Horário</th>
+                                <th>Data</th>
                                 <th>Time Casa</th>
                                 <th>Time Fora</th>
-                                <th>Valor Casa</th>
-                                <th>Valor Emp</th>
-                                <th>Valor Fora</th>
-                                <th>Valor Gol</th>
-                                <th>Valor Dupla</th>
-                                <th>Campeonato</th>
-                                <th>Ação</th>
+                                <th>Casa</th>
+                                <th>Emp</th>
+                                <th>Fora</th>
+                                <th>Gol</th>
+                                <th>Dupla</th>
+                                <th>Ambas</th>
+                                <th>-2.5</th>
+                                <th>+2.5</th>
+                                <th>Campeonato</th>                                
                             </tr>
                         </thead>
                         <tbody>
                              @foreach($jogos as $jo)
-
                               <tr>
                                 <td scope="row">{{ $jo->id }}</td>
                                 <td>{{ $jo->horario }}</td>
-                                <td>{{ $jo->timecasa }}</td>
-                                <td>{{ $jo->timefora }}</td>
-                                <td>{{ $jo->valorcasa }}</td>
-                                <td>{{ $jo->valoremp }}</td>
-                                <td>{{ $jo->valorfora }}</td>
-                                <td>{{ $jo->valorgoal }}</td>
-                                <td>{{ $jo->valordupla }}</td>
-                                <td>{{ $jo->campeonato_id }}</td>
-                                <td>
-                                    <a class="btn btn-success" href="#">Apostar</a>
-                                </td>
+                                <td>{{ $jo->time_casa }}</td>
+                                <td>{{ $jo->time_fora }}</td>
+                                <td>{{ $jo->valor_casa }}</td>
+                                <td>{{ $jo->valor_empate }}</td>
+                                <td>{{ $jo->valor_fora }}</td>
+                                <td>{{ $jo->valor_1_2 }}</td>
+                                <td>{{ $jo->valor_dupla }}</td>
+                                <td>{{ $jo->valor_ambas }}</td>
+                                <td>{{ $jo->max_gol_2 }}</td>
+                                <td>{{ $jo->min_gol_3 }}</td>                              
+                                <td>{{ $jo->campeonato_id }}</td>                                
                             </tr>
-                            
                             @endforeach
-                            
-
                         </tbody>
-
                     </table>
-
                   </div>
               </div>
             </div>

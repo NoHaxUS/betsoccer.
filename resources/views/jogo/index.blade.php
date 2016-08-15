@@ -18,33 +18,39 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Horário</th>
-                                <th>Time Casa</th>
-                                <th>Time Fora</th>
-                                <th>Valor Casa</th>
-                                <th>Valor Emp</th>
-                                <th>Valor Fora</th>
-                                <th>Valor Gol</th>
-                                <th>Valor Dupla</th>
+                                <th>Codigo</th>                                
+                                <th>Casa</th>
+                                <th>Fora</th>
+                                <th>Rs Casa</th>
+                                <th>Rs Emp</th>
+                                <th>Rs Fora</th>
+                                <th>Rs Gol</th>
+                                <th>Rs Dupla</th>
+                                <th>Rs +2.5</th>
+                                <th>Rs -2.5</th>
+                                <th>Rs Ambas</th>
                                 <th>Campeonato</th>
+                                <th>Horário</th>
                                 <th>Ação</th>
                             </tr>
                         </thead>
                         <tbody>
                              @foreach($jogos as $jo)
-
+    
                               <tr>
-                                <td scope="row">{{ $jo->id }}</td>
-                                <td>{{ $jo->horario }}</td>
-                                <td>{{ $jo->timecasa }}</td>
-                                <td>{{ $jo->timefora }}</td>
-                                <td>{{ $jo->valorcasa }}</td>
-                                <td>{{ $jo->valoremp }}</td>
-                                <td>{{ $jo->valorfora }}</td>
-                                <td>{{ $jo->valorgoal }}</td>
-                                <td>{{ $jo->valordupla }}</td>
-                                <td>{{ $jo->campeonato_id }}</td>
+                                <td scope="row">{{ $jo->id }}</td>                                
+                                <td>{{ $jo->time_casa }}</td>
+                                <td>{{ $jo->time_fora }}</td>
+                                <td>{{ $jo->valor_casa }}</td>
+                                <td>{{ $jo->valor_empate }}</td>
+                                <td>{{ $jo->valor_fora }}</td>
+                                <td>{{ $jo->valor_gol }}</td>
+                                <td>{{ $jo->valor_dupla }}</td>
+                                <td>{{ $jo->max_gol_2 }}</td>
+                                <td>{{ $jo->min_gol_3 }}</td>
+                                <td>{{ $jo->ambas_gol }}</td>
+                                <td>{{ $jo->campeonatos_id }}</td>
+                                <td>{{ $jo->horario_id }}</td>
                                 <td>
                                     <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Editar</a>
                                     <a class="btn btn-danger" href="javascript:(confirm('Excluir esse registro')? window.location.href='{{ route('jogo.deletar',$jo->id) }}' : false)">Excluir</a>

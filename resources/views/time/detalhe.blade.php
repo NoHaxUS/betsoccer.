@@ -22,22 +22,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($time->campeonatos as $ca)
+                         
                             <tr>
-                                <th scope="row">{{ $ca->id }}</th>
-                                <td>{{ $ca->descricao_campeonato }}</td>
+                                <!-- <th scope="row">{{ $time->campeonatos->id }}</th>
+                                <td>{{ $time->campeonatos->descricao_campeonato }}</td> -->
                                 <td>
-                                    <a class="btn btn-default" href="{{ route('campeonato.editar',$campeonato->id) }}">Editar</a>
-                                    <a class="btn btn-danger" href="javascript:(confirm('Deletar esse registro?') ? window.location.href='{{ route('campeonato.deletar',$campeonato->id) }}' : false)">Deletar</a>
+                                    <a class="btn btn-default" href="{{ route('time.editar',$time) }}">Editar</a>
+                                    <a class="btn btn-danger" href="javascript:(confirm('Deletar esse registro?') ? window.location.href='{{ route('time.deletar',$time) }}' : false)">Deletar</a>
                                 </td>
                             </tr>
-                            @endforeach
-
                         </tbody>
 
                     </table>
                     <p>
-                        <a class="btn btn-info" href="{{ route('campeonato.cadastrar')}}">Cadastrar Campeonatos</a>
+                        <a class="btn btn-info" href="{{ route('time.cadastrar')}}">Cadastrar Campeonatos</a>
                     </p>
 
                 </div>

@@ -22,7 +22,7 @@
                             </span>
                             @endif
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label for="campeonato_id">Descrição do Campeonato</label>
                             <select id="campeonato_id"  name="campeonato_id" class="form-control">
                                 <option valeu="null">Selecione</option>
@@ -32,6 +32,7 @@
                             </select>
                              
                         </div>
+                        -->
                         <div class="form-group">
                         <button class="btn btn-info">Cadastrar</button>
                         </div>
