@@ -18,24 +18,33 @@ class JogoRequest extends Request
 
     public function messages(){
         return [
-            'horario.required'=>'Informe a descricao do campeonato',
-            'horario.max'=>'O campo deve ter no máximo 5 caracteres',
-            'horario.date_format'=>'Informe o horario da seguinte forma xx:xx',
-            'valorcasa.required'=>'Informe o valor a pagar no time da casa',
-            'valorcasa.max'=>'O campo deve conter no máximo 10 caracteres',
-            'valorcasa.numeric'=>'Informe um valor númerico',
-            'valoremp.required'=>'Informe o valor a pagar no empate',
-            'valoremp.max'=>'O campo deve conter no máximo 10 caracteres',
-            'valoremp.numeric'=>'Informe um valor númerico',
-            'valorfora.required'=>'Informe o valor a pagar no time de fora',
-            'valorfora.max'=>'O campo deve conter no máximo 10 caracteres',
-            'valorfora.numeric'=>'Informe um valor númerico',
-            'valorgoal.required'=>'Informe o valor a pagar no número de gol',
-            'valorgoal.max'=>'O campo deve conter no máximo 10 caracteres',
-            'valorgoal.numeric'=>'Informe um valor númerico',
-            'valordupla.required'=>'Informe o valor a pagar no empate ou na vitória do time de fora',
-            'valordupla.max'=>'O campo deve conter no máximo 10 caracteres',
-            'valordupla.numeric'=>'Informe um valor númerico',
+            'time_casa.required'=>'Informe qual será o time mandante',
+            'time_fora.required'=>'Informe qual será o time visitante',
+            'valor_casa.required'=>'Informe o valor a pagar no time mandante',
+            'valor_casa.max'=>'O campo deve conter no máximo 3 caracteres',
+            'valor_casa.numeric'=>'Informe um valor númerico',
+            'valor_fora.required'=>'Informe o valor a pagar no time visitante',
+            'valor_fora.max'=>'O campo deve conter no máximo 3 caracteres',
+            'valor_fora.numeric'=>'Informe um valor númerico',
+            'valor_empate.required'=>'Informe o valor a pagar no empate',
+            'valor_empate.max'=>'O campo deve conter no máximo 3 caracteres',
+            'valor_empate.numeric'=>'Informe um valor númerico',
+            'valor_gol.required'=>'Informe o valor a pagar no número de gol',
+            'valor_gol.max'=>'O campo deve conter no máximo 3 caracteres',
+            'valor_gol.numeric'=>'Informe um valor númerico',
+            'valor_dupla.required'=>'Informe o valor a pagar no empate ou na vitória do time de fora',
+            'valor_dupla.max'=>'O campo deve conter no máximo 3 caracteres',
+            'valor_dupla.numeric'=>'Informe um valor númerico',            
+            'max_gol_2.required'=>'Informe o valor a pagar',
+            'max_gol_2.max'=>'O campo deve conter no máximo 3 caracteres',
+            'max_gol_2.numeric'=>'Informe um valor númerico',
+            'min_gol_3.required'=>'Informe o valor a pagar',
+            'min_gol_3.max'=>'O campo deve conter no máximo 3 caracteres',
+            'min_gol_3.numeric'=>'Informe um valor númerico',
+            'ambas_gol.required'=>'Informe o valor a pagar',
+            'ambas_gol.max'=>'O campo deve conter no máximo 3 caracteres',
+            'ambas_gol.numeric'=>'Informe um valor númerico',
+
         ];
     }
 
@@ -47,12 +56,14 @@ class JogoRequest extends Request
     public function rules()
     {
         return [
-            'horario'=>'required|max:50|date_format:H:i',
-            'valorcasa'=>'required|max:15|numeric',
-            'valoremp'=>'required|max:15|numeric',
-            'valorfora'=>'required|max:15|numeric',
-            'valorgoal'=>'required|max:15|numeric',
-            'valordupla'=>'required|max:15|numeric',
+            'valor_casa'=>'required|max:3|numeric',
+            'valor_empate'=>'required|max:3|numeric',
+            'valor_fora'=>'required|max:3|numeric',
+            'valor_gol'=>'required|max:3|numeric',
+            'valor_dupla'=>'required|max:3|numeric',
+            'max_gol_2'=>'required|max:3|numeric',
+            'min_gol_3'=>'required|max:3|numeric',
+            'ambas_gol'=>'required|max:3|numeric',
         ];
     }
 }
