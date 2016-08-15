@@ -27,7 +27,7 @@
                                     <td scope="row">{{ $time->id }}</td>
                                     <td>{{ $time->descricao_time }}</td>
                                     <td>
-                                        <a class="btn btn-default" href="{{ route('time.detalhe',$time->id) }}">Detalhe</a>
+                                        <!--<a class="btn btn-default" href="{{ route('time.detalhe',$time->id) }}">Detalhe</a>-->
                                         <a class="btn btn-default" href="{{ route('time.editar',$time->id) }}">Editar</a>
                                         <a class="btn btn-danger" href="javascript:(confirm('Excluir esse registro')? window.location.href='{{ route('time.deletar',$time->id) }}' : false)">Excluir</a>
                                     </td>
