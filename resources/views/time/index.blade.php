@@ -8,8 +8,6 @@
                  <ol class="breadcrumb panel-heading">
                     <li class="active">Time</li>
                 </ol>
-
-
                 <div class="panel-body">
                     <p>
                         <a class="btn btn-info" href="{{ route('time.cadastrar') }}">Cadastrar</a>
@@ -25,7 +23,6 @@
                             </thead>
                             <tbody>
                                  @foreach($times as $time)
-
                                   <tr>
                                     <td scope="row">{{ $time->id }}</td>
                                     <td>{{ $time->descricao_time }}</td>
@@ -35,10 +32,8 @@
                                         <a class="btn btn-danger" href="javascript:(confirm('Excluir esse registro')? window.location.href='{{ route('time.deletar',$time->id) }}' : false)">Excluir</a>
                                     </td>
                                 </tr>
-                                
                                 @endforeach
                                 
-
                             </tbody>
 
                         </table>
@@ -47,8 +42,6 @@
                         {!! $times->links() !!}
 
                     </div>
-
-
                 </div>
             </div>
         </div>
