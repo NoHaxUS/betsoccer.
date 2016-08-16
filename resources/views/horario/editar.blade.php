@@ -19,8 +19,7 @@
                             <input type="date" name="date" class="form-control" placeholder="Troque a data" value="{{$horario->data}}">
                         </div>
                         <button class="btn btn-info">Editar</button>
-                    </form>
-                   
+                    </form>                   
                 </div>
             </div>
         </div>

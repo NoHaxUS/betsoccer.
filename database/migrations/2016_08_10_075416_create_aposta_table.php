@@ -29,6 +29,6 @@ class CreateApostaTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('apostas');
     }
 }

@@ -18,17 +18,22 @@ class JogoController extends Controller
     public function index(){
     	
     	//buscando todas as informacoes dos times
-    	$jogos = \App\Jogo::paginate(10);
+    	$jogos = \App\Jogo::all();
+        //$time = \App\Time::all();   
+        //$jogos = \App\Jogo::with('time')->get();
         
     	return view('jogo.index',compact('jogos'));
     }
 
     public function cadastrar(){
+       // $time = \App\Time::all();
+       // $horario = \App\Horario::all();
     	return view('jogo.cadastrar');	
     }
 
     public function salvar(\App\Http\Requests\JogoRequest $request){
-    	\App\Jogo::create($request->all());
+    	
+        \App\Jogo::create($request->all());
 
     	\Session::flash('flash_message',[
     		'msg'=>"Cadastro do Time realizado com sucesso!!!",

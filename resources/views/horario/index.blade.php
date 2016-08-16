@@ -30,7 +30,6 @@
                                     <td scope="row">{{ $horario->id }}</td>
                                     <td>{{ $horario->data }}</td>
                                     <td>
-                                        <a class="btn btn-default" href="{{ route('horario.detalhe',$horario->id) }}">Detalhe</a>
                                         <a class="btn btn-default" href="{{ route('horario.editar',$horario->id) }}">Editar</a>
                                         <a class="btn btn-danger" href="javascript:(confirm('Excluir esse registro')? window.location.href='{{ route('horario.deletar',$horario->id) }}' : false)">Excluir</a>
                                     </td>

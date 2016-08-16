@@ -12,23 +12,17 @@ class Time extends Model
   {
       return $this->hasMany('App\Jogo');
   }
-
 /**
     public function campeonatos(){
     	return $this->belongsTo('App\Campeonato');
     }
-  
    public function addCampeonato(Campeonato $cam){
     	return $this->campeonatos()->save($cam);
-
    }
-
    public function deletarTime(){
    	foreach($this->campeonatos as $camp){
    		$camp->delete();
    	}
    	return true;
 */
-
-   
 }

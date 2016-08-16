@@ -13,6 +13,7 @@
                 <div class="panel-body">
                     <form action="{{ route('jogo.salvar')}}" method="post">
                         {{ csrf_field() }}
+                        
                         <label for="horarios_id">Horário</label>
                         <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
                         <select id="horarios_id"  name="horarios_id" class="form-control">
@@ -23,18 +24,18 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="time_casa">Time Casa</label>
-                            <select id="time_casa"  name="time_casa" class="form-control">
+                            <label for="time_casa_id">Time Casa</label>
+                            <select id="time_casa_id"  name="time_casa_id" class="form-control">
                                 <option valeu="null">Selecione</option>
                                     @foreach (App\Time::all() as $time)
-                                    <option valeu="{{ $time->descricao_time }}"> {{ $time->descricao_time }}</option>
+                                    <option valeu="{{ $time->id }}"> {{ $time->id }}</option>
                                     @endforeach
                             </select>
-                            <label for="time_fora">Time Fora</label>
-                            <select id="time_fora"  name="time_fora" class="form-control">
+                            <label for="time_fora_id">Time Fora</label>
+                            <select id="time_fora_id"  name="time_fora_id" class="form-control">
                                 <option valeu="null">Selecione</option>
                                     @foreach (App\Time::all() as $time)
-                                    <option valeu="{{ $time->descricao_time }}"> {{ $time->descricao_time }}</option>
+                                    <option valeu="{{ $time->id }}"> {{ $time->id }}</option>
                                     @endforeach
                             </select>
                         </div>
@@ -71,13 +72,13 @@
                             </span>
                             @endif
                         </div>
-                        <div class="input-group {{ $errors->has('valor_gol') ? 'has-error' : ''}}">
+                        <div class="input-group {{ $errors->has('valor_1_2') ? 'has-error' : ''}}">
                         	<span class="input-group-addon" id="sizing-addon2">$</span>
-                            <label for="valor_gol">Valor Gol</label>
-                            <input type="text" name="valor_gol" class="form-control" placeholder="Insira o valor para o vencedor de mais de um goal" aria-describedby="sizing-addon2">
-                            @if($errors->has('valor_gol'))
+                            <label for="valor_1_2">Valor Gol</label>
+                            <input type="text" name="valor_1_2" class="form-control" placeholder="Insira o valor para o vencedor de mais de um goal" aria-describedby="sizing-addon2">
+                            @if($errors->has('valor_1_2'))
                             <span class="help-block">
-                                <strong> {{ $errors->first('valor_gol') }} </strong>
+                                <strong> {{ $errors->first('valor_1_2') }} </strong>
                             </span>
                             @endif
                         </div>
