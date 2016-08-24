@@ -8,14 +8,10 @@
                  <ol class="breadcrumb panel-heading">
                     <li class="active">Jogo</li>
                 </ol>
-
-
                 <div class="panel-body">
                     <p>
                         <a class="btn btn-info" href="{{ route('jogo.cadastrar') }}">Cadastrar</a>
-                    </p>
-                
-                   
+                    </p>                   
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -30,7 +26,7 @@
                                 <th>+2.5</th>
                                 <th>-2.5</th>
                                 <th>Ambas</th>
-                            <!--<th>Campeonato</th>-->
+                                <th>Campeonato</th>
                                 <th>data</th>
                                 <th>Ação</th>
                             </tr>
@@ -38,12 +34,11 @@
                         <tbody>
                                 
                                 {{ csrf_field() }}
-                             @foreach($jogos as $jo)                                    
+                             @foreach($jogos as $jo)                                                                 
                               <tr>
-                                <td scope="row">{{ $jo->id }}</td>                                
-                                <!-- Resolvido com POOOG mudar Assim que possível-->
-                                <td>{{ \App\Time::find($jo->time_casa_id)->descricao_time }}</td>
-                                <td>{{ \App\Time::find($jo->time_fora_id)->descricao_time }}</td>
+                                <td scope="row">{{ $jo->id }}</td>                                                                
+                                <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
+                                <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                                 <td>{{ $jo->valor_casa }}</td>
                                 <td>{{ $jo->valor_empate }}</td>
                                 <td>{{ $jo->valor_fora }}</td>
@@ -52,9 +47,8 @@
                                 <td>{{ $jo->max_gol_2 }}</td>
                                 <td>{{ $jo->min_gol_3 }}</td>
                                 <td>{{ $jo->ambas_gol }}</td>
-                               <!-- <td>{{ \App\Campeonato::find($jo->campeonatos_id)->descricao_campeonato }}</td>-->
-                                <td>{{ \App\Horario::find($jo->horarios_id)->data }}</td>
-                               
+                                <td>{{ \App\Campeonato::find($jo->campeonatos_id)->descricao_campeonato }}</td>
+                                <td>{{ \App\Horario::find($jo->horarios_id)->data }}</td>                              
                                 <td>
                                     <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Editar</a>
                                     <a class="btn btn-danger" href="javascript:(confirm('Excluir esse registro')? window.location.href='{{ route('jogo.deletar',$jo->id) }}' : false)">Excluir</a>

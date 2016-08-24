@@ -19,23 +19,26 @@ class JogoController extends Controller
     	
     	//buscando todas as informacoes dos times
     	$jogos = \App\Jogo::all();
-        //$time = \App\Time::all();   
-        //$jogos = \App\Jogo::with('time')->get();
-        
     	return view('jogo.index',compact('jogos'));
     }
 
     public function cadastrar(){
-       // $time = \App\Time::all();
-       // $horario = \App\Horario::all();
-    	return view('jogo.cadastrar');	
+       $campeonatos = \App\Campeonato::all();
+       $datas = \App\Horario::all();
+       $times = \App\Time::all();
+    	return view('jogo.cadastrar',compact('campeonatos','datas','times'));	
     }
 
     public function salvar(\App\Http\Requests\JogoRequest $request){
     	
-        \App\Jogo::create($request->all());
-
-    	\Session::flash('flash_message',[
+        $jogo = \App\Jogo::create($request->all());
+        $jogo->save();
+        $time=[];
+        $time []= $request->get('time_id');
+        $time []= $request->get('timef_id');
+        $jogo->time()->attach($time);
+    	
+        \Session::flash('flash_message',[
     		'msg'=>"Cadastro do Time realizado com sucesso!!!",
     		'class'=>"alert-success"
     		]);
@@ -69,15 +72,18 @@ class JogoController extends Controller
 
     public function deletar($id){
     		$jogo = \App\Jogo::find($id);
-
-    		if($jogo->deletarTime()){
+            $time=[];
+            $time []= $jogo->time->get(0);
+            $time []= $jogo->time->get(1);
+    		/*if($jogo->deletarTime()){
     			\Session::flash('flash_message',[
     		'msg'=>"Registro não pode ser deletado!!!",
     		'class'=>"alert-danger"
     		]);
     		return redirect()->route('time.index');
     		}
-    		
+    		*/
+            $jogo->time()->detach($time);
     		$jogo->delete();
     	
     		\Session::flash('flash_message',[

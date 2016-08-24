@@ -22,6 +22,7 @@ class ApostaController extends Controller
     }
     public function cadastrar(){
         $time = \App\Jogo::all();
+
         return view('aposta.cadastrar',compact('time'));
     }
 

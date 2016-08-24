@@ -13,8 +13,7 @@ class JogoTime extends Migration
     public function up()
     {
         
-        Schema::create('jogo_time', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('jogo_time', function (Blueprint $table) {            
             $table->integer('jogos_id')->unsigned();
             $table->integer('times_id')->unsigned();
             

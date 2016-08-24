@@ -24,8 +24,6 @@ class CreateJogoTable extends Migration
             $table->double('min_gol_3', 3 , 2);
             $table->double('ambas_gol', 3 , 2);
 
-            $table->integer('time_casa_id')->unsigned();
-            $table->integer('time_fora_id')->unsigned();
             $table->integer('campeonatos_id')->unsigned();           
             $table->integer('horarios_id')->unsigned();
             $table->timestamps();

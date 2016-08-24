@@ -17,25 +17,25 @@
                         <label for="horarios_id">Horário</label>
                         <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
                         <select id="horarios_id"  name="horarios_id" class="form-control">
-                                <option valeu="null">Selecione</option>
-                                    @foreach (App\Horario::all() as $data)
-                                    <option valeu="{{ $data->id }}"> {{ $data->id }}</option>
+                                <option value="null">Selecione</option>
+                                    @foreach ($datas as $data)
+                                    <option value="{{ $data->id }}"> {!! $data->data !!}</option>
                                     @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="time_casa_id">Time Casa</label>
-                            <select id="time_casa_id"  name="time_casa_id" class="form-control">
-                                <option valeu="null">Selecione</option>
-                                    @foreach (App\Time::all() as $time)
-                                    <option valeu="{{ $time->id }}"> {{ $time->id }}</option>
+                            <label for="time_id">Time Casa</label>
+                            <select id="time_id"  name="time_id" class="form-control">
+                                <option value="null">Selecione</option>
+                                    @foreach ($times as $time)
+                                    <option value="{{ $time->id }}"> {{ $time->descricao_time }}</option>
                                     @endforeach
                             </select>
-                            <label for="time_fora_id">Time Fora</label>
-                            <select id="time_fora_id"  name="time_fora_id" class="form-control">
-                                <option valeu="null">Selecione</option>
-                                    @foreach (App\Time::all() as $time)
-                                    <option valeu="{{ $time->id }}"> {{ $time->id }}</option>
+                            <label for="timef_id">Time Fora</label>
+                            <select id="timef_id"  name="timef_id" class="form-control">
+                                <option value="null">Selecione</option>
+                                    @foreach ($times as $time)
+                                    <option value="{{ $time->id }}"> {{ $time->descricao_time }}</option>
                                     @endforeach
                             </select>
                         </div>
@@ -126,8 +126,8 @@
                             <label for="campeonatos_id">Descrição do Campeonato</label>
                             <select id="campeonatos_id"  name="campeonatos_id" class="form-control">
                                 <option value="null">Selecione</option>
-                                    @foreach (App\Campeonato::all() as $campeonato)
-                                    <option value="{{ $campeonato->id }}"> {{ $campeonato->id }}</option>
+                                    @foreach ($campeonatos as $campeonato)
+                                    <option value="{{ $campeonato->id }}"> {{ $campeonato->descricao_campeonato }}</option>
                                     @endforeach
                             </select>
                         </div>
