@@ -13,39 +13,40 @@ class JogoRequest extends Request
      */
     public function authorize()
     {
-        return true;
+    	return true;
     }
 
     public function messages(){
-        return [
-            'time_casa.required'=>'Informe qual será o time mandante',
-            'time_fora.required'=>'Informe qual será o time visitante',
-            'valor_casa.required'=>'Informe o valor a pagar no time mandante',
-            'valor_casa.max'=>'O campo deve conter no máximo 3 caracteres',
-            'valor_casa.numeric'=>'Informe um valor númerico',
-            'valor_fora.required'=>'Informe o valor a pagar no time visitante',
-            'valor_fora.max'=>'O campo deve conter no máximo 3 caracteres',
-            'valor_fora.numeric'=>'Informe um valor númerico',
-            'valor_empate.required'=>'Informe o valor a pagar no empate',
-            'valor_empate.max'=>'O campo deve conter no máximo 3 caracteres',
-            'valor_empate.numeric'=>'Informe um valor númerico',
-            'valor_1_2.required'=>'Informe o valor a pagar no número de gol',
-            'valor_1_2.max'=>'O campo deve conter no máximo 3 caracteres',
-            'valor_1_2.numeric'=>'Informe um valor númerico',
-            'valor_dupla.required'=>'Informe o valor a pagar no empate ou na vitória do time de fora',
-            'valor_dupla.max'=>'O campo deve conter no máximo 3 caracteres',
-            'valor_dupla.numeric'=>'Informe um valor númerico',            
-            'max_gol_2.required'=>'Informe o valor a pagar',
-            'max_gol_2.max'=>'O campo deve conter no máximo 3 caracteres',
-            'max_gol_2.numeric'=>'Informe um valor númerico',
-            'min_gol_3.required'=>'Informe o valor a pagar',
-            'min_gol_3.max'=>'O campo deve conter no máximo 3 caracteres',
-            'min_gol_3.numeric'=>'Informe um valor númerico',
-            'ambas_gol.required'=>'Informe o valor a pagar',
-            'ambas_gol.max'=>'O campo deve conter no máximo 3 caracteres',
-            'ambas_gol.numeric'=>'Informe um valor númerico',
+    	return [
+    	'timef_id.required'=>'Informe qual será o time mandante',
+    	'time_id.required'=>'Informe qual será o time visitante',
+    	'horarios_id.required'=>'Informe uma data para o jogo',
+    	'valor_casa.required'=>'Informe o valor a pagar no time mandante',
+    	'valor_casa.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'valor_casa.numeric'=>'Informe um valor númerico',
+    	'valor_fora.required'=>'Informe o valor a pagar no time visitante',
+    	'valor_fora.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'valor_fora.numeric'=>'Informe um valor númerico',
+    	'valor_empate.required'=>'Informe o valor a pagar no empate',
+    	'valor_empate.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'valor_empate.numeric'=>'Informe um valor númerico',
+    	'valor_1_2.required'=>'Informe o valor a pagar no número de gol',
+    	'valor_1_2.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'valor_1_2.numeric'=>'Informe um valor númerico',
+    	'valor_dupla.required'=>'Informe o valor a pagar no empate ou na vitória do time de fora',
+    	'valor_dupla.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'valor_dupla.numeric'=>'Informe um valor númerico',            
+    	'max_gol_2.required'=>'Informe o valor a pagar',
+    	'max_gol_2.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'max_gol_2.numeric'=>'Informe um valor númerico',
+    	'min_gol_3.required'=>'Informe o valor a pagar',
+    	'min_gol_3.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'min_gol_3.numeric'=>'Informe um valor númerico',
+    	'ambas_gol.required'=>'Informe o valor a pagar',
+    	'ambas_gol.max'=>'O campo deve conter no máximo 3 caracteres',
+    	'ambas_gol.numeric'=>'Informe um valor númerico',
 
-        ];
+    	];
     }
 
     /**
@@ -55,15 +56,18 @@ class JogoRequest extends Request
      */
     public function rules()
     {
-        return [
-            'valor_casa'=>'required|max:15|numeric',
-            'valor_empate'=>'required|max:15|numeric',
-            'valor_fora'=>'required|max:15|numeric',
-            'valor_1_2'=>'required|max:15|numeric',
-            'valor_dupla'=>'required|max:15|numeric',
-            'max_gol_2'=>'required|max:15|numeric',
-            'min_gol_3'=>'required|max:15|numeric',
-            'ambas_gol'=>'required|max:15|numeric',
-        ];
+    	return [
+    	'horarios_id'=>'required',
+    	'timef_id'=>'required',
+    	'time_id'=>'required',
+    	'valor_casa'=>'required|max:15|numeric',
+    	'valor_empate'=>'required|max:15|numeric',
+    	'valor_fora'=>'required|max:15|numeric',
+    	'valor_1_2'=>'required|max:15|numeric',
+    	'valor_dupla'=>'required|max:15|numeric',
+    	'max_gol_2'=>'required|max:15|numeric',
+    	'min_gol_3'=>'required|max:15|numeric',
+    	'ambas_gol'=>'required|max:15|numeric',
+    	];
     }
 }

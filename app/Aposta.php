@@ -12,11 +12,11 @@ class Aposta extends Model
     //metodo que retorna jogos
     public function jogo()
     {
-        return $this->belongsToMany('App\Jogo');
+        return $this->belongsToMany('App\Jogo','aposta_jogo','apostas_id','jogos_id')->withPivot('palpite');
     }
     
     //metodo que retorna os usuários
-    public public function user()
+    public function user()
     {
     	return $this->belongsTo('App\User');
     }

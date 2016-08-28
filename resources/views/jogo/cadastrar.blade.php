@@ -16,27 +16,33 @@
                         
                         <label for="horarios_id">Horário</label>
                         <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
-                        <select id="horarios_id"  name="horarios_id" class="form-control">
+                            <select id="horarios_id"  name="horarios_id" class="form-control">
                                 <option value="null">Selecione</option>
-                                    @foreach ($datas as $data)
-                                    <option value="{{ $data->id }}"> {!! $data->data !!}</option>
-                                    @endforeach
+                                @foreach ($datas as $data)
+                                <option value="{{ $data->id }}"> {!! $data->data !!}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group {{ $errors->has('time_id') ? 'has-error' : ''}}">
                             <label for="time_id">Time Casa</label>
                             <select id="time_id"  name="time_id" class="form-control">
                                 <option value="null">Selecione</option>
-                                    @foreach ($times as $time)
-                                    <option value="{{ $time->id }}"> {{ $time->descricao_time }}</option>
-                                    @endforeach
+                                @foreach ($times as $time)
+                                <option value="{{ $time->id }}"> {{ $time->descricao_time }}</option>
+                                @endforeach  
+                                 @if($errors->has('time_id'))
+                            <span class="help-block">
+                                <strong> {{ $errors->first('time_id') }} </strong>
+                            </span>
+                            @endif                              
                             </select>
+
                             <label for="timef_id">Time Fora</label>
                             <select id="timef_id"  name="timef_id" class="form-control">
                                 <option value="null">Selecione</option>
-                                    @foreach ($times as $time)
-                                    <option value="{{ $time->id }}"> {{ $time->descricao_time }}</option>
-                                    @endforeach
+                                @foreach ($times as $time)
+                                <option value="{{ $time->id }}"> {{ $time->descricao_time }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="input-group {{ $errors->has('valor_casa') ? 'has-error' : ''}}">
@@ -49,8 +55,8 @@
                             </span>
                             @endif
 
-                       </div>
-                       
+                        </div>
+
                         <div class="input-group {{ $errors->has('valor_empate') ? 'has-error' : ''}}">
                         	<span class="input-group-addon" id="sizing-addon2">$</span>
                         	<label for="valor_empate">Valor Emp</label>
@@ -126,16 +132,16 @@
                             <label for="campeonatos_id">Descrição do Campeonato</label>
                             <select id="campeonatos_id"  name="campeonatos_id" class="form-control">
                                 <option value="null">Selecione</option>
-                                    @foreach ($campeonatos as $campeonato)
-                                    <option value="{{ $campeonato->id }}"> {{ $campeonato->descricao_campeonato }}</option>
-                                    @endforeach
+                                @foreach ($campeonatos as $campeonato)
+                                <option value="{{ $campeonato->id }}"> {{ $campeonato->descricao_campeonato }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                        <button class="btn btn-info">Cadastrar</button>
+                            <button class="btn btn-info">Cadastrar</button>
                         </div>
                     </form>
-                   
+
                 </div>
             </div>
         </div>
