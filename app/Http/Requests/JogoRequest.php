@@ -18,9 +18,12 @@ class JogoRequest extends Request
 
     public function messages(){
     	return [
-    	'timef_id.required'=>'Informe qual será o time mandante',
-    	'time_id.required'=>'Informe qual será o time visitante',
+    	'timef_id.different'=>'Informe um time Diferente do time Mandante',
+        'timef_id.required'=>'Informe um time',
+    	'time_id.required'=>'Informe um time',
+        'time_id.different'=>'Informe um time Diferente do time visitante',
     	'horarios_id.required'=>'Informe uma data para o jogo',
+        'campeonatos_id.required'=>'Informe um campeonato',        
     	'valor_casa.required'=>'Informe o valor a pagar no time mandante',
     	'valor_casa.max'=>'O campo deve conter no máximo 3 caracteres',
     	'valor_casa.numeric'=>'Informe um valor númerico',
@@ -58,8 +61,8 @@ class JogoRequest extends Request
     {
     	return [
     	'horarios_id'=>'required',
-    	'timef_id'=>'required',
-    	'time_id'=>'required',
+    	'timef_id'=>'different:time_id|required',
+    	'time_id'=>'required|different:timef_id',
     	'valor_casa'=>'required|max:15|numeric',
     	'valor_empate'=>'required|max:15|numeric',
     	'valor_fora'=>'required|max:15|numeric',
@@ -68,6 +71,7 @@ class JogoRequest extends Request
     	'max_gol_2'=>'required|max:15|numeric',
     	'min_gol_3'=>'required|max:15|numeric',
     	'ambas_gol'=>'required|max:15|numeric',
+        'campeonatos_id'=>'required',
     	];
     }
 }
