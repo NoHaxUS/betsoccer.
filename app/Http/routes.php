@@ -16,14 +16,6 @@ Route::get('/', function () {
 	
     return view('welcome');
 });
-Route::post('/teste', function() {
-    //
-    $meuPost = file_get_contents("php://input");
-    $json = json_decode( $meuPost );
-    
-   dd($json->titulo);
-});
-
 Route::auth();
 
 //rotas para tabelas times

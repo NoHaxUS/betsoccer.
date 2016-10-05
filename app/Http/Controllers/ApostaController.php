@@ -12,15 +12,26 @@ class ApostaController extends Controller
     }
     public function index(){    	
     	//buscando todas as informacoes dos times
+        /*foreach ($aposta->jogo as $key) {
+               echo "JOGO" . $key->time;
+               echo $key->pivot->palpite;
+           }*/
     	//$aposta = \App\Aposta::paginate(10);
-    	$jogos = \App\Jogo::all();
-    	return view('aposta.index',compact('jogos'));
-    }
-    public function cadastrar(){
-        
+           $apostas = \App\Aposta::with('jogo')->get();
+           foreach ($apostas as $aposta) {            
+            
+                echo $aposta->jogo->get('id');
+           }
+           
+           $jogos = \App\Jogo::all();
+           return view('aposta.index',compact('jogos'));
+       }
+       public function cadastrar(){
+
         $time= \App\Jogo::all();
         return view('aposta.cadastrar',compact('time'));
     }
+
     public function salvar(\App\Http\Requests\ApostaRequest $request){                
         $jogo=[]; 
         $palpite=[];        
@@ -33,6 +44,16 @@ class ApostaController extends Controller
             $aposta->jogo()->attach($value,$palpite); 
         }                             
         $aposta->save();                               
-        return redirect()->route('aposta.cadastrar');    
+        return redirect()->route('aposta.index');    
+    }
+    public function show($id){
+
     }  
+    public function showAll(){
+        $jogos = \App\Aposta::find(4)->jogo()->get();
+        foreach ($jogos as $jogo) {
+            dd($jogo->pivot->palpite);
+        }
+        dd($jogos);
+    }
 }

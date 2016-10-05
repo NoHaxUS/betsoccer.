@@ -18,7 +18,7 @@ class JogoController extends Controller
     public function index(){
     	
     	//buscando todas as informacoes dos times
-    	$jogos = \App\Jogo::all();
+    	$jogos = \App\Jogo::with('campeonato')->get();
     	return view('jogo.index',compact('jogos'));
     }
 
@@ -30,7 +30,8 @@ class JogoController extends Controller
     }
 
     public function salvar(\App\Http\Requests\JogoRequest $request){
-    	
+    	//dd($request);
+        //dd($request->session());
         $jogo = \App\Jogo::create($request->all());
         $jogo->save();
         $time=[];
@@ -87,7 +88,7 @@ class JogoController extends Controller
     		$jogo->delete();
     	
     		\Session::flash('flash_message',[
-    		'msg'=>"Time apagado com sucesso!!!",
+    		'msg'=>"Jogo apagado com sucesso!!!",
     		'class'=>"alert-danger"
     		]);
     		return redirect()->route('jogo.index');
