@@ -19,7 +19,8 @@ class JogoController extends Controller
     	
     	//buscando todas as informacoes dos times
     	$jogos = \App\Jogo::with('campeonato')->get();
-    	return view('jogo.index',compact('jogos'));
+        $campeonatos = \App\Campeonato::all();        
+    	return view('jogo.index',compact('jogos','campeonatos'));
     }
 
     public function cadastrar(){
@@ -31,7 +32,6 @@ class JogoController extends Controller
 
     public function salvar(\App\Http\Requests\JogoRequest $request){
     	//dd($request);
-        //dd($request->session());
         $jogo = \App\Jogo::create($request->all());
         $jogo->save();
         $time=[];
