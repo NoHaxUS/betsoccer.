@@ -12,22 +12,21 @@
 
                 <div class="panel-body">
                     <form action="{{ route('horario.salvar')}}" method="post">
-                        {{ csrf_field() }}
-                        <div class="form-group {{ $errors->has('data') ? 'has-error' : ''}} ">
-                            <label for="data">Descricao do Time</label>
-                            <input type="date" name="data" class="form-control" placeholder="Insira um horario para ser cadastrado">
-                             
-                           @if($errors->has('data'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('data') }} </strong>
+                        {{ csrf_field() }}                                
+                        <div class='input-group date form-group' id='datetimepicker1' name="data">
+                            <input type='text' class="form-control" name="data"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
                             </span>
-                            @endif
                         </div>
+                        
+
+
                         <div class="form-group">
-                        <button class="btn btn-info">Cadastrar</button>
+                            <button class="btn btn-info">Cadastrar</button>
                         </div>
                     </form>
-                   
+
                 </div>
             </div>
         </div>
