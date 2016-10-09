@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-             <ol class="breadcrumb panel-heading">
+               <ol class="breadcrumb panel-heading">
                 <li><a href="{{ route('aposta.index') }}">Aposta</a></li>
                 <li class="active">Aposta</li>
             </ol>
@@ -15,9 +15,9 @@
                 <form class="form-inline" action="{{ route('aposta.salvar')}}" method="post">
                     <div class="container">
                         <div class="row">
-                        <div class="form-group">
+                            <div class="form-group">
                                 <p>
-                                <button class="btn btn-success ">Apostar</button>
+                                    <button class="btn btn-success ">Apostar</button>
                                 </p>
                             </div>   
                         </div>
@@ -58,7 +58,7 @@
                     <br>
 
                     <div class="table-responsive"> 
-                       <table class="table table-bordered">
+                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -77,9 +77,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                         @foreach($jogos as $jo)                                            
-                         {{ csrf_field() }}
-                         <tr>
+                           @foreach($jogos as $jo)                                            
+                           {{ csrf_field() }}
+                           @if ($jo->horario != null)                       
+                           <tr>
                             <td scope="row">
                                 <div class="form-group">
                                     <div class="checkbox">
@@ -128,7 +129,7 @@
 
                         </td>
                         <td>
-                         <div class="radio">
+                           <div class="radio">
                             <label>
                                 <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_dupla}}" aria-label="...">
                                 {{ $jo->valor_dupla}}
@@ -161,7 +162,8 @@
                         </div>    
                     </td>                              
                     <td>{{ \App\Campeonato::find($jo->campeonatos_id)->descricao_campeonato}}</td>
-                </tr>                            
+                </tr>   
+                @endif                         
                 @endforeach                                                          
             </tbody>
         </table>
