@@ -76,7 +76,7 @@ class TimeController extends Controller
     		//'class'=>"alert-danger"
     		//]);
     		//return redirect()->route('time.index');
-    	//	}
+    	    //}
     		
     		$time->delete();
     	

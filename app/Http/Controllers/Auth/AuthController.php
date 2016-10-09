@@ -37,7 +37,8 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+        //$this->middleware('guest', ['except' => ['getLogout', 'getRegister', 'postRegister']]);
+        $this->middleware($this->guestMiddleware(), ['except' => ['logout', 'getRegister', 'postRegister']]);
     }
 
     /**
@@ -51,15 +52,18 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-          ],[
-                'name.required'=>'Informe um Nome',
-                'name.max'=>'O campo nome deve conter no máximo 255 caracteres',
-                'email.required'=>'Informe um Email',
-                'email.email'=>'Informe um Email válido',
-                'email.max'=>'O campo email deve conter no máximo 255 caracteres',
-                'email.unique'=>'Email já existe!!! Informe outro email',
+            'role' => 'required',
+            'password' =>'confirmed',
+            ],[
+            'name.required'=>'Informe um Nome',
+            'name.max'=>'O campo nome deve conter no máximo 255 caracteres',
+            'email.required'=>'Informe um Email',
+            'email.email'=>'Informe um Email válido',
+            'email.max'=>'O campo email deve conter no máximo 255 caracteres',
+            'email.unique'=>'Email já existe!!! Informe outro email',
+            'password.confirmed'=>'É preciso Confirmar sua Senha',
 
-          ]);
+            ]);
     }
 
     /**
@@ -74,6 +78,7 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-        ]);
+            'role'=>$data['role'],
+            ]);
     }
 }

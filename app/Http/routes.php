@@ -14,47 +14,56 @@
 Route::get('/', function () {
 
 	
-    return view('welcome');
+	return view('welcome');
 });
+Route::get('/password/reset', ['uses'=>'Auth\PasswordController@getEmail', 'as'=>'senha.recu']);
 Route::auth();
 
+Route::get('/home', 'HomeController@index');
 //rotas para tabelas times
+Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], function() {
+	
+	Route::get('/register', ['uses'=>'Auth\AuthController@getRegister', 'as'=>'reg.get']);
+	Route::post('/register', ['uses'=>'Auth\AuthController@postRegister', 'as'=>'reg.post']);
 
-Route::get('/time', ['uses'=>'TimeController@index', 'as'=>'time.index']);
-Route::get('/time/cadastrar', ['uses'=>'TimeController@cadastrar', 'as'=>'time.cadastrar']);
-Route::post('/time/salvar', ['uses'=>'TimeController@salvar', 'as'=>'time.salvar']);
-Route::get('/time/editar/{id}', ['uses'=>'TimeController@editar', 'as'=>'time.editar']);
-Route::put('/time/atualizar/{id}', ['uses'=>'TimeController@atualizar', 'as'=>'time.atualizar']);
-Route::get('/time/deletar/{id}', ['uses'=>'TimeController@deletar', 'as'=>'time.deletar']);
-Route::get('/time/detalhe/{id}', ['uses'=>'TimeController@detalhe', 'as'=>'time.detalhe']);
+	
+	// Registration routes...
 
-//rotas para tabela campeonatos
+	Route::get('/time', ['uses'=>'TimeController@index', 'as'=>'time.index']);
+	Route::get('/time/cadastrar', ['uses'=>'TimeController@cadastrar', 'as'=>'time.cadastrar']);
+	Route::post('/time/salvar', ['uses'=>'TimeController@salvar', 'as'=>'time.salvar']);
+	Route::get('/time/editar/{id}', ['uses'=>'TimeController@editar', 'as'=>'time.editar']);
+	Route::put('/time/atualizar/{id}', ['uses'=>'TimeController@atualizar', 'as'=>'time.atualizar']);
+	Route::get('/time/deletar/{id}', ['uses'=>'TimeController@deletar', 'as'=>'time.deletar']);
+	Route::get('/time/detalhe/{id}', ['uses'=>'TimeController@detalhe', 'as'=>'time.detalhe']);
 
-Route::get('/campeonato', ['uses'=>'CampeonatoController@index', 'as'=>'campeonato.index']);
-Route::get('/campeonato/cadastrar', ['uses'=>'CampeonatoController@cadastrar', 'as'=>'campeonato.cadastrar']);
-Route::post('/campeonato/salvar', ['uses'=>'CampeonatoController@salvar', 'as'=>'campeonato.salvar']);
-Route::get('/campeonato/editar/{id}', ['uses'=>'CampeonatoController@editar', 'as'=>'campeonato.editar']);
-Route::put('/campeonato/atualizar/{id}', ['uses'=>'CampeonatoController@atualizar', 'as'=>'campeonato.atualizar']);
-Route::get('/campeonato/deletar/{id}', ['uses'=>'CampeonatoController@deletar', 'as'=>'campeonato.deletar']);
+	//rotas para tabela campeonatos
 
-//rotas para tabela horario
-Route::get('/horario', ['uses'=>'HorarioController@index', 'as'=>'horario.index']);
-Route::get('/horario/cadastrar', ['uses'=>'HorarioController@cadastrar', 'as'=>'horario.cadastrar']);
-Route::post('/horario/salvar', ['uses'=>'HorarioController@salvar', 'as'=>'horario.salvar']);
-Route::get('/horario/editar/{id}', ['uses'=>'HorarioController@editar', 'as'=>'horario.editar']);
-Route::put('/horario/atualizar/{id}', ['uses'=>'HorarioController@atualizar', 'as'=>'horario.atualizar']);
-Route::get('/horario/deletar/{id}', ['uses'=>'HorarioController@deletar', 'as'=>'horario.deletar']);
+	Route::get('/campeonato', ['uses'=>'CampeonatoController@index', 'as'=>'campeonato.index']);
+	Route::get('/campeonato/cadastrar', ['uses'=>'CampeonatoController@cadastrar', 'as'=>'campeonato.cadastrar']);
+	Route::post('/campeonato/salvar', ['uses'=>'CampeonatoController@salvar', 'as'=>'campeonato.salvar']);
+	Route::get('/campeonato/editar/{id}', ['uses'=>'CampeonatoController@editar', 'as'=>'campeonato.editar']);
+	Route::put('/campeonato/atualizar/{id}', ['uses'=>'CampeonatoController@atualizar', 'as'=>'campeonato.atualizar']);
+	Route::get('/campeonato/deletar/{id}', ['uses'=>'CampeonatoController@deletar', 'as'=>'campeonato.deletar']);
 
-//rotas para tabela de jogos
+	//rotas para tabela horario
+	Route::get('/horario', ['uses'=>'HorarioController@index', 'as'=>'horario.index']);
+	Route::get('/horario/cadastrar', ['uses'=>'HorarioController@cadastrar', 'as'=>'horario.cadastrar']);
+	Route::post('/horario/salvar', ['uses'=>'HorarioController@salvar', 'as'=>'horario.salvar']);
+	Route::get('/horario/editar/{id}', ['uses'=>'HorarioController@editar', 'as'=>'horario.editar']);
+	Route::put('/horario/atualizar/{id}', ['uses'=>'HorarioController@atualizar', 'as'=>'horario.atualizar']);
+	Route::get('/horario/deletar/{id}', ['uses'=>'HorarioController@deletar', 'as'=>'horario.deletar']);
 
-Route::get('/jogo', ['uses'=>'JogoController@index', 'as'=>'jogo.index']);
-Route::get('/jogo/cadastrar', ['uses'=>'JogoController@cadastrar', 'as'=>'jogo.cadastrar']);
-Route::post('/jogo/salvar', ['uses'=>'JogoController@salvar', 'as'=>'jogo.salvar']);
-Route::get('/jogo/editar/{id}', ['uses'=>'JogoController@editar', 'as'=>'jogo.editar']);
-Route::put('/jogo/atualizar/{id}', ['uses'=>'JogoController@atualizar', 'as'=>'jogo.atualizar']);
-Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
+	//rotas para tabela de jogos
 
-//rotas para a tabela de aposta
+	Route::get('/jogo', ['uses'=>'JogoController@index', 'as'=>'jogo.index']);
+	Route::get('/jogo/cadastrar', ['uses'=>'JogoController@cadastrar', 'as'=>'jogo.cadastrar']);
+	Route::post('/jogo/salvar', ['uses'=>'JogoController@salvar', 'as'=>'jogo.salvar']);
+	Route::get('/jogo/editar/{id}', ['uses'=>'JogoController@editar', 'as'=>'jogo.editar']);
+	Route::put('/jogo/atualizar/{id}', ['uses'=>'JogoController@atualizar', 'as'=>'jogo.atualizar']);
+	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
+});
+	//rotas para a tabela de aposta
 Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.index']);
 Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
 Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);

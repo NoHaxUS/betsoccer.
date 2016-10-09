@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class Jogo extends Model
 {
 	  protected $table = 'jogos';
@@ -11,12 +11,12 @@ class Jogo extends Model
 
 
     public function campeonato(){
-   		return $this->belongsTo('App\Campeonato');
+   		return $this->belongsTo('App\Campeonato','campeonatos_id');
 
    	}
    	public function horario(){
-
-   		return $this->belongsTo('App\Horario');
+      $teste = Carbon::now()->addMinutes(5);
+   		return $this->belongsTo('App\Horario','horarios_id')->where('data', '>', $teste);
    	}
    	public function time(){
    		return $this->belongsToMany('App\Time','jogo_time','jogos_id','times_id');
