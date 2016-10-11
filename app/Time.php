@@ -10,7 +10,7 @@ class Time extends Model
 
   public function jogos()
   {
-      return $this->hasMany('App\Jogo');
+      return $this->belongsToMany('App\Jogo','jogo_time','jogos_id','times_id');
   }
 /**
     public function campeonatos(){
