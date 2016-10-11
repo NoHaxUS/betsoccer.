@@ -13,23 +13,23 @@ class Foreing extends Migration
     public function up()
     {
         //
-     Schema::table('aposta_jogo', function (Blueprint $table) {
-        $table->foreign('apostas_id')->references('id')->on('apostas');
-        $table->foreign('jogos_id')->references('id')->on('jogos');            
+       Schema::table('aposta_jogo', function (Blueprint $table) {
+        $table->foreign('apostas_id')->references('id')->on('apostas')->onDelete('cascade');
+        $table->foreign('jogos_id')->references('id')->on('jogos')->onDelete('cascade');            
     });
-     Schema::table('jogos', function (Blueprint $table) {
+       Schema::table('jogos', function (Blueprint $table) {
         $table->foreign('campeonatos_id')->references('id')->on('campeonatos');
-        $table->foreign('horarios_id')->references('id')->on('horarios');
+        $table->foreign('horarios_id')->references('id')->on('horarios')->onUpdate('cascade');
     });
-     Schema::table('apostas', function (Blueprint $table) {
+       Schema::table('apostas', function (Blueprint $table) {
         $table->foreign('users_id')->references('id')->on('users');
     });
-     Schema::table('jogo_time', function (Blueprint $table) {
+       Schema::table('jogo_time', function (Blueprint $table) {
         $table->foreign('jogos_id')->references('id')->on('jogos');
         $table->foreign('times_id')->references('id')->on('times');
     });
-     
- }
+       
+   }
 
     /**
      * Reverse the migrations.
@@ -38,6 +38,6 @@ class Foreing extends Migration
      */
     public function down()
     {
-       
+     
     }
 }
