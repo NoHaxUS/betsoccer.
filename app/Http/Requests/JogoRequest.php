@@ -22,7 +22,7 @@ class JogoRequest extends Request
         'timef_id.required'=>'Informe um time',
     	'time_id.required'=>'Informe um time',
         'time_id.different'=>'Informe um time Diferente do time visitante',
-    	'horarios_id.required'=>'Informe uma data para o jogo',
+    	'data.required'=>'Informe uma data para o jogo',
         'campeonatos_id.required'=>'Informe um campeonato',        
     	'valor_casa.required'=>'Informe o valor a pagar no time mandante',
     	'valor_casa.max'=>'O campo deve conter no máximo 3 caracteres',
@@ -60,7 +60,7 @@ class JogoRequest extends Request
     public function rules()
     {
     	return [
-    	'horarios_id'=>'required',
+    	'data'=>'required',
     	'timef_id'=>'different:time_id|required',
     	'time_id'=>'required|different:timef_id',
     	'valor_casa'=>'required|max:15|numeric',
