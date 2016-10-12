@@ -18,15 +18,14 @@ class Foreing extends Migration
         $table->foreign('jogos_id')->references('id')->on('jogos')->onDelete('cascade');            
     });
        Schema::table('jogos', function (Blueprint $table) {
-        $table->foreign('campeonatos_id')->references('id')->on('campeonatos');
-        $table->foreign('horarios_id')->references('id')->on('horarios')->onUpdate('cascade');
+        $table->foreign('campeonatos_id')->references('id')->on('campeonatos');        
     });
        Schema::table('apostas', function (Blueprint $table) {
-        $table->foreign('users_id')->references('id')->on('users');
+        $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
     });
        Schema::table('jogo_time', function (Blueprint $table) {
-        $table->foreign('jogos_id')->references('id')->on('jogos');
-        $table->foreign('times_id')->references('id')->on('times');
+        $table->foreign('jogos_id')->references('id')->on('jogos')->onDelete('cascade');
+        $table->foreign('times_id')->references('id')->on('times')->onDelete('cascade');
     });
        
    }
