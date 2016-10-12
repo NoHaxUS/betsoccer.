@@ -17,16 +17,14 @@ Route::get('/', function () {
 	return view('welcome');
 });
 Route::get('/password/reset', ['uses'=>'Auth\PasswordController@getEmail', 'as'=>'senha.recu']);
+
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
 //rotas para tabelas times
 Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], function() {
-	
 	Route::get('/register', ['uses'=>'Auth\AuthController@getRegister', 'as'=>'reg.get']);
 	Route::post('/register', ['uses'=>'Auth\AuthController@postRegister', 'as'=>'reg.post']);
-
-	
 	// Registration routes...
 
 	Route::get('/time', ['uses'=>'TimeController@index', 'as'=>'time.index']);
@@ -60,7 +58,9 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/jogo/cadastrar', ['uses'=>'JogoController@cadastrar', 'as'=>'jogo.cadastrar']);
 	Route::post('/jogo/salvar', ['uses'=>'JogoController@salvar', 'as'=>'jogo.salvar']);
 	Route::get('/jogo/editar/{id}', ['uses'=>'JogoController@editar', 'as'=>'jogo.editar']);
-	Route::put('/jogo/atualizar/{id}', ['uses'=>'JogoController@atualizar', 'as'=>'jogo.atualizar']);
+	Route::post('/jogo/atualizar/{id}', ['uses'=>'JogoController@atualizar', 'as'=>'jogo.atualizar']);
+	Route::get('/jogo/ativar-desativar/{id}', ['uses'=>'JogoController@atiDes', 'as'=>'jogo.atides']);
+
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
 });
 	//rotas para a tabela de aposta
