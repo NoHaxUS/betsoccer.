@@ -21,43 +21,51 @@ class ApostaController extends Controller
              }
     	$aposta = \App\Aposta::paginate(10);
       */      
-     $apostas = \App\Aposta::with('jogo','horario')->get();
+     $apostas = \App\Aposta::with('jogo')->get();
      //dd($apostas);
      foreach ($apostas as $aposta) {            
       echo $aposta->jogo->get('id');
     }     
-      $jogos =\App\Jogo::all();
-      return view('aposta.index',compact('jogos'));
-    }
-    public function cadastrar(){
-
-      $time= \App\Jogo::all();
-      return view('aposta.cadastrar',compact('time'));
-    }
-
-    public function salvar(\App\Http\Requests\ApostaRequest $request){                
-
-      $jogo=[]; 
-      $palpite=[];        
-      $jogo = $request->get('jogo');   
-      $aposta = \App\Aposta::create($request->all());        
-      foreach ($jogo as $jogos => $value) {          
-        $text="palpite";            
-        $text.=$value;            
-        $palpite ['palpite']= $request->get($text);   
-        $aposta->jogo()->attach($value,$palpite); 
-      }                             
-      $aposta->save();                               
-      return redirect()->route('aposta.index');    
-    }
-    public function show($id){
-
-    }  
-    public function showAll(){
-      $jogos = \App\Aposta::find(4)->jogo()->get();
-      foreach ($jogos as $jogo) {
-        dd($jogo->pivot->palpite);
-      }
-      dd($jogos);
-    }
+    $jogos =\App\Jogo::all();
+    return view('aposta.index',compact('jogos'));
   }
+  public function cadastrar(){
+
+    $time= \App\Jogo::all();
+    return view('aposta.cadastrar',compact('time'));
+  }
+
+  public function salvar(\App\Http\Requests\ApostaRequest $request){                
+
+    $jogo=[]; 
+    $palpite=[];        
+    $jogo = $request->get('jogo');
+     // dd($request->all());   
+    $aposta = \App\Aposta::create($request->all());        
+    foreach ($jogo as $jogos => $value) {    
+      $jo = \App\Jogo::find($value);
+      $text="palpite";            
+      $text.=$value;
+      $consu=$request->get($text);      
+      $palpite ['palpite']= $jo->$consu;
+      $palpite ['tpalpite']=$consu;   
+      $aposta->jogo()->attach($value,$palpite); 
+    }                             
+    $aposta->save();
+    \Session::flash('flash_message',[
+      'msg'=>"Aposta realizada com Sucesso",
+      'class'=>"alert-danger"
+      ]);                               
+    return redirect()->route('aposta.index');    
+  }
+  public function show($id){
+
+  }  
+  public function showAll(){
+    $jogos = \App\Aposta::find(4)->jogo()->get();
+    foreach ($jogos as $jogo) {
+      dd($jogo->pivot->palpite);
+    }
+    dd($jogos);
+  }
+}

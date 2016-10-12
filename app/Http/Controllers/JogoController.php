@@ -18,15 +18,15 @@ class JogoController extends Controller
 public function index(){
 
     	//buscando todas as informacoes dos times
-   $jogos = \App\Jogo::with('campeonato')->get();
-   $campeonatos = \App\Campeonato::all();        
-   return view('jogo.index',compact('jogos','campeonatos'));
+ $jogos = \App\Jogo::with('campeonato')->get();
+ $campeonatos = \App\Campeonato::all();        
+ return view('jogo.index',compact('jogos','campeonatos'));
 }
 
 public function cadastrar(){
- $campeonatos = \App\Campeonato::all();
- $times = \App\Time::all();
- return view('jogo.cadastrar',compact('campeonatos','datas','times'));	
+   $campeonatos = \App\Campeonato::all();
+   $times = \App\Time::all();
+   return view('jogo.cadastrar',compact('campeonatos','datas','times'));	
 }
 
 public function salvar(\App\Http\Requests\JogoRequest $request){
@@ -48,17 +48,17 @@ public function salvar(\App\Http\Requests\JogoRequest $request){
 }
 
 public function editar($id){
-   $jogo = \App\Jogo::find($id);
-   $campeonatos = \App\Campeonato::all();
-   $times = \App\Time::all();
-   if(!$jogo){
-      \Session::flash('flash_message',[
-          'msg'=>"Não existe esse jogo cadastrado!!! Deseja cadastrar um novo Jogo?",
-          'class'=>"alert-danger"
-          ]);
-      return redirect()->route('jogo.cadastrar');
-  }
-  return view('jogo.editar',compact('jogo','campeonatos','datas','times'));
+ $jogo = \App\Jogo::find($id);
+ $campeonatos = \App\Campeonato::all();
+ $times = \App\Time::all();
+ if(!$jogo){
+  \Session::flash('flash_message',[
+      'msg'=>"Não existe esse jogo cadastrado!!! Deseja cadastrar um novo Jogo?",
+      'class'=>"alert-danger"
+      ]);
+  return redirect()->route('jogo.cadastrar');
+}
+return view('jogo.editar',compact('jogo','campeonatos','datas','times'));
 }
 
 public function atualizar(\App\Http\Requests\JogoRequest $request, $id){
@@ -70,6 +70,13 @@ public function atualizar(\App\Http\Requests\JogoRequest $request, $id){
       ]);
   return redirect()->route('jogo.index');
 
+}
+public function atiDes($id){
+   $jogo = \App\Jogo::find($id);
+   $boolean = $jogo->ativo;
+   $jogo->ativo=!$boolean;
+   $jogo->save();          
+   return redirect()->route('jogo.index');   
 }
 
 public function deletar($id){

@@ -21,8 +21,6 @@ class ApostaRequest extends Request
 
 		'valor_aposta.required'=>'Digite um valor para sua Aposta',
 		'nome_apostador.required'=>'Digite o nome do Apostador',
-		'cpf.required'=>'Digite o cpf do Apostador',
-
 		];
 	}
 	
@@ -36,7 +34,6 @@ class ApostaRequest extends Request
 		return [
 		'valor_aposta'=>'required',
 		'nome_apostador'=>'required',      
-		'cpf'=>'required',
 		];
 	}
 }
