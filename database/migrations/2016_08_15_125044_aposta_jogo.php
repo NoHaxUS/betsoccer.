@@ -17,6 +17,7 @@ class ApostaJogo extends Migration
             $table->integer('apostas_id')->unsigned();
             $table->integer('jogos_id')->unsigned();
             $table->integer('palpite');
+            $table->string('tpalpite');
             $table->timestamps();
         });
     }
