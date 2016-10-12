@@ -14,17 +14,17 @@
                     <form action="{{ route('jogo.salvar')}}" method="post">
                         {{ csrf_field() }}
                         
-                        <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
-                            <label for="horarios_id">Horário</label>
-                            <select id="horarios_id"  name="horarios_id" class="form-control">
-                                <option value="">Selecione</option>
-                                @foreach ($datas as $data)
-                                <option value="{{ $data->id }}">{{ $data->data }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('horarios_id'))                                
+                        <div class="form-group {{ $errors->has('data') ? 'has-error' : ''}}">
+                            <label for="data">Horário</label>
+                            <div class='input-group date form-group' id='datetimepicker1' name="data">
+                                <input type='text' class="form-control" name="data"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            @if($errors->has('data'))                                
                             <span class="help-block">
-                                <strong> {{ $errors->first('horarios_id') }} </strong>
+                                <strong> {{ $errors->first('data') }} </strong>
                             </span>
                             @endif 
                         </div>
@@ -152,7 +152,7 @@
                             </span>
                             @endif
                         </div>
-                        <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
+                        <div class="form-group {{ $errors->has('campeonatos_id') ? 'has-error' : ''}}">
                             <label for="campeonatos_id">Descrição do Campeonato</label>
                             <select id="campeonatos_id"  name="campeonatos_id" class="form-control">
                                 <option value="">Selecione</option>

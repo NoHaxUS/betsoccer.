@@ -31,16 +31,7 @@
                                 <strong> {{ $errors->first('nome_apostador') }} </strong>
                             </span>
                             @endif
-                        </div>
-                        <div class="form-group {{ $errors->has('cpf') ? 'has-error' : ''}}">
-                            <label for="cpf">CPF</label>
-                            <input type="number" class="form-control" name="cpf" value="{{old('cpf')}}" placeholder="Digite seu CPF">
-                            @if($errors->has('cpf'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('cpf') }} </strong>
-                            </span>
-                            @endif
-                        </div>
+                        </div>                        
                         <div class="form-group {{ $errors->has('valor_aposta') ? 'has-error' : ''}}">
                             <label class="sr-only" for="valor_aposta">Valor</label>
                             <div class="input-group">
@@ -73,13 +64,13 @@
                                 <th>-2.5</th>
                                 <th>+2.5</th>
                                 <th>Ambas</th>
-                                <th>Campeonato</th>                                
+                                <th>Campeonato</th>                                                        
                             </tr>
                         </thead>
                         <tbody>
                            @foreach($jogos as $jo)                                            
                            {{ csrf_field() }}
-                           @if ($jo->horario != null)                       
+                           @if (($jo->data > \Carbon\Carbon::now()->addMinutes(5)) AND ($jo->data < \Carbon\Carbon::now()->addDays(1)) AND ($jo->ativo == true))                       
                            <tr>
                             <td scope="row">
                                 <div class="form-group">
@@ -92,7 +83,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>{{ \App\Horario::find($jo->horarios_id)->data}}</td>
+                        <td>{{ $jo->data}}</td>
                         <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
                         <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                         <td>
