@@ -22,7 +22,7 @@ class ApostaController extends Controller
         $aposta = \App\Aposta::paginate(10); 
       */    
      $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-     $apostas = \App\Aposta::with('jogo','horario')->get();
+     $apostas = \App\Aposta::with('jogo')->get();
      //dd($apostas);
      foreach ($apostas as $aposta) {            
       echo $aposta->jogo->get('id');
@@ -39,21 +39,29 @@ class ApostaController extends Controller
       return view('aposta.cadastrar',compact('time'));
     }
 
-    public function salvar(\App\Http\Requests\ApostaRequest $request){                
+public function salvar(\App\Http\Requests\ApostaRequest $request){                
 
-      $jogo=[]; 
-      $palpite=[];        
-      $jogo = $request->get('jogo');   
-      $aposta = \App\Aposta::create($request->all());        
-      foreach ($jogo as $jogos => $value) {          
-        $text="palpite";            
-        $text.=$value;            
-        $palpite ['palpite']= $request->get($text);   
-        $aposta->jogo()->attach($value,$palpite); 
-      }                             
-      $aposta->save();                               
-      return redirect()->route('aposta.index');    
-    }
+    $jogo=[]; 
+    $palpite=[];        
+    $jogo = $request->get('jogo');
+     // dd($request->all());   
+    $aposta = \App\Aposta::create($request->all());        
+    foreach ($jogo as $jogos => $value) {    
+      $jo = \App\Jogo::find($value);
+      $text="palpite";            
+      $text.=$value;
+      $consu=$request->get($text);      
+      $palpite ['palpite']= $jo->$consu;
+      $palpite ['tpalpite']=$consu;   
+      $aposta->jogo()->attach($value,$palpite); 
+    }                             
+    $aposta->save();
+    \Session::flash('flash_message',[
+      'msg'=>"Aposta realizada com Sucesso",
+      'class'=>"alert-danger"
+      ]);                               
+    return redirect()->route('aposta.index');    
+  }
     public function show($id){
 
     }  

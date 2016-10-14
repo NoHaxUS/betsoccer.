@@ -68,6 +68,7 @@
 {!! Html::script('/js/bootstrap.min.js') !!}
 {!! Html::script('/js/bootstrap-datetimepicker.min.js') !!}
 {!! Html::script('/js/date.js') !!}
+{!! Html::script('/js/form.js') !!}
 
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

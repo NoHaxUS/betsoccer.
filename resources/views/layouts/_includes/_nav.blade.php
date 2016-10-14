@@ -26,10 +26,7 @@
             </ul>
             <ul class="nav navbar-nav">
                 <li><a href="{{ route('campeonato.index') }}">Campeonatos</a></li>               
-            </ul>
-            <ul class="nav navbar-nav">
-                <li><a href="{{ route('horario.index') }}">horario</a></li>            
-            </ul>
+            </ul>            
             <ul class="nav navbar-nav">
                 <li><a href="{{ route('jogo.index') }}">Jogos</a></li>            
             </ul>

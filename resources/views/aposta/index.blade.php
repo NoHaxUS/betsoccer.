@@ -101,7 +101,7 @@
                         <td>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id}}" id="palpite" value="{{ $jo->valor_casa}}" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id}}" id="palpite" value="valor_casa" aria-label="...">
                                     {{ $jo->valor_casa}}
                                 </label>
                             </div>
@@ -109,7 +109,7 @@
                         <td>   
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_empate}}" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_empate" aria-label="...">
                                     {{ $jo->valor_empate}}
                                 </label>
                             </div>
@@ -117,7 +117,7 @@
                         <td>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_fora}}" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_fora" aria-label="...">
                                     {{ $jo->valor_fora}}
                                 </label>
                             </div>                                
@@ -125,7 +125,7 @@
                         <td>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_1_2}}" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_1_2" aria-label="...">
                                     {{ $jo->valor_1_2}}
                                 </label>
                             </div>  
@@ -134,7 +134,7 @@
                         <td>
                            <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_dupla}}" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_dupla" aria-label="...">
                                 {{ $jo->valor_dupla}}
                             </label>
                         </div>  
@@ -142,7 +142,7 @@
                     <td>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->max_gol_2 }}" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="max_gol_2" aria-label="...">
                                 {{ $jo->max_gol_2}}
                             </label>
                         </div> 
@@ -150,7 +150,7 @@
                     <td>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->min_gol_3 }}" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="min_gol_3" aria-label="...">
                                 {{ $jo->min_gol_3}}
                             </label>
                         </div> 
@@ -159,7 +159,7 @@
                     <td>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->ambas_gol }}" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="ambas_gol" aria-label="...">
                                 {{ $jo->ambas_gol}}
                             </label>
                         </div>    
