@@ -1,10 +1,11 @@
 @extends('layouts.app')
+
 @section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-             <ol class="breadcrumb panel-heading">
+               <ol class="breadcrumb panel-heading">
                 <li><a href="{{ route('aposta.index') }}">Aposta</a></li>
                 <li class="active">Aposta</li>
             </ol>
@@ -47,8 +48,16 @@
                     </div> 
                     <br>
 
-                    <div class="table-responsive"> 
-                       <table class="table table-bordered">
+                    <div class="table-responsive">
+
+                   @foreach($results as $dataJo)
+                   @foreach($campeonatos as $camp) 
+                   @if (($dataJo->dataS > \Carbon\Carbon::now()->addDays(-1)) AND ($dataJo->dataS < \Carbon\Carbon::now()->addDays(2)) AND ($camp->id == $dataJo->campeonatos_id)) 
+                  
+                     <table class="table table-bordered">
+                     <br>
+                     <label>{{$camp->descricao_campeonato}} -- </label>
+                     <label> {{ $dataJo->dataS}}</label>
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -63,14 +72,18 @@
                                 <th>-2.5</th>
                                 <th>+2.5</th>
                                 <th>Ambas</th>
-                                <th>Campeonato</th>                                                        
+                                                                                     
                             </tr>
                         </thead>
                         <tbody>
-                         @foreach($jogos as $jo)                                            
-                         {{ csrf_field() }}
-                         @if (($jo->data > \Carbon\Carbon::now()->addMinutes(5)) AND ($jo->data < \Carbon\Carbon::now()->addDays(1)) AND ($jo->ativo == true))                       
-                         <tr>
+                           @foreach($jogos as $jo) 
+
+                           @if(substr($jo->data,0,10) == $dataJo->dataS)
+                           
+                           @if (($jo->data > \Carbon\Carbon::now()->addMinutes(5)) AND ($jo->data < \Carbon\Carbon::now()->addDays(2)) AND ($jo->ativo == true) AND ($camp->id == $jo->campeonatos_id ))                                          
+                           {{ csrf_field() }}
+                                                 
+                           <tr>
                             <td scope="row">
                                 <div class="form-group">
                                     <div class="checkbox">
@@ -82,13 +95,13 @@
                                 </div>
                             </div>
                         </td>
-                        <td>{{ $jo->data}}</td>
+                        <td>{{ substr($jo->data,10,6)}}</td>
                         <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
                         <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                         <td>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id}}" id="palpite" value="valor_casa" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id}}" id="palpite" value="{{ $jo->valor_casa}}" aria-label="...">
                                     {{ $jo->valor_casa}}
                                 </label>
                             </div>
@@ -96,7 +109,7 @@
                         <td>   
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_empate" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_empate}}" aria-label="...">
                                     {{ $jo->valor_empate}}
                                 </label>
                             </div>
@@ -104,7 +117,7 @@
                         <td>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_fora" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_fora}}" aria-label="...">
                                     {{ $jo->valor_fora}}
                                 </label>
                             </div>                                
@@ -112,16 +125,16 @@
                         <td>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_1_2" aria-label="...">
+                                    <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_1_2}}" aria-label="...">
                                     {{ $jo->valor_1_2}}
                                 </label>
                             </div>  
 
                         </td>
                         <td>
-                         <div class="radio">
+                           <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="valor_dupla" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->valor_dupla}}" aria-label="...">
                                 {{ $jo->valor_dupla}}
                             </label>
                         </div>  
@@ -129,7 +142,7 @@
                     <td>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="max_gol_2" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->max_gol_2 }}" aria-label="...">
                                 {{ $jo->max_gol_2}}
                             </label>
                         </div> 
@@ -137,7 +150,7 @@
                     <td>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="min_gol_3" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->min_gol_3 }}" aria-label="...">
                                 {{ $jo->min_gol_3}}
                             </label>
                         </div> 
@@ -146,15 +159,20 @@
                     <td>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="ambas_gol" aria-label="...">
+                                <input type="radio" name="palpite{{ $jo->id }}" id="palpite" value="{{ $jo->ambas_gol }}" aria-label="...">
                                 {{ $jo->ambas_gol}}
                             </label>
                         </div>    
                     </td>                              
-                    <td>{{ \App\Campeonato::find($jo->campeonatos_id)->descricao_campeonato}}</td>
+                    
                 </tr>   
+                @endif 
                 @endif                         
-                @endforeach                                                          
+                @endforeach
+                @endif 
+                @endforeach 
+                @endforeach   
+                                                                       
             </tbody>
         </table>
     </div> 

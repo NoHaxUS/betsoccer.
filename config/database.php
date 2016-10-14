@@ -65,7 +65,7 @@ return [
             'strict' => false,
             'engine' => null,
         ],
-
+/*
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '209.99.16.14'),
@@ -78,7 +78,7 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
-        ],
+        ],*/
 
         'pgsql' => [
             'driver' => 'pgsql',
