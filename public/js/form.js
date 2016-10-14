@@ -8,13 +8,8 @@ $('input:radio').click(function() {
 		allRadios[teste = $(this).attr('name')] = booRadio;
 	}else{		
 		booRadio = this;
-		allRadios[$(this).attr('name')] = booRadio;
-		console.log(allRadios);
+		allRadios[$(this).attr('name')] = booRadio;		
 	}
-	$.each(allRadios[$(this).attr('name')], function(index, val) {
-	  	alert(index);
-		alert(val);
-	});	
 });
 /*
 $('input:radio').click(function() { 
