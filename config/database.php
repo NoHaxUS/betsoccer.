@@ -23,10 +23,10 @@ return [
     | Here you may specify which of the database connections below you wish
     | to use as your default connection for all database work. Of course
     | you may use many connections at once using the Database library.
-    |
+    |'default' => env('DB_CONNECTION', 'mysql'),
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => 'mysql1',
 
     /*
     |--------------------------------------------------------------------------
@@ -65,8 +65,8 @@ return [
             'strict' => false,
             'engine' => null,
         ],
-/*
-        'mysql' => [
+
+        'mysql1' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '209.99.16.14'),
             'port' => env('DB_PORT', '3306'),
@@ -79,7 +79,7 @@ return [
             'strict' => false,
             'engine' => null,
         ],
-*/
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', 'localhost'),
