@@ -12,16 +12,16 @@
 */
 
 
-
-
-Route::get('/', function () {	
-	return view('welcome');
-});
 //rotas não auteticadas (TEMPORARIAMENTE)
 
 Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.index']);
 
 //rotas não auteticadas (TEMPORARIAMENTE)
+
+Route::get('/', function () {	
+	return view('welcome');
+});
+
 Route::get('/password/reset', ['uses'=>'Auth\PasswordController@getEmail', 'as'=>'senha.recu']);
 
 Route::auth();
