@@ -104,8 +104,9 @@
                                     <input type="radio" name="palpite{{ $jo->id}}" id="palpite" value="valor_casa" aria-label="...">
                                     {{ $jo->valor_casa}}
                                 </label>
-                            </div>
+                            
                         </td>
+                        </div>
                         <td>   
                             <div class="radio">
                                 <label>

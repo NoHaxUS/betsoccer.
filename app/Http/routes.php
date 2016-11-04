@@ -11,11 +11,17 @@
 |
 */
 
-Route::get('/', function () {
 
-	
+
+
+Route::get('/', function () {	
 	return view('welcome');
 });
+//rotas não auteticadas (TEMPORARIAMENTE)
+
+Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.index']);
+
+//rotas não auteticadas (TEMPORARIAMENTE)
 Route::get('/password/reset', ['uses'=>'Auth\PasswordController@getEmail', 'as'=>'senha.recu']);
 
 Route::auth();
@@ -63,10 +69,14 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
 });
+	
 	//rotas para a tabela de aposta
-Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.index']);
-Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
-Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);
-Route::get('/aposta/editar/{id}', ['uses'=>'ApostaController@editar', 'as'=>'aposta.editar']);
-Route::put('/aposta/atualizar/{id}', ['uses'=>'ApostaController@atualizar', 'as'=>'aposta.atualizar']);
-Route::get('/aposta/deletar/{id}', ['uses'=>'ApostaController@deletar', 'as'=>'aposta.deletar']);
+
+Route::group(['middleware' => 'auth'], function() {	  
+	Route::get('/aposta/teste', ['middleware' => 'auth','uses'=>'ApostaController@index', 'as'=>'aposta.index']);
+	Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
+	Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);
+	Route::get('/aposta/editar/{id}', ['uses'=>'ApostaController@editar', 'as'=>'aposta.editar']);
+	Route::put('/aposta/atualizar/{id}', ['uses'=>'ApostaController@atualizar', 'as'=>'aposta.atualizar']);
+	Route::get('/aposta/deletar/{id}', ['uses'=>'ApostaController@deletar', 'as'=>'aposta.deletar']);
+});
