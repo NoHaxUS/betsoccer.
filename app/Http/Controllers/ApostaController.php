@@ -31,7 +31,7 @@ class ApostaController extends Controller
         $jogos =\App\Jogo::all();
         $res= array_merge($results,$jogos->toArray(),$campeonatos->toArray()); 
         return response()->json($jogos);
-        return view('aposta.index',compact('jogos','campeonatos','results'));
+        //return view('aposta.index',compact('jogos','campeonatos','results'));
       }
 
       public function cadastrar(){
