@@ -52,7 +52,7 @@ class ApostaController extends Controller
         //dd($request->all());
         $aposta = \App\Aposta::create($request->all());
         foreach ($jogo as $jogos => $value) {
-            $jo = \App\Jogo::find($value);
+            $jo = Jogo::find($value);
             $text = "palpite";
             $text .= $value;
             $consu = $request->get($text);
@@ -88,27 +88,25 @@ class ApostaController extends Controller
         if (count($jogos_invalidos) > 0):
             return response()->json($jogos_invalidos);
         endif;
-
-
-        //nome_apostador; valor_aposta; jogo(id); palpite
+        //Instancia uma aposta
         $aposta = new \App\Aposta($request->all());
-        //dd($aposta);
-        //dd($request->palpites);
-        $palpites = json_decode($request->palpites, true);
-        //dd(json_decode($request->palpites, false), $palpites, $request->palpites, $palpites[1]);
-    dd($palpites);
-        foreach ($jogos as $jogo => $value):
-            $jo = \App\Jogo::find($value)->first();
-            dd($palpites[$value]);
-            $text = "palpite";
-            $text .= $value;
-            $consu = $request->get($text);
-            $palpite ['palpite'] = $jo->$consu;
-            $palpite ['tpalpite'] = $consu;
+        $aposta->users_id = $user->id;
+        //Cria um coleção de palpites a partir do json (Array) passado
+        $palpites = collect(json_decode($request->get('palpites'), true))->collapse()->all();
+        //Cria contador para coleção de palpites
+        $cont = 0;
+        //Intera sobre jogos
+        foreach ($jogos as $value):
+            //Busca jogo pelo id
+            $jogo = Jogo::find($value)->first();
+            $text = $palpites[$cont++];
+            $palpite ['palpite'] = $jogo->$text;
+            $palpite ['tpalpite'] = $text;
+            //Incluir validação de palpite
+            $aposta->save();
             $aposta->jogo()->attach($value, $palpite);
         endforeach;
         return response()->json(['status' => 'Aposta feita']);
-
     }
 
     private function validarJogos($jogos)
@@ -118,7 +116,7 @@ class ApostaController extends Controller
         //Realiza interação em todos os jogos
         foreach ($jogos as $valor):
             //Busca jogo pelo id (valor)
-            $jogo = \App\Jogo::find($valor)->first();
+            $jogo = Jogo::find($valor)->first();
             //Verificar horário
             if ($jogo == null || $jogo->data < Carbon::now()->subMinute(5)):
                 //Se passou do horário para apostar coloca o joga no array
