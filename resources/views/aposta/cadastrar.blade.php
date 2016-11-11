@@ -18,7 +18,6 @@
                             <input type="text" name="descricao_campeonato" class="form-control" placeholder="Insira o nome do campeonato que será cadastrado">
                             <input type="text" name="descricao_campeonato" class="form-control" placeholder="Insira o nome do campeonato que será cadastrado">
 
-
                             @if($errors->has('descricao_campeonato'))
                             <span class="help-block">
                                 <strong> {{ $errors->first('descricao_campeonato') }} </strong>
