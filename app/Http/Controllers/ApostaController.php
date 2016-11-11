@@ -25,15 +25,16 @@ class ApostaController extends Controller
         $aposta = \App\Aposta::paginate(10); 
       */
         $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-        $apostas = \App\Aposta::with('jogo')->get();
+        $jogos = \App\Jogo::with('time','campeonato')->get();
         //dd($apostas);
+        /*
         foreach ($apostas as $aposta) {
             echo $aposta->jogo->get('id');
         }
+        */
         $campeonatos = \App\Campeonato::all();
-        $jogos = \App\Jogo::all();
-        $res = array_merge($results, $jogos->toArray(), $campeonatos->toArray());
-        //return response()->json($jogos);
+        //$res = array_merge($results, $jogos->toArray(), $campeonatos->toArray());
+        return response()->json($jogos);
         return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
     }
 
