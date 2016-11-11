@@ -92,16 +92,21 @@ class ApostaController extends Controller
 
         //nome_apostador; valor_aposta; jogo(id); palpite
         $aposta = new \App\Aposta($request->all());
-        dd($aposta);
-         foreach ($jogos as $jogo => $value) {
-             $jo = \App\Jogo::find($value);
-             $text = "palpite";
-             $text .= $value;
-             $consu = $request->get($text);
-             $palpite ['palpite'] = $jo->$consu;
-             $palpite ['tpalpite'] = $consu;
-             $aposta->jogo()->attach($value, $palpite);
-         }
+        //dd($aposta);
+        //dd($request->palpites);
+        $palpites = json_decode($request->palpites, true);
+        //dd(json_decode($request->palpites, false), $palpites, $request->palpites, $palpites[1]);
+    dd($palpites);
+        foreach ($jogos as $jogo => $value):
+            $jo = \App\Jogo::find($value)->first();
+            dd($palpites[$value]);
+            $text = "palpite";
+            $text .= $value;
+            $consu = $request->get($text);
+            $palpite ['palpite'] = $jo->$consu;
+            $palpite ['tpalpite'] = $consu;
+            $aposta->jogo()->attach($value, $palpite);
+        endforeach;
         return response()->json(['status' => 'Aposta feita']);
 
     }
@@ -115,7 +120,7 @@ class ApostaController extends Controller
             //Busca jogo pelo id (valor)
             $jogo = \App\Jogo::find($valor)->first();
             //Verificar horário
-            if ($jogo==null || $jogo->data < Carbon::now()->subMinute(5)):
+            if ($jogo == null || $jogo->data < Carbon::now()->subMinute(5)):
                 //Se passou do horário para apostar coloca o joga no array
                 $jogos_invalidos[] = $jogo;
             endif;
