@@ -21,4 +21,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function scopeBuscarPorCodigoSeguranca($query, $codigo)
+    {
+        return $query->where('codigo_seguranca', $codigo)->get();       //Busca usuário por codigo de segurança
+    }
 }
