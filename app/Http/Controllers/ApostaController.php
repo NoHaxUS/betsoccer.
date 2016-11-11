@@ -49,7 +49,7 @@ class ApostaController extends Controller
         $jogo = [];
         $palpite = [];
         $jogo = $request->get('jogo');
-        dd($jogo);
+        //dd($request->all());
         $aposta = \App\Aposta::create($request->all());
         foreach ($jogo as $jogos => $value) {
             $jo = \App\Jogo::find($value);
@@ -91,7 +91,8 @@ class ApostaController extends Controller
 
 
         //nome_apostador; valor_aposta; jogo(id); palpite
-        $aposta = \App\Aposta::create($request->all());
+        $aposta = new \App\Aposta($request->all());
+        dd($aposta);
          foreach ($jogos as $jogo => $value) {
              $jo = \App\Jogo::find($value);
              $text = "palpite";
