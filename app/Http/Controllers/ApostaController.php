@@ -34,7 +34,7 @@ class ApostaController extends Controller
         */
         $campeonatos = \App\Campeonato::all();
         //$res = array_merge($results, $jogos->toArray(), $campeonatos->toArray());
-        return response()->json($jogos);
+        return response()->json(array("jogos" => $jogos));
         return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
     }
 
