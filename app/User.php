@@ -22,11 +22,19 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /** Consulta de usuário por código de segurança
+     * @param $query
+     * @param $codigo string código de segurança
+     * @return mixed usuário com código de segurança especificado
+     */
     public function scopeBuscarPorCodigoSeguranca($query, $codigo)
     {
         return $query->where('codigo_seguranca', $codigo)->get();       //Busca usuário por codigo de segurança
     }
 
+    /** Consulta apostas feitas
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function apostas()
     {
         return $this->hasMany('App\Aposta', 'users_id');
