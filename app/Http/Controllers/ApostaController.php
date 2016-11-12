@@ -25,7 +25,7 @@ class ApostaController extends Controller
         $aposta = \App\Aposta::paginate(10); 
       */
         $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-        $jogos = \App\Jogo::with('time','campeonato')->get();
+        $jogos = \App\Jogo::with('time', 'campeonato')->get();
         //dd($apostas);
         /*
         foreach ($apostas as $aposta) {
@@ -71,6 +71,7 @@ class ApostaController extends Controller
 
     public function apostar(Request $request)
     {
+        //dd($request->all());
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
         //Verificar se usuário existe
@@ -83,7 +84,8 @@ class ApostaController extends Controller
             return response()->json(['status' => 'Inativo']);
         endif;
         //transforma json em array
-        $jogos = json_decode($request->jogos, true);
+        $jogos = $request->jogos;
+        //dd($jogos);
         //Valida jogos
         $jogos_invalidos = $this->validarJogos($jogos);
         if (count($jogos_invalidos) > 0):
@@ -93,7 +95,7 @@ class ApostaController extends Controller
         $aposta = new \App\Aposta($request->all());
         $aposta->users_id = $user->id;
         //Cria um coleção de palpites a partir do json (Array) passado
-        $palpites = collect(json_decode($request->get('palpites'), true))->collapse()->all();
+        $palpites = collect($request->palpites)->collapse()->all();
         //Cria contador para coleção de palpites
         $cont = 0;
         //Intera sobre jogos
