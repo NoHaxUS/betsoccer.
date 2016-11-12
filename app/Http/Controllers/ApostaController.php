@@ -25,7 +25,7 @@ class ApostaController extends Controller
         $aposta = \App\Aposta::paginate(10); 
       */
         $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-        $jogos = \App\Jogo::with('time', 'campeonato')->get();
+        $jogos = \App\Jogo::with('time','campeonato')->get();
         //dd($apostas);
         /*
         foreach ($apostas as $aposta) {
@@ -34,7 +34,8 @@ class ApostaController extends Controller
         */
         $campeonatos = \App\Campeonato::all();
         //$res = array_merge($results, $jogos->toArray(), $campeonatos->toArray());
-        return response()->json($jogos);
+        return response()->json(array("jogos" => $jogos));
+
         return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
     }
 
@@ -80,29 +81,20 @@ class ApostaController extends Controller
         endif;
         //Verificar se usuário não está ativo
         if (!$user->ativo):
-            //Retorna json informando que usuário está inativo
             return response()->json(['status' => 'Inativo']);
         endif;
         //transforma json em array
-        $jogos = $request->jogos;
-        //dd($jogos);
+        $jogos = json_decode($request->jogos, true);
         //Valida jogos
         $jogos_invalidos = $this->validarJogos($jogos);
-        //Verifica se lista de jogos invalidos (que não podem receber aposta) tem algum jogo
         if (count($jogos_invalidos) > 0):
-            //Retorna json com array de jogos inválidos
             return response()->json($jogos_invalidos);
         endif;
         //Instancia uma aposta
         $aposta = new \App\Aposta($request->all());
-        //Passa id do usuário
         $aposta->users_id = $user->id;
-        //Salva aposta
-        $aposta->save();
         //Cria um coleção de palpites a partir do json (Array) passado
-        $palpites = collect($request->palpites)->collapse()->all();
-        //Incluir validação de palpite
-
+        $palpites = collect(json_decode($request->get('palpites'), true))->collapse()->all();
         //Cria contador para coleção de palpites
         $cont = 0;
         //Intera sobre jogos
@@ -112,9 +104,10 @@ class ApostaController extends Controller
             $text = $palpites[$cont++];
             $palpite ['palpite'] = $jogo->$text;
             $palpite ['tpalpite'] = $text;
+            //Incluir validação de palpite
+            $aposta->save();
             $aposta->jogo()->attach($value, $palpite);
         endforeach;
-        //Retorna json informando que a aposta foi feita
         return response()->json(['status' => 'Aposta feita']);
     }
 
