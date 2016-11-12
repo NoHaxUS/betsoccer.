@@ -21,7 +21,11 @@ class Aposta extends Model
         return $this->belongsTo('App\User');
     }
 
-    //Método que busca apostas com menos de 7 dias de um determinado usuário
+    /**Método que busca apostas com menos de 7 dias de um determinado usuário
+     * @param $query
+     * @param $user_id int id do usuário
+     * @return mixed lista de apostas dos últimos 7 dias
+     */
     public function scopeRecentes($query, $user_id)
     {
         return $query->where('users_id', $user_id)

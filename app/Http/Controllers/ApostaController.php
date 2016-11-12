@@ -70,6 +70,10 @@ class ApostaController extends Controller
         return redirect()->route('aposta.index');
     }
 
+    /**Método para realização de aposta via Web Service
+     * @param Request $request dados da aposta
+     * @return \Illuminate\Http\JsonResponse resultado da operação
+     */
     public function apostar(Request $request)
     {
         //Busca o usuário pelo código de segurança
@@ -111,6 +115,10 @@ class ApostaController extends Controller
         return response()->json(['status' => 'Aposta feita']);
     }
 
+    /** Método que verifica se jogos estão válidos para realização de aposta
+     * @param $jogos mixed de jogas para validar
+     * @return array lista de jogos inválidos
+     */
     private function validarJogos($jogos)
     {
         //Cria array para armazenar jogos que não podem receber aposta
@@ -129,10 +137,15 @@ class ApostaController extends Controller
         return $jogos_invalidos;
     }
 
+    /** Método que cálcula o valor a ser recebido pelas apostas feitas
+     * @param $codigo_seguranca string código que identifica o usuário
+     * @return \Illuminate\Http\JsonResponse json com resultado da operação
+     */
     public function ganhosApostas($codigo_seguranca)
     {
-        $porcentagem = 10 / 100;
-        //Busca o usuário pelo código de segurança
+        //Definição de porcentagem por meio de constante
+        $porcentagem = config('constantes.porcentagem') / 100;
+         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
         //Verificar se usuário existe
         if ($user == null):
