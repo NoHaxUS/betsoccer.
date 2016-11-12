@@ -53,7 +53,7 @@
                     <td>{{ $jo->min_gol_3 }}</td>
                     <td>{{ $jo->ambas_gol }}</td>
                     <td>{{ \App\Campeonato::find($jo->campeonatos_id)->descricao_campeonato }}</td>
-                    <td>{{ $jo->data }}</td>                              
+                    <td>{{date('d/m/Y H:i:s', strtotime($jo->data)) }}</td>
                     <td>
                         <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Editar</a>
                         @if($jo->ativo == false)
@@ -69,9 +69,7 @@
             </tbody>
         </table>   
     </div>                    
-    
-    
-    
+
 </div>
 </div>
 
