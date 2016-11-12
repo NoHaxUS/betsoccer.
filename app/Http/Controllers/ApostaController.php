@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Aposta;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\jogo;
@@ -25,7 +26,7 @@ class ApostaController extends Controller
         $aposta = \App\Aposta::paginate(10); 
       */
         $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-        $jogos = \App\Jogo::with('time','campeonato')->get();
+        $jogos = \App\Jogo::with('time', 'campeonato')->get();
         //dd($apostas);
         /*
         foreach ($apostas as $aposta) {
@@ -41,7 +42,6 @@ class ApostaController extends Controller
 
     public function cadastrar()
     {
-
         $time = \App\Jogo::all();
         return view('aposta.cadastrar', compact('time'));
     }
@@ -127,6 +127,28 @@ class ApostaController extends Controller
         endforeach;
         //retorna o array com jogos que não podem ser feita aposta
         return $jogos_invalidos;
+    }
+
+    public function ganhosApostas($codigo_seguranca)
+    {
+        $porcentagem = 10 / 100;
+        //Busca o usuário pelo código de segurança
+        $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
+        //Verificar se usuário existe
+        if ($user == null):
+            //Retorna json com informação que usuário não existe
+            return response()->json(['status' => 'Inexistente']);
+        endif;
+        //Verificar se usuário não está ativo
+        if (!$user->ativo):
+            return response()->json(['status' => 'Inativo']);
+        endif;
+        //Busca as apostas recentes (últimos 7 dias) feitas pelo usuário
+        $total = Aposta::recentes($user->id)->sum('valor_aposta');
+        //Calcula o valor a ser recebido pelo usuário
+        $ganho = $total * $porcentagem;
+        //Retorna o total de aposta e o valor que o usuário deverá receber
+        return response()->json(['total' => $total, 'ganho' => $ganho]);
     }
 
     public function show($id)
