@@ -78,24 +78,25 @@ class ApostaController extends Controller
     {
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        //Verificar se usuário existe
-        if ($user == null):
-            //Retorna json com informação que usuário não existe
-            return response()->json(['status' => 'Inexistente']);
+        //Verifica restrição usuário
+        $resposta = $this->verificarUsuario($user);
+        //Se retornou restrição
+        if (!is_null($resposta)):
+            //Retorna json com restrição encontrada
+            return response()->json($resposta);
         endif;
-        //Verificar se usuário não está ativo
-        if (!$user->ativo):
-            return response()->json(['status' => 'Inativo']);
-        endif;
-        //transforma json em array
+        //transforma json de jogos em array
         $jogos = json_decode($request->jogos, true);
         //Valida jogos
         $jogos_invalidos = $this->validarJogos($jogos);
+        //Verifica se quantidade de jogos inválidos é maior que zero
         if (count($jogos_invalidos) > 0):
+            //retorna json com array com todos os jogos inválidos
             return response()->json($jogos_invalidos);
         endif;
         //Instancia uma aposta
         $aposta = new \App\Aposta($request->all());
+        //Passa id do usuário responsável pela aposta
         $aposta->users_id = $user->id;
         //Cria um coleção de palpites a partir do json (Array) passado
         $palpites = collect(json_decode($request->get('palpites'), true))->collapse()->all();
@@ -112,7 +113,28 @@ class ApostaController extends Controller
             $aposta->save();
             $aposta->jogo()->attach($value, $palpite);
         endforeach;
+        //Retorna json com informação de que a aposta foi feita
         return response()->json(['status' => 'Aposta feita']);
+    }
+
+    /** Método que verifica se usuário possui alguma restrição
+     * @param $user \App\User usuário a ser verificado
+     * @return array|null informação de problema do usuário ou null caso usuário esteja apto
+     */
+    private function verificarUsuario($user)
+    {
+        //Verificar se usuário existe
+        if (is_null($user)):
+            //Retorna status de usuário inexistente
+            return ['status' => 'Inexistente'];
+        endif;
+        //Verificar se usuário não está ativo
+        if (!$user->ativo):
+            //Retorna status de usuário inativo
+            return ['status' => 'Inativo'];
+        endif;
+        //Retorn null
+        return null;
     }
 
     /** Método que verifica se jogos estão válidos para realização de aposta
@@ -145,16 +167,14 @@ class ApostaController extends Controller
     {
         //Definição de porcentagem por meio de constante
         $porcentagem = config('constantes.porcentagem') / 100;
-         //Busca o usuário pelo código de segurança
+        //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
-        //Verificar se usuário existe
-        if ($user == null):
-            //Retorna json com informação que usuário não existe
-            return response()->json(['status' => 'Inexistente']);
-        endif;
-        //Verificar se usuário não está ativo
-        if (!$user->ativo):
-            return response()->json(['status' => 'Inativo']);
+        //Verifica restrição usuário
+        $resposta = $this->verificarUsuario($user);
+        //Se retornou restrição
+        if (!is_null($resposta)):
+            //Retorna json com restrição encontrada
+            return response()->json($resposta);
         endif;
         //Busca as apostas recentes (últimos 7 dias) feitas pelo usuário
         $total = Aposta::recentes($user->id)->sum('valor_aposta');
