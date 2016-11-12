@@ -71,7 +71,6 @@ class ApostaController extends Controller
 
     public function apostar(Request $request)
     {
-        //dd($request->all());
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
         //Verificar se usuário existe
@@ -81,6 +80,7 @@ class ApostaController extends Controller
         endif;
         //Verificar se usuário não está ativo
         if (!$user->ativo):
+            //Retorna json informando que usuário está inativo
             return response()->json(['status' => 'Inativo']);
         endif;
         //transforma json em array
@@ -88,14 +88,21 @@ class ApostaController extends Controller
         //dd($jogos);
         //Valida jogos
         $jogos_invalidos = $this->validarJogos($jogos);
+        //Verifica se lista de jogos invalidos (que não podem receber aposta) tem algum jogo
         if (count($jogos_invalidos) > 0):
+            //Retorna json com array de jogos inválidos
             return response()->json($jogos_invalidos);
         endif;
         //Instancia uma aposta
         $aposta = new \App\Aposta($request->all());
+        //Passa id do usuário
         $aposta->users_id = $user->id;
+        //Salva aposta
+        $aposta->save();
         //Cria um coleção de palpites a partir do json (Array) passado
         $palpites = collect($request->palpites)->collapse()->all();
+        //Incluir validação de palpite
+
         //Cria contador para coleção de palpites
         $cont = 0;
         //Intera sobre jogos
@@ -105,10 +112,9 @@ class ApostaController extends Controller
             $text = $palpites[$cont++];
             $palpite ['palpite'] = $jogo->$text;
             $palpite ['tpalpite'] = $text;
-            //Incluir validação de palpite
-            $aposta->save();
             $aposta->jogo()->attach($value, $palpite);
         endforeach;
+        //Retorna json informando que a aposta foi feita
         return response()->json(['status' => 'Aposta feita']);
     }
 
