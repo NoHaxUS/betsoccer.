@@ -25,7 +25,8 @@ class ApostaController extends Controller
              }
         $aposta = \App\Aposta::paginate(10); 
       */
-        $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
+        $results = DB::select('select DISTINCT CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
+
         $jogos = \App\Jogo::with('time', 'campeonato')->get();
         //dd($apostas);
         /*
@@ -43,6 +44,7 @@ class ApostaController extends Controller
     public function index2()
     {
         $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
+        dd($results);
         $jogos = \App\Jogo::with('time', 'campeonato')->get();
         $campeonatos = \App\Campeonato::all();
         return view('aposta.index', compact('jogos', 'campeonatos', 'results'));

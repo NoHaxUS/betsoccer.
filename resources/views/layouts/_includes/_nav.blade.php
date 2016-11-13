@@ -30,9 +30,6 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{ route('jogo.index') }}">Jogos</a></li>            
             </ul>
-            <ul class="nav navbar-nav">
-                <li><a href="{{ route('jogo.index') }}">Valores</a></li>
-            </ul>
             @endcan
             <ul class="nav navbar-nav">
                 <li><a href="{{ route('aposta.index') }}">Aposta</a></li>
