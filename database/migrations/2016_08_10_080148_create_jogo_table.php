@@ -17,17 +17,15 @@ class CreateJogoTable extends Migration
         $table->increments('id');
         $table->datetime('data');
         $table->boolean('ativo')->default(true);
-        $table->double('valor_casa', 3 , 2);
-        $table->double('valor_fora', 3 , 2);
-        $table->double('valor_empate', 3 , 2);
-        $table->double('valor_dupla', 3 , 2);
-        $table->double('valor_1_2', 3 , 2);
-        $table->double('max_gol_2', 3 , 2);
-        $table->double('min_gol_3', 3 , 2);
-        $table->double('ambas_gol', 3 , 2);
-        $table->integer('campeonatos_id')->unsigned();           
-        $table->timestamps();
-        $table->softDeletes();
+        $table->integer('valor_casa')->unsigned();
+        $table->integer('valor_fora')->unsigned();
+        $table->integer('valor_empate')->unsigned();
+        $table->integer('valor_dupla')->unsigned();
+        $table->integer('valor_1_2')->unsigned();
+        $table->integer('max_gol_2')->unsigned();
+        $table->integer('min_gol_3')->unsigned();
+        $table->integer('ambas_gol')->unsigned();
+
 
     });
    }

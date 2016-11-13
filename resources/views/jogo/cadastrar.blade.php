@@ -57,89 +57,118 @@
                             @endif    
                         </div>
 
-                        <label for="valor_casa">Valor Casa</label>
+
+                        <!-- # Select dropdown de valores #-->
                         <div class="input-group {{ $errors->has('valor_casa') ? 'has-error' : ''}}">
-                        	
-                            <span class="input-group-addon" id="sizing-addon2">$</span>
-                            
-                            <input type="text" name="valor_casa" class="form-control" placeholder="Insira o valor para o vencedor do time da casa" aria-describedby="sizing-addon2">
-                            @if($errors->has('valor_casa'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('valor_casa') }} </strong>
-                            </span>
-                            @endif
-
-                        </div>
-                        <label for="valor_empate">Valor Emp</label>
-                        <div class="input-group {{ $errors->has('valor_empate') ? 'has-error' : ''}}">
-                            <span class="input-group-addon" id="sizing-addon2">$</span>
-                            
-                            <input type="text" name="valor_empate" class="form-control" placeholder="Insira o valor para o empate" aria-describedby="sizing-addon2">
-                            @if($errors->has('valor_empate'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('valor_empate') }} </strong>
+                            <label for="valor_casa">Valor Casa</label>
+                            <select id="valor_id"  name="valor_id" class="form-control">
+                                <option value="">Selecione Valor</option>
+                                @foreach ($valores as $valor)
+                                    <option value="{{ $valor->id }}">{{ $valor->valor }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('valor_id'))
+                                <span class="help-block">
+                                <strong> {{ $errors->first('valor_id') }} </strong>
                             </span>
                             @endif
                         </div>
 
-                        <label for="valor_fora">Valor Fora</label>
+
+                        <div class="input-group {{ $errors->has('valor_emp') ? 'has-error' : ''}}">
+                            <label for="valor_emp">Valor Empate</label>
+                            <select id="valor_id"  name="valor_id" class="form-control">
+                                <option value="">Selecione Valor</option>
+                                @foreach ($valores as $valor)
+                                    <option value="{{ $valor->id }}">{{ $valor->valor }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('valor_id'))
+                                <span class="help-block">
+                                <strong> {{ $errors->first('valor_id') }} </strong>
+                            </span>
+                            @endif
+                        </div>
+
                         <div class="input-group {{ $errors->has('valor_fora') ? 'has-error' : ''}}">
-                        	<span class="input-group-addon" id="sizing-addon2">$</span>
-                            <input type="text" name="valor_fora" class="form-control" placeholder="Insira o valor para o vencedor do time de fora" aria-describedby="sizing-addon2">
-                            @if($errors->has('valor_fora'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('valor_fora') }} </strong>
+                            <label for="valor_fora">Valor Fora</label>
+                            <select id="valor_id"  name="valor_id" class="form-control">
+                                <option value="">Selecione Valor</option>
+                                @foreach ($valores as $valor)
+                                    <option value="{{ $valor->id }}">{{ $valor->valor }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('valor_id'))
+                                <span class="help-block">
+                                <strong> {{ $errors->first('valor_id') }} </strong>
                             </span>
                             @endif
                         </div>
 
-                        <label for="valor_1_2">Valor Gol</label>
-                        <div class="input-group {{ $errors->has('valor_1_2') ? 'has-error' : ''}}">
-                        	<span class="input-group-addon" id="sizing-addon2">$</span>
 
-                            <input type="text" name="valor_1_2" class="form-control" placeholder="Insira o valor para o vencedor de mais de um goal" aria-describedby="sizing-addon2">
-                            @if($errors->has('valor_1_2'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('valor_1_2') }} </strong>
+                        <div class="input-group {{ $errors->has('valor_fora') ? 'has-error' : ''}}">
+                            <label for="valor_gol">Valor Gol</label>
+                            <select id="valor_id"  name="valor_id" class="form-control">
+                                <option value="">Selecione Valor</option>
+                                @foreach ($valores as $valor)
+                                    <option value="{{ $valor->id }}">{{ $valor->valor }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('valor_id'))
+                                <span class="help-block">
+                                <strong> {{ $errors->first('valor_id') }} </strong>
                             </span>
                             @endif
                         </div>
 
-                        <label for="valor_dupla">Valor Dupla</label>
-                        <div class="input-group {{ $errors->has('valor_dupla') ? 'has-error' : ''}}">
-                        	<span class="input-group-addon" id="sizing-addon2">$</span>
 
-                            <input type="text" name="valor_dupla" class="form-control" placeholder="Insira o valor para o vencedor do time de fora ou empate" aria-describedby="sizing-addon2">
-                            @if($errors->has('valor_dupla'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('valor_dupla') }} </strong>
+                        <div class="input-group {{ $errors->has('valor_fora') ? 'has-error' : ''}}">
+                            <label for="valor_dupla">Valor Dupla</label>
+                            <select id="valor_id"  name="valor_id" class="form-control">
+                                <option value="">Selecione Valor</option>
+                                @foreach ($valores as $valor)
+                                    <option value="{{ $valor->id }}">{{ $valor->valor }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('valor_id'))
+                                <span class="help-block">
+                                <strong> {{ $errors->first('valor_id') }} </strong>
                             </span>
                             @endif
                         </div>
 
-                        <label for="max_gol_2">Valor -2.5</label>
-                        <div class="input-group {{ $errors->has('max_gol_2') ? 'has-error' : ''}}">
-                            <span class="input-group-addon" id="sizing-addon2">$</span>
-
-                            <input type="text" name="max_gol_2" class="form-control" placeholder="Insira o valor para se a partida tiver no maximo 2 gols" aria-describedby="sizing-addon2">
-                            @if($errors->has('max_gol_2'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('max_gol_2') }} </strong>
+                        <div class="input-group {{ $errors->has('valor_menos_dois_cinco') ? 'has-error' : ''}}">
+                            <label for="valor_menos_dois_cinco">Valor -2.5</label>
+                            <select id="valor_id"  name="valor_id" class="form-control">
+                                <option value="">Selecione Valor</option>
+                                @foreach ($valores as $valor)
+                                    <option value="{{ $valor->id }}">{{ $valor->valor }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('valor_id'))
+                                <span class="help-block">
+                                <strong> {{ $errors->first('valor_id') }} </strong>
                             </span>
                             @endif
                         </div>
 
-                        <label for="min_gol_3">Valor +2.5</label>
-                        <div class="input-group {{ $errors->has('min_gol_3') ? 'has-error' : ''}}">
-                            <span class="input-group-addon" id="sizing-addon2">$</span>
-                            
-                            <input type="text" name="min_gol_3" class="form-control" placeholder="Insira o valor para se a partida tiver no minimo 3 gols ou mais" aria-describedby="sizing-addon2">
-                            @if($errors->has('min_gol_3'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('min_gol_3') }} </strong>
+                        <div class="input-group {{ $errors->has('valor_mais_dois_cinco') ? 'has-error' : ''}}">
+                            <label for="valor_mais_dois_cinco">Valor -2.5</label>
+                            <select id="valor_id"  name="valor_id" class="form-control">
+                                <option value="">Selecione Valor</option>
+                                @foreach ($valores as $valor)
+                                    <option value="{{ $valor->id }}">{{ $valor->valor }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('valor_id'))
+                                <span class="help-block">
+                                <strong> {{ $errors->first('valor_id') }} </strong>
                             </span>
                             @endif
                         </div>
+
+                        <!-- ########## fim select drop valores #############-->
+
 
                         <label for="ambas_gol">Valor Ambas</label>
                         <div class="input-group {{ $errors->has('ambas_gol') ? 'has-error' : ''}}">

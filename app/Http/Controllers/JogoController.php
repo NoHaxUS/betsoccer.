@@ -19,24 +19,24 @@ public function index(){
 
     	//buscando todas as informacoes dos times
  $jogos = \App\Jogo::with('campeonato')->get();
- $campeonatos = \App\Campeonato::all();        
- return view('jogo.index',compact('jogos','campeonatos'));
+ $campeonatos = \App\Campeonato::all();
+ $valores = \App\Valor::all();
+    return view('jogo.index',compact('jogos','campeonatos','valores'));
 }
 
 public function cadastrar(){
    $campeonatos = \App\Campeonato::all();
    $times = \App\Time::all();
-   return view('jogo.cadastrar',compact('campeonatos','datas','times'));	
+   $valores = \App\Valor::all();
+   return view('jogo.cadastrar',compact('campeonatos','datas','times', 'valores'));
 }
 
 public function salvar(\App\Http\Requests\JogoRequest $request){
     	//dd($request);
     $jogo = \App\Jogo::create($request->all());
     $jogo->save();
-    $time=[];
-    $time []= $request->get('time_id');
-    $time []= $request->get('timef_id');
-    $jogo->time()->attach($time);
+    $time= $request->get('valor_id');
+    $jogo->valores()->attach($time);
 
     \Session::flash('flash_message',[
       'msg'=>"Cadastro do Time realizado com sucesso!!!",
