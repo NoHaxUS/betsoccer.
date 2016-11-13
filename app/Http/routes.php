@@ -73,7 +73,7 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	//rotas para a tabela de aposta
 
 Route::group(['middleware' => 'auth'], function() {	  
-	Route::get('/aposta/teste', ['middleware' => 'auth','uses'=>'ApostaController@index', 'as'=>'aposta.index']);
+	Route::get('/aposta/serv', ['middleware' => 'auth','uses'=>'ApostaController@index2', 'as'=>'aposta.index']);
 	Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
 	Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);
 	Route::get('/aposta/editar/{id}', ['uses'=>'ApostaController@editar', 'as'=>'aposta.editar']);

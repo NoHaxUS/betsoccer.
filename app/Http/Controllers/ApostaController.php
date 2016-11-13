@@ -40,6 +40,14 @@ class ApostaController extends Controller
         return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
     }
 
+    public function index2()
+    {
+        $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
+        $jogos = \App\Jogo::with('time', 'campeonato')->get();
+        $campeonatos = \App\Campeonato::all();
+        return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
+    }
+
     public function cadastrar()
     {
         $time = \App\Jogo::all();
