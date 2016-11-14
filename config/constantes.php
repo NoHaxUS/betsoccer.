@@ -6,5 +6,5 @@
  * Time: 16:01
  */
 return [
-    'porcentagem' => 5,
+    'porcentagem' => 10,
 ];

@@ -87,43 +87,32 @@ class ApostaController extends Controller
     {
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        //Verifica restrição usuário
-        $resposta = $this->verificarUsuario($user);
-        //Se retornou restrição
-        if (!is_null($resposta)):
-            //Retorna json com restrição encontrada
-            return response()->json($resposta);
+        $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
+        if (!is_null($resposta)):                                   //Se retornou restrição
+            return response()->json($resposta);                     //Retorna json com restrição encontrada
         endif;
-        //transforma json de jogos em array
-        $jogos = json_decode($request->jogos, true);
-        //Valida jogos
-        $jogos_invalidos = $this->validarJogos($jogos);
-        //Verifica se quantidade de jogos inválidos é maior que zero
-        if (count($jogos_invalidos) > 0):
-            //retorna json com array com todos os jogos inválidos
-            return response()->json($jogos_invalidos);
+        $palpites = collect(json_decode($request->palpites, true)); //Cria um coleção de palpites a partir do json (Array) passado
+        $jogos = $palpites->pluck('jogo_id')->toArray();            //Pega id dos jogos
+        $jogos_invalidos = $this->validarJogos($jogos);             //Valida jogos
+        if (count($jogos_invalidos) > 0):                           //Verifica se quantidade de jogos inválidos é maior que zero
+            return response()->json($jogos_invalidos);              //retorna json com array com todos os jogos inválidos
         endif;
-        //Instancia uma aposta
-        $aposta = new \App\Aposta($request->all());
-        //Passa id do usuário responsável pela aposta
-        $aposta->users_id = $user->id;
-        //Cria um coleção de palpites a partir do json (Array) passado
-        $palpites = collect(json_decode($request->get('palpites'), true))->collapse()->all();
-        //Cria contador para coleção de palpites
-        $cont = 0;
-        //Intera sobre jogos
-        foreach ($jogos as $value):
-            //Busca jogo pelo id
-            $jogo = Jogo::find($value)->first();
-            $text = $palpites[$cont++];
-            $palpite ['palpite'] = $jogo->$text;
-            $palpite ['tpalpite'] = $text;
-            //Incluir validação de palpite
-            $aposta->save();
-            $aposta->jogo()->attach($value, $palpite);
+        $palpites_invalidos = $this->verificarPalpites($palpites);  //Verifica se há palpites inválidos
+        if (count($palpites_invalidos) > 0):                        //Verifica se quantidade de palpites inválidos é maior que zero
+            return response()->json($palpites_invalidos);           //retorna json com array com todos os palpites inválidos
+        endif;
+        $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
+        $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
+        $aposta->save();                                            //Salva aposta
+        foreach ($palpites as $value):                              //Intera sobre palpites
+            $jogo = Jogo::find($value['jogo_id']);                  //Busca jogo pelo id
+            $tpalpite = $value['palpite'];                          //Passa texto do palpite
+            $palpite ['palpite'] = $jogo->$tpalpite;                //Passa valor do palpite para array
+            $palpite ['tpalpite'] = $tpalpite;                      //Passa texto do palpite para array
+            $aposta->jogo()->attach($value['jogo_id'], $palpite);   //Relaciona aposta com jogo incluindo os dados de palpite
+            //$aposta->jogo()->attach($value['jogo_id'], collect($value)->except('jogo_id')->toArray());       //Cria relação entre jogo e aposta incluindo dados de palpite
         endforeach;
-        //Retorna json com informação de que a aposta foi feita
-        return response()->json(['status' => 'Aposta feita']);
+        return response()->json(['status' => 'Aposta feita']);      //Retorna json com informação de que a aposta foi feita
     }
 
     /** Método que verifica se usuário possui alguma restrição
@@ -132,18 +121,13 @@ class ApostaController extends Controller
      */
     private function verificarUsuario($user)
     {
-        //Verificar se usuário existe
-        if (is_null($user)):
-            //Retorna status de usuário inexistente
-            return ['status' => 'Inexistente'];
+        if (is_null($user)):                        //Verificar se usuário existe
+            return ['status' => 'Inexistente'];     //Retorna status de usuário inexistente
         endif;
-        //Verificar se usuário não está ativo
-        if (!$user->ativo):
-            //Retorna status de usuário inativo
-            return ['status' => 'Inativo'];
+        if (!$user->ativo):                         //Verificar se usuário não está ativo
+            return ['status' => 'Inativo'];         //Retorna status de usuário inativo
         endif;
-        //Retorn null
-        return null;
+        return null;                                //Retorn null
     }
 
     /** Método que verifica se jogos estão válidos para realização de aposta
@@ -152,20 +136,32 @@ class ApostaController extends Controller
      */
     private function validarJogos($jogos)
     {
-        //Cria array para armazenar jogos que não podem receber aposta
-        $jogos_invalidos = Array();
-        //Realiza interação em todos os jogos
-        foreach ($jogos as $valor):
-            //Busca jogo pelo id (valor)
-            $jogo = Jogo::find($valor)->first();
+        $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
+        foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
+            $jogo = Jogo::find($valor)->first();    //Busca jogo pelo id (valor)
             //Verificar horário
             if ($jogo == null || $jogo->data < Carbon::now()->subMinute(5)):
-                //Se passou do horário para apostar coloca o joga no array
-                $jogos_invalidos[] = $jogo;
+                $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
             endif;
         endforeach;
-        //retorna o array com jogos que não podem ser feita aposta
-        return $jogos_invalidos;
+        return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
+    }
+
+    /** Método que verifica validade de palpites
+     * @param $palpites \Illuminate\Support\Collection com palpites a serem verificados
+     * @return array palpites inválidos
+     */
+    private function verificarPalpites($palpites)
+    {
+        $palpites_invalidos = Array();                  //Cria array para armazenar palpites inválidos
+        foreach ($palpites as $palpite):                //Interra sobre palpites
+            //dd($palpite['jogo_id']." ".$palpite['palpite']);
+            $jogo = Jogo::find($palpite['jogo_id']);    //Busca jogo pelo id
+            if ($jogo->$palpite['tpalpite'] == 0):       //Verifica se valor do palpite no jogo é zero
+                $palpites_invalidos[] = $palpite;       //Passa palpite inválido para array
+            endif;
+        endforeach;
+        return $palpites_invalidos;                     //Retorna array com palpites inválidos
     }
 
     /** Método que cálcula o valor a ser recebido pelas apostas feitas
@@ -174,23 +170,39 @@ class ApostaController extends Controller
      */
     public function ganhosApostas($codigo_seguranca)
     {
-        //Definição de porcentagem por meio de constante
-        $porcentagem = config('constantes.porcentagem') / 100;
+        $porcentagem = config('constantes.porcentagem') / 100;      //Definição de porcentagem por meio de constante
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
-        //Verifica restrição usuário
-        $resposta = $this->verificarUsuario($user);
-        //Se retornou restrição
-        if (!is_null($resposta)):
-            //Retorna json com restrição encontrada
-            return response()->json($resposta);
+        $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
+        if (!is_null($resposta)):                                   //Se retornou restrição
+            return response()->json($resposta);                     //Retorna json com restrição encontrada
         endif;
-        //Busca as apostas recentes (últimos 7 dias) feitas pelo usuário
-        $total = Aposta::recentes($user->id)->sum('valor_aposta');
-        //Calcula o valor a ser recebido pelo usuário
-        $ganho = $total * $porcentagem;
-        //Retorna o total de aposta e o valor que o usuário deverá receber
-        return response()->json(['total' => $total, 'ganho' => $ganho]);
+        //$total = Aposta::recentes($user->id)->sum('valor_aposta');  //Busca as apostas recentes (últimos 7 dias) feitas pelo usuário
+        //$ganho = $total * $porcentagem;                             //Calcula o valor a ser recebido pelo usuário
+        $apostas = Aposta::recentes($user->id);                     //Busca as apostas recentes feitas pelo usuário
+        $total = $apostas->sum('valor_aposta');                     //Calcula o valor total
+        $ganho_total = 0;                                           //Cria variável para acumular o ganho de cada aposta
+        $lista_apostas = Array();                                   //Cria array para guardar lista de apostas
+        foreach ($apostas as $aposta):                              //Itera pela lista de apostas
+            $ganho_aposta = $aposta->valor_aposta * $porcentagem;   //Calcula o ganho por cada aposta
+            $lista_apostas [] = [
+                'aposta' => $aposta->id,
+                'ganho' => $ganho_aposta
+            ];                                                      //Cria array para armazenar id e ganho da aposta
+            $ganho_total += $ganho_aposta;                          //Soma o ganho de cada aposta para formar o montante
+        endforeach;
+        //dd($ganho_total, $total * $porcentagem);
+        $cambista = [
+            'numero' => $user->id,
+            'nome' => $user->name
+        ];                                                          //Guarda dados de cambista
+        //Retorna o dados do cambista, lista de apostas, ganho total do cambista e valor total de apostas
+        return response()->json([
+            'cambista' => $cambista,
+            'apostas' => $lista_apostas,
+            'ganho_total' => $ganho_total,
+            'total' => $total,
+        ]);
     }
 
     public function show($id)
