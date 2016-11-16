@@ -93,7 +93,7 @@ class ApostaController extends Controller
         endif;
         $palpites = collect(json_decode($request->palpites, true)); //Cria um coleção de palpites a partir do json (Array) passado
         $jogos = $palpites->pluck('jogo_id')->toArray();            //Pega id dos jogos
-        $jogos_invalidos = $this->validarJogos($jogos);             //Valida jogos
+        $jogos_invalidos = $this->verificarJogos($jogos);             //Valida jogos
         if (count($jogos_invalidos) > 0):                           //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
                 ['jogos_invalidos' => $jogos_invalidos]);           //retorna json com array com todos os jogos inválidos
@@ -126,7 +126,7 @@ class ApostaController extends Controller
      * @param $jogos mixed de jogas para validar
      * @return array lista de jogos inválidos
      */
-    private function validarJogos($jogos)
+    private function verificarJogos($jogos)
     {   //dd($jogos);
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
