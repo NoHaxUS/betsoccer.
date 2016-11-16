@@ -95,13 +95,16 @@ class ApostaController extends Controller
         $jogos = $palpites->pluck('jogo_id')->toArray();            //Pega id dos jogos
         $jogos_invalidos = $this->validarJogos($jogos);             //Valida jogos
         if (count($jogos_invalidos) > 0):                           //Verifica se quantidade de jogos inválidos é maior que zero
-            return response()->json($jogos_invalidos);              //retorna json com array com todos os jogos inválidos
+            return response()->json(
+                ['jogos_invalidos' => $jogos_invalidos]);             //retorna json com array com todos os jogos inválidos
         endif;
         $palpites_invalidos = $this->verificarPalpites($palpites);  //Verifica se há palpites inválidos
         if (count($palpites_invalidos) > 0):                        //Verifica se quantidade de palpites inválidos é maior que zero
-            return response()->json($palpites_invalidos);           //retorna json com array com todos os palpites inválidos
+            return response()->json(
+                ['palpites_invalidos' => $palpites_invalidos]);       //retorna json com array com todos os palpites inválidos
         endif;
-        $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
+
+        /*$aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
         $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
         $aposta->save();                                            //Salva aposta
         foreach ($palpites as $value):                              //Intera sobre palpites
@@ -110,9 +113,9 @@ class ApostaController extends Controller
             $palpite ['palpite'] = $jogo->$tpalpite;                //Passa valor do palpite para array
             $palpite ['tpalpite'] = $tpalpite;                      //Passa texto do palpite para array
             $aposta->jogo()->attach($value['jogo_id'], $palpite);   //Relaciona aposta com jogo incluindo os dados de palpite
-            //$aposta->jogo()->attach($value['jogo_id'], collect($value)->except('jogo_id')->toArray());       //Cria relação entre jogo e aposta incluindo dados de palpite
-        endforeach;
-        return response()->json(['status' => 'Aposta feita']);      //Retorna json com informação de que a aposta foi feita
+        endforeach;*/
+        return response()->json(
+            ['aposta' => $this->registrarAposta($request, $user, $palpites)]);        //Retorna json com a aposta feita
     }
 
     /** Método que verifica se usuário possui alguma restrição
@@ -135,12 +138,12 @@ class ApostaController extends Controller
      * @return array lista de jogos inválidos
      */
     private function validarJogos($jogos)
-    {
+    {   //dd($jogos);
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
-            $jogo = Jogo::find($valor)->first();    //Busca jogo pelo id (valor)
-            //Verificar horário
-            if ($jogo == null || $jogo->data < Carbon::now()->subMinute(5)):
+            $jogo = Jogo::find($valor);             //Busca jogo pelo id (valor)
+            //Verificar  jogo é nulo ou se data e hora do jogo é menor horário que a data atual menos 5 minutos
+            if ($jogo == null ||  (new Carbon($jogo->data))< Carbon::now()->subMinute(5)):
                 $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
             endif;
         endforeach;
@@ -162,6 +165,21 @@ class ApostaController extends Controller
             endif;
         endforeach;
         return $palpites_invalidos;                     //Retorna array com palpites inválidos
+    }
+
+    private function registrarAposta(Request $request, \App\User $user, $palpites)
+    {
+        $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
+        $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
+        $aposta->save();                                            //Salva aposta
+        foreach ($palpites as $value):                              //Intera sobre palpites
+            $jogo = Jogo::find($value['jogo_id']);                  //Busca jogo pelo id
+            $tpalpite = $value['tpalpite'];                          //Passa texto do palpite
+            $palpite ['palpite'] = $jogo->$tpalpite;                //Passa valor do palpite para array
+            $palpite ['tpalpite'] = $tpalpite;                      //Passa texto do palpite para array
+            $aposta->jogo()->attach($value['jogo_id'], $palpite);   //Relaciona aposta com jogo incluindo os dados de palpite
+        endforeach;
+        return $aposta;                                             //Retorna a aposta
     }
 
     /** Método que cálcula o valor a ser recebido pelas apostas feitas
