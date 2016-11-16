@@ -31,4 +31,6 @@ class Aposta extends Model
         return $query->where('users_id', $user_id)
             ->whereDate('created_at', '>=', \Carbon\Carbon::now()->subDay(7))->get();
     }
+
+
 }

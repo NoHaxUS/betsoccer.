@@ -21,6 +21,10 @@ class Jogo extends Model
    	}*/
    	public function time(){
    		return $this->belongsToMany('App\Time','jogo_time','jogos_id','times_id');
-
    	}
+
+	public function apostas(){
+		return $this->belongsToMany('App\Aposta', 'aposta_jogo', 'apostas_id', 'jogos_id')
+			->withPivot('palpite', 'tpalpite')->withTimestamps();
+	}
 }

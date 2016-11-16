@@ -69,6 +69,11 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
 });
+
+
+
+Route::get('/apostaJogo', ['uses'=>'ApostaController@resumoAposta', 'as'=>'apostaJogo.index']);
+
 	
 	//rotas para a tabela de aposta
 

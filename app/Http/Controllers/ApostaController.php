@@ -218,4 +218,14 @@ class ApostaController extends Controller
         }
         dd($jogos);
     }
+
+    /*
+    * Metodo calcula valor a pagar por aposta
+    * */
+    public function resumoAposta(){
+        //Obtenho todas as apostas
+        $apostas = Aposta::with(['jogo'])->get();
+        //Lista de apostas é passada para a view
+        return view('apostaJogo.index', compact('apostas'));
+    }
 }

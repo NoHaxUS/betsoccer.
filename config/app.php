@@ -204,6 +204,11 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+
+
+        'Jogo' => App\Jogo::class,
+        'Aposta' => App\Aposta::class,
+
         
 
     ],
