@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        
+
         <div class="panel panel-default">
            <ol class="breadcrumb panel-heading">
             <li class="active">Jogo</li>
@@ -11,14 +11,14 @@
         <div class="panel-body">
             <p>
                 <a class="btn btn-info" href="{{ route('jogo.cadastrar') }}">Cadastrar</a>
-            </p>       
+            </p>
         </div>
     </div>
-    <div class="table-responsive">            
+    <div class="table-responsive">
         <table class="table table-bordered table-condensed">
             <thead>
                 <tr>
-                    <th>Cod</th>                                
+                    <th>Cod</th>
                     <th>Casa</th>
                     <th>Fora</th>
                     <th>Casa</th>
@@ -31,7 +31,7 @@
                     <th>Ambas</th>
                     <th>Campeonato</th>
                     <th>data</th>
-                    <th>Ação</th> 
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,7 +41,7 @@
                 @foreach($jogos as $jo)
                 @if ($camp->id == $jo->campeonatos_id)
                 <tr>
-                    <td scope="row">{{ $jo->id }}</td>                                                                
+                    <td scope="row">{{ $jo->id }}</td>
                     <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
                     <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                     <td>{{ $jo->valor_casa }}</td>
@@ -52,8 +52,8 @@
                     <td>{{ $jo->max_gol_2 }}</td>
                     <td>{{ $jo->min_gol_3 }}</td>
                     <td>{{ $jo->ambas_gol }}</td>
-                    <td>{{ \App\Campeonato::find($jo->campeonatos_id)->descricao_campeonato }}</td>
-                    <td>{{ $jo->data }}</td>                              
+                    <td>{{ $jo->campeonato->descricao_campeonato }}</td>
+                    <td>{{date('d/m/Y H:i:s', strtotime($jo->data)) }}</td>
                     <td>
                         <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Editar</a>
                         @if($jo->ativo == false)
@@ -63,15 +63,13 @@
                         @endif
                     </td>
                 </tr>
-                @endif  
+                @endif
                 @endforeach
-                @endforeach                            
+                @endforeach
             </tbody>
-        </table>   
-    </div>                    
-    
-    
-    
+        </table>
+    </div>
+
 </div>
 </div>
 
