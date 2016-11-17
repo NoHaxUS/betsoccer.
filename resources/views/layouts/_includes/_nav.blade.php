@@ -21,14 +21,14 @@
 
             @if (!Auth::guest())
             @can('show', Auth::user())
-            <ul class="nav navbar-nav">                
-                <li><a href="{{ route('time.index') }}">Times</a></li>            
+            <ul class="nav navbar-nav">
+                <li><a href="{{ route('time.index') }}">Times</a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li><a href="{{ route('campeonato.index') }}">Campeonatos</a></li>               
-            </ul>            
+                <li><a href="{{ route('campeonato.index') }}">Campeonatos</a></li>
+            </ul>
             <ul class="nav navbar-nav">
-                <li><a href="{{ route('jogo.index') }}">Jogos</a></li>            
+                <li><a href="{{ route('jogo.index') }}">Jogos</a></li>
             </ul>
             @endcan
             <ul class="nav navbar-nav">
@@ -39,17 +39,18 @@
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
                 @if (Auth::guest())
-                <li><a href="{{ url('/login') }}">Entrar</a></li>                          
+                <li><a href="{{ url('/login') }}">Entrar</a></li>
                 @else
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                         {{ Auth::user()->name }} <span class="caret"></span>
-                    </a>                    
+                    </a>
                     <ul class="dropdown-menu" role="menu">
                         @can('show', Auth::user())
-                        <li><a href="{{ route('reg.get') }}">Registrar</a></li>
+                          <li><a href="{{ route('reg.get') }}">Registrar</a></li>
+                          <li><a href="{{ route('user.editar') }}">Editar Cambista</a></li>
                         @endcan
-                        <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
+                          <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
                     </ul>
                 </li>
                 @endif

@@ -19,14 +19,14 @@ public function index(){
 
     	//buscando todas as informacoes dos times
  $jogos = \App\Jogo::with('campeonato')->get();
- $campeonatos = \App\Campeonato::all();        
+ $campeonatos = \App\Campeonato::all();
  return view('jogo.index',compact('jogos','campeonatos'));
 }
 
 public function cadastrar(){
    $campeonatos = \App\Campeonato::all();
    $times = \App\Time::all();
-   return view('jogo.cadastrar',compact('campeonatos','datas','times'));	
+   return view('jogo.cadastrar',compact('campeonatos','datas','times'));
 }
 
 public function salvar(\App\Http\Requests\JogoRequest $request){
@@ -75,8 +75,8 @@ public function atiDes($id){
    $jogo = \App\Jogo::find($id);
    $boolean = $jogo->ativo;
    $jogo->ativo=!$boolean;
-   $jogo->save();          
-   return redirect()->route('jogo.index');   
+   $jogo->save();
+   return redirect()->route('jogo.index');
 }
 
 public function deletar($id){

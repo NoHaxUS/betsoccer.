@@ -18,7 +18,7 @@ Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.index']);
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
-Route::get('/', function () {	
+Route::get('/', function () {
 	return view('welcome');
 });
 
@@ -27,8 +27,17 @@ Route::get('/password/reset', ['uses'=>'Auth\PasswordController@getEmail', 'as'=
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+
+
+
 //rotas para tabelas times
 Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], function() {
+
+	Route::get('/editarUser', ['uses' => 'Auth\AuthController@getAll', 'as'=>'user.editar']);
+	Route::get('/editarUser/{id}/ativ',['uses' => 'Auth\AuthController@ativar', 'as'=>'user.ativ']);
+	Route::get('/editarUser/{id}/desat',['uses' => 'Auth\AuthController@desativar', 'as'=>'user.desat']);
+
+
 	Route::get('/register', ['uses'=>'Auth\AuthController@getRegister', 'as'=>'reg.get']);
 	Route::post('/register', ['uses'=>'Auth\AuthController@postRegister', 'as'=>'reg.post']);
 	// Registration routes...
@@ -68,17 +77,20 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/jogo/ativar-desativar/{id}', ['uses'=>'JogoController@atiDes', 'as'=>'jogo.atides']);
 
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
+
+
+
 });
-	
 	//rotas para a tabela de aposta
 
-Route::group(['middleware' => 'auth'], function() {	  
+Route::group(['middleware' => 'auth'], function() {
 	Route::get('/aposta/teste', ['middleware' => 'auth','uses'=>'ApostaController@index', 'as'=>'aposta.index']);
 	Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
 	Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);
 	Route::get('/aposta/editar/{id}', ['uses'=>'ApostaController@editar', 'as'=>'aposta.editar']);
 	Route::put('/aposta/atualizar/{id}', ['uses'=>'ApostaController@atualizar', 'as'=>'aposta.atualizar']);
 	Route::get('/aposta/deletar/{id}', ['uses'=>'ApostaController@deletar', 'as'=>'aposta.deletar']);
+
 
 
 });

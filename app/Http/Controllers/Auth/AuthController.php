@@ -7,6 +7,7 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use DB;
 
 class AuthController extends Controller
 {
@@ -38,7 +39,7 @@ class AuthController extends Controller
     public function __construct()
     {
         //$this->middleware('guest', ['except' => ['getLogout', 'getRegister', 'postRegister']]);
-        $this->middleware($this->guestMiddleware(), ['except' => ['logout', 'getRegister', 'postRegister']]);
+        $this->middleware($this->guestMiddleware(), ['except' => ['logout', 'getRegister', 'postRegister','getAll','ativar','desativar']]);
     }
 
     /**
@@ -81,4 +82,25 @@ class AuthController extends Controller
             'role'=>$data['role'],
             ]);
     }
+
+    public function ativar($id){
+      $user = User::find($id);
+      $user->ativo = true;
+      $user->save();
+      return redirect()->route('user.editar');
+    }
+
+    public function desativar($id){
+      $user = User::find($id);
+      $user->ativo = false;
+      $user->save();
+      return redirect()->route('user.editar');
+    }
+
+
+    public function getAll(){
+        $user =  DB::select("SELECT * FROM users where role = 'apostador'");
+        return view('auth.editarUser', ['user' =>$user ]);
+    }
+
 }

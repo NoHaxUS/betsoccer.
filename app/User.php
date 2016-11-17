@@ -11,7 +11,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password','role',];
+    protected $fillable = ['name', 'email', 'password','role','ativo',];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -24,6 +24,6 @@ class User extends Authenticatable
 
     public function scopeBuscarPorCodigoSeguranca($query, $codigo)
     {
-        return $query->where('codigo_seguranca', $codigo)->get();       //Busca usuário por codigo de segurança
+        return $query->where('codigo_seguranca', $codigo)->get();       //Busca usuï¿½rio por codigo de seguranï¿½a
     }
 }
