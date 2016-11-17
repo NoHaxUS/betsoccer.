@@ -39,7 +39,7 @@ public function salvar(\App\Http\Requests\JogoRequest $request){
     $jogo->time()->attach($time);
 
     \Session::flash('flash_message',[
-      'msg'=>"Cadastro do Time realizado com sucesso!!!",
+      'msg'=>"Cadastro do Jogo realizado com sucesso!!!",
       'class'=>"alert-success"
       ]);
 
@@ -65,7 +65,7 @@ public function atualizar(\App\Http\Requests\JogoRequest $request, $id){
   \App\Jogo::find($id)->update($request->all());
 
   \Session::flash('flash_message',[
-      'msg'=>"Time atualizado com sucesso!!!",
+      'msg'=>"Jogo atualizado com sucesso!!!",
       'class'=>"alert-success"
       ]);
   return redirect()->route('jogo.index');

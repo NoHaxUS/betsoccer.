@@ -44,8 +44,8 @@
                             <div class="col-md-6">
                                 <select id="role"  name="role" class="form-control">
                                     <option value="">Selecione</option>
-                                    <option value="{{ $roles['admin']}}">Administrador</option>
-                                    <option value="{{ $roles['apostador']}}">Apostador</option>
+                                    <option value="{{ 'admin'}}">Administrador</option>
+                                    <option value="{{ 'apostador'}}">Apostador</option>
                                 </select>
                             </div>
                         </div>
