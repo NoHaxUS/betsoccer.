@@ -18,35 +18,21 @@ class ApostaController extends Controller
 
     public function index()
     {
-        /*buscando todas as informacoes dos times
-        foreach ($aposta->jogo as $key) {
-               echo "JOGO" . $key->time;
-               echo $key->pivot->palpite;
-             }
-        $aposta = \App\Aposta::paginate(10); 
-      */
-        $results = DB::select('select DISTINCT CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-
-        $jogos = \App\Jogo::with('time', 'campeonato')->get();
-        //dd($apostas);
-        /*
-        foreach ($apostas as $aposta) {
-            echo $aposta->jogo->get('id');
-        }
-        */
-        $campeonatos = \App\Campeonato::all();
-        //$res = array_merge($results, $jogos->toArray(), $campeonatos->toArray());
-        return response()->json(array("jogos" => $jogos));
-
-        return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
-    }
-
-    public function index2()
-    {
         $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
         $jogos = \App\Jogo::with('time', 'campeonato')->get();
         $campeonatos = \App\Campeonato::all();
         return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
+    }
+    
+    /**Método que retornar um Json com jogos e suas relações.
+     * @param
+     * @return \Illuminate\Http\JsonResponse resultado da operação
+     */
+    public function getJogosJson()
+    {
+        $jogos = \App\Jogo::with('time', 'campeonato')->get();
+        $campeonatos = \App\Campeonato::all();
+        return response()->json(array("jogos" => $jogos));
     }
 
     public function cadastrar()
@@ -60,7 +46,6 @@ class ApostaController extends Controller
         $jogo = [];
         $palpite = [];
         $jogo = $request->get('jogo');
-        //dd($request->all());
         $aposta = \App\Aposta::create($request->all());
         foreach ($jogo as $jogos => $value) {
             $jo = Jogo::find($value);

@@ -14,7 +14,9 @@
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
-Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.index']);
+Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.getJogosJson']);
+Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
+Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
@@ -27,12 +29,12 @@ Route::get('/password/reset', ['uses'=>'Auth\PasswordController@getEmail', 'as'=
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
-//rotas para tabelas times
-Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], function() {
+     // Rotas para Registrar usuarios e para redirecionar Apos registro.
+    Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], function() {
 	Route::get('/register', ['uses'=>'Auth\AuthController@getRegister', 'as'=>'reg.get']);
 	Route::post('/register', ['uses'=>'Auth\AuthController@postRegister', 'as'=>'reg.post']);
-	// Registration routes...
-
+     
+     //rotas para tabelas times
 	Route::get('/time', ['uses'=>'TimeController@index', 'as'=>'time.index']);
 	Route::get('/time/cadastrar', ['uses'=>'TimeController@cadastrar', 'as'=>'time.cadastrar']);
 	Route::post('/time/salvar', ['uses'=>'TimeController@salvar', 'as'=>'time.salvar']);
@@ -50,14 +52,6 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::put('/campeonato/atualizar/{id}', ['uses'=>'CampeonatoController@atualizar', 'as'=>'campeonato.atualizar']);
 	Route::get('/campeonato/deletar/{id}', ['uses'=>'CampeonatoController@deletar', 'as'=>'campeonato.deletar']);
 
-	//rotas para tabela horario
-	Route::get('/horario', ['uses'=>'HorarioController@index', 'as'=>'horario.index']);
-	Route::get('/horario/cadastrar', ['uses'=>'HorarioController@cadastrar', 'as'=>'horario.cadastrar']);
-	Route::post('/horario/salvar', ['uses'=>'HorarioController@salvar', 'as'=>'horario.salvar']);
-	Route::get('/horario/editar/{id}', ['uses'=>'HorarioController@editar', 'as'=>'horario.editar']);
-	Route::put('/horario/atualizar/{id}', ['uses'=>'HorarioController@atualizar', 'as'=>'horario.atualizar']);
-	Route::get('/horario/deletar/{id}', ['uses'=>'HorarioController@deletar', 'as'=>'horario.deletar']);
-
 	//rotas para tabela de jogos
 
 	Route::get('/jogo', ['uses'=>'JogoController@index', 'as'=>'jogo.index']);
@@ -66,19 +60,12 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/jogo/editar/{id}', ['uses'=>'JogoController@editar', 'as'=>'jogo.editar']);
 	Route::post('/jogo/atualizar/{id}', ['uses'=>'JogoController@atualizar', 'as'=>'jogo.atualizar']);
 	Route::get('/jogo/ativar-desativar/{id}', ['uses'=>'JogoController@atiDes', 'as'=>'jogo.atides']);
-
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
 });
-
-
-
-Route::get('/apostaJogo', ['uses'=>'ApostaController@resumoAposta', 'as'=>'apostaJogo.index']);
-
-	
 	//rotas para a tabela de aposta
 
 Route::group(['middleware' => 'auth'], function() {	  
-	Route::get('/aposta/serv', ['middleware' => 'auth','uses'=>'ApostaController@index2', 'as'=>'aposta.index']);
+	Route::get('/aposta/serv', ['middleware' => 'auth','uses'=>'ApostaController@index', 'as'=>'aposta.index']);
 	Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
 	Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);
 	Route::get('/aposta/editar/{id}', ['uses'=>'ApostaController@editar', 'as'=>'aposta.editar']);
@@ -86,5 +73,3 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('/aposta/deletar/{id}', ['uses'=>'ApostaController@deletar', 'as'=>'aposta.deletar']);
 
 });
-Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
-Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
