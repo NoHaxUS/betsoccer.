@@ -125,7 +125,7 @@ class ApostaController extends Controller
      * @return array lista de jogos inválidos
      */
     private function verificarJogos($jogos)
-    {   //dd($jogos);
+    {
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
             $jogo = Jogo::find($valor);             //Busca jogo pelo id (valor)
