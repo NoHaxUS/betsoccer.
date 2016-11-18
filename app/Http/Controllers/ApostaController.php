@@ -86,15 +86,14 @@ class ApostaController extends Controller
     public function apostar(Request $request)
     {
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        //dd($user);
         $resposta = $this->verificarUsuario($user);                         //Verifica restrição usuário
         if (!is_null($resposta)):                                           //Se retornou restrição
-            return response()->json($resposta);                             //Retorna json com restrição encontrada
+            return response()->json($resposta, 400);                        //Retorna json com restrição encontrada
         endif;
         $jogos_invalidos = $this->verificarJogos($request->jogo);           //Valida jogos
         if (count($jogos_invalidos) > 0):                                   //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
-                ['jogos_invalidos' => $jogos_invalidos]);                   //retorna json com array com todos os jogos inválidos
+                ['jogos_invalidos' => $jogos_invalidos], 400);              //retorna json com array com todos os jogos inválidos
         endif;
         /*$palpites_invalidos = $this->verificarPalpites($palpites);        //Verifica se há palpites inválidos
         if (count($palpites_invalidos) > 0):                                //Verifica se quantidade de palpites inválidos é maior que zero
