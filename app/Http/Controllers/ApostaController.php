@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Aposta;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\jogo;
+use App\Jogo;
 use Carbon\Carbon;
 use DB;
 
@@ -91,7 +91,7 @@ class ApostaController extends Controller
         if (!is_null($resposta)):                                           //Se retornou restrição
             return response()->json($resposta);                             //Retorna json com restrição encontrada
         endif;
-        $jogos_invalidos = $this->verificarJogos($request->jogo);  //Valida jogos
+        $jogos_invalidos = $this->verificarJogos($request->jogo);           //Valida jogos
         if (count($jogos_invalidos) > 0):                                   //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
                 ['jogos_invalidos' => $jogos_invalidos]);                   //retorna json com array com todos os jogos inválidos
