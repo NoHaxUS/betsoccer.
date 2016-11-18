@@ -87,24 +87,22 @@ class ApostaController extends Controller
     {
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
-        if (!is_null($resposta)):                                   //Se retornou restrição
-            return response()->json($resposta);                     //Retorna json com restrição encontrada
+        $resposta = $this->verificarUsuario($user);                         //Verifica restrição usuário
+        if (!is_null($resposta)):                                           //Se retornou restrição
+            return response()->json($resposta);                             //Retorna json com restrição encontrada
         endif;
-        $palpites = collect(json_decode($request->palpites, true)); //Cria um coleção de palpites a partir do json (Array) passado
-        $jogos = $palpites->pluck('jogo_id')->toArray();            //Pega id dos jogos
-        $jogos_invalidos = $this->verificarJogos($jogos);             //Valida jogos
-        if (count($jogos_invalidos) > 0):                           //Verifica se quantidade de jogos inválidos é maior que zero
+        $jogos_invalidos = $this->verificarJogos($jogos = $request->jogo);  //Valida jogos
+        if (count($jogos_invalidos) > 0):                                   //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
-                ['jogos_invalidos' => $jogos_invalidos]);           //retorna json com array com todos os jogos inválidos
+                ['jogos_invalidos' => $jogos_invalidos]);                   //retorna json com array com todos os jogos inválidos
         endif;
-        $palpites_invalidos = $this->verificarPalpites($palpites);  //Verifica se há palpites inválidos
-        if (count($palpites_invalidos) > 0):                        //Verifica se quantidade de palpites inválidos é maior que zero
+        /*$palpites_invalidos = $this->verificarPalpites($palpites);        //Verifica se há palpites inválidos
+        if (count($palpites_invalidos) > 0):                                //Verifica se quantidade de palpites inválidos é maior que zero
             return response()->json(
-                ['palpites_invalidos' => $palpites_invalidos]);     //retorna json com array com todos os palpites inválidos
-        endif;
-        //Retorna json com a aposta feita
-        return response()->json(['aposta' => $this->registrarAposta($request, $user, $palpites)]);
+                ['palpites_invalidos' => $palpites_invalidos]);             //retorna json com array com todos os palpites inválidos
+        endif;*/
+        return response()->json(
+            ['aposta' => $this->registrarAposta($request, $user)]);         //Retorna json com a aposta feita
     }
 
     /** Método que verifica se usuário possui alguma restrição
@@ -161,18 +159,16 @@ class ApostaController extends Controller
      * @param \Illuminate\Support\Collection $palpites array de palpites
      * @return Aposta aposta feita
      */
-    private function registrarAposta(Request $request, \App\User $user, $palpites)
+    private function registrarAposta(Request $request, \App\User $user)
     {
         $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
         $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
         $aposta->save();                                            //Salva aposta
-        foreach ($palpites as $value):                              //Intera sobre palpites
-            $jogo = Jogo::find($value['jogo_id']);                  //Busca jogo pelo id
-            $tpalpite = $value['tpalpite'];                         //Passa texto do palpite
-            $palpite ['palpite'] = $jogo->$tpalpite;                //Passa valor do palpite para array
-            $palpite ['tpalpite'] = $tpalpite;                      //Passa texto do palpite para array
-            $aposta->jogo()->attach($value['jogo_id'], $palpite);   //Relaciona aposta com jogo incluindo os dados de palpite
-        endforeach;
+        for ($i = 0; $i < count($request->jogo); $i++):             //Criar iteração com base no número de jogos
+            $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
+            $palpite['tpalpite'] = $request->tpalpite[$i];          //Passa texto do palpite para arrayu
+            $aposta->jogo()->attach($request->jogo[$i], $palpite);  //Relaciona aposta com jogo incluindo os dados de palpite
+        endfor;
         return $aposta;                                             //Retorna a aposta
     }
 
@@ -201,7 +197,6 @@ class ApostaController extends Controller
             ];                                                      //Cria array para armazenar id e ganho da aposta
             $ganho_total += $ganho_aposta;                          //Soma o ganho de cada aposta para formar o montante
         endforeach;
-        //dd($ganho_total, $total * $porcentagem);
         $cambista = [
             'numero' => $user->id,
             'nome' => $user->name
