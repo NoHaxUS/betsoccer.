@@ -18,27 +18,13 @@ class ApostaController extends Controller
 
     public function index()
     {
-        /*buscando todas as informacoes dos times
-        foreach ($aposta->jogo as $key) {
-               echo "JOGO" . $key->time;
-               echo $key->pivot->palpite;
-             }
-        $aposta = \App\Aposta::paginate(10); 
-      */
-        $results = DB::select('select DISTINCT CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
 
-        $jogos = \App\Jogo::with('time', 'campeonato')->get();
-        //dd($apostas);
-        /*
-        foreach ($apostas as $aposta) {
-            echo $aposta->jogo->get('id');
-        }
-        */
+
+        $jogos = \App\Jogo::with('time', 'campeonato')
+        ->where('data', '>', Carbon::now()->addMinutes(5))
+        ->get();
         $campeonatos = \App\Campeonato::all();
-        //$res = array_merge($results, $jogos->toArray(), $campeonatos->toArray());
         return response()->json(array("jogos" => $jogos));
-
-        return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
     }
 
     public function index2()
