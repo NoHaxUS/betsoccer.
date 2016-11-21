@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 use App\Http\Requests;
 
 class JogoController extends Controller
@@ -24,50 +24,73 @@ public function index(){
 }
 
 public function cadastrar(){
-   $campeonatos = \App\Campeonato::all();
-   $times = \App\Time::all();
-   return view('jogo.cadastrar',compact('campeonatos','datas','times'));
+ $campeonatos = \App\Campeonato::all();
+ $times = \App\Time::all();
+ return view('jogo.cadastrar',compact('campeonatos','datas','times'));
 }
 
 public function salvar(\App\Http\Requests\JogoRequest $request){
     	//dd($request);
-    $jogo = \App\Jogo::create($request->all());
-    $jogo->save();
-    $time=[];
-    $time []= $request->get('time_id');
-    $time []= $request->get('timef_id');
-    $jogo->time()->attach($time);
+  $jogo = \App\Jogo::create($request->all());
+  $jogo->save();
+  $time=[];
+  $time []= $request->get('time_id');
+  $time []= $request->get('timef_id');
+  $jogo->time()->attach($time);
 
-    \Session::flash('flash_message',[
-      'msg'=>"Cadastro do Jogo realizado com sucesso!!!",
-      'class'=>"alert-success"
-      ]);
+  \Session::flash('flash_message',[
+    'msg'=>"Cadastro do Jogo realizado com sucesso!!!",
+    'class'=>"alert-success"
+    ]);
 
-    return redirect()->route('jogo.cadastrar');
+  return redirect()->route('jogo.cadastrar');
 
+}
+
+public function allJogosPlacar(){
+  $jogos = \App\Jogo::with('time', 'campeonato')
+  ->where( 'data','<',Carbon::now())
+  ->get();
+  return view('jogo.resultado',compact('jogos'));
+}
+
+public function addPlacar(Request $request){
+   $jogo = [];
+   $jogo = $request->get('jogo');
+   foreach ($jogo as $id) {
+      $jogo=\App\Jogo::find($id);
+      $jogo->r_casa=$request->get("r_casa".$id);
+      $jogo->r_fora=$request->get("r_fora".$id);
+      $jogo->save();
+  }
+  \Session::flash('flash_message',[
+    'msg'=>"Placares Adicionados Com Sucesso!!!",
+    'class'=>"alert-success"
+    ]);
+  return redirect()->route('jogo.index');
 }
 
 public function editar($id){
- $jogo = \App\Jogo::find($id);
- $campeonatos = \App\Campeonato::all();
- $times = \App\Time::all();
- if(!$jogo){
-  \Session::flash('flash_message',[
-      'msg'=>"Não existe esse jogo cadastrado!!! Deseja cadastrar um novo Jogo?",
-      'class'=>"alert-danger"
-      ]);
-  return redirect()->route('jogo.cadastrar');
-}
-return view('jogo.editar',compact('jogo','campeonatos','datas','times'));
+   $jogo = \App\Jogo::find($id);
+   $campeonatos = \App\Campeonato::all();
+   $times = \App\Time::all();
+   if(!$jogo){
+      \Session::flash('flash_message',[
+        'msg'=>"Não existe esse jogo cadastrado!!! Deseja cadastrar um novo Jogo?",
+        'class'=>"alert-danger"
+        ]);
+      return redirect()->route('jogo.cadastrar');
+  }
+  return view('jogo.editar',compact('jogo','campeonatos','datas','times'));
 }
 
 public function atualizar(\App\Http\Requests\JogoRequest $request, $id){
   \App\Jogo::find($id)->update($request->all());
 
   \Session::flash('flash_message',[
-      'msg'=>"Jogo atualizado com sucesso!!!",
-      'class'=>"alert-success"
-      ]);
+    'msg'=>"Jogo atualizado com sucesso!!!",
+    'class'=>"alert-success"
+    ]);
   return redirect()->route('jogo.index');
 
 }

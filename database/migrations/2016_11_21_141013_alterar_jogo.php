@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterApostaJogo extends Migration
+class AlterarJogo extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,9 @@ class AlterApostaJogo extends Migration
      */
     public function up()
     {
-        Schema::table('aposta_jogo', function (Blueprint $table) {
-            $table->float('palpite',3,2)->change();
+         Schema::table('jogos', function ($table) {
+            $table->integer('r_casa')->after('campeonatos_id');
+            $table->integer('r_fora')->after('campeonatos_id');
         });
     }
 
@@ -24,8 +25,6 @@ class AlterApostaJogo extends Migration
      */
     public function down()
     {
-        Schema::table('aposta_jogo', function (Blueprint $table) {
-            //
-        });
+        //
     }
 }

@@ -14,7 +14,7 @@
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
-Route::get('/aposta', ['uses'=>'ApostaController@index', 'as'=>'aposta.index']);
+Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.index']);
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
@@ -75,7 +75,8 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/jogo/editar/{id}', ['uses'=>'JogoController@editar', 'as'=>'jogo.editar']);
 	Route::post('/jogo/atualizar/{id}', ['uses'=>'JogoController@atualizar', 'as'=>'jogo.atualizar']);
 	Route::get('/jogo/ativar-desativar/{id}', ['uses'=>'JogoController@atiDes', 'as'=>'jogo.atides']);
-
+	Route::get('/jogo/cadastrar-placar', ['uses'=>'JogoController@allJogosPlacar', 'as'=>'jogo.allJogosPlacar']);
+	Route::post('/jogo/cadastrar-placar/post', ['uses'=>'JogoController@addPlacar', 'as'=>'jogo.addPlacar']);
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
 
 
@@ -96,7 +97,7 @@ Route::get('/apostaJogo', ['uses'=>'ApostaController@resumoAposta', 'as'=>'apost
 	//rotas para a tabela de aposta
 
 Route::group(['middleware' => 'auth'], function() {	  
-	Route::get('/aposta/serv', ['middleware' => 'auth','uses'=>'ApostaController@index2', 'as'=>'aposta.index']);
+	Route::get('/aposta/serv', ['middleware' => 'auth','uses'=>'ApostaController@index', 'as'=>'aposta.index']);
 
 	Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
 	Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);
