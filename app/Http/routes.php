@@ -14,7 +14,10 @@
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
-Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.index']);
+Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.getJsonJogos']);
+Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
+Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
+
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
@@ -86,32 +89,13 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	//rotas para a tabela de aposta
 
 Route::group(['middleware' => 'auth'], function() {
-	Route::get('/aposta/teste', ['middleware' => 'auth','uses'=>'ApostaController@index', 'as'=>'aposta.index']);
-
-
-
-
-Route::get('/apostaJogo', ['uses'=>'ApostaController@resumoAposta', 'as'=>'apostaJogo.index']);
-
-	
-	//rotas para a tabela de aposta
-
-Route::group(['middleware' => 'auth'], function() {	  
+	Route::get('/apostaJogo', ['uses'=>'ApostaController@resumoAposta', 'as'=>'apostaJogo.index']);
 	Route::get('/aposta/serv', ['middleware' => 'auth','uses'=>'ApostaController@index', 'as'=>'aposta.index']);
-
 	Route::get('/aposta/cadastrar', ['uses'=>'ApostaController@cadastrar', 'as'=>'aposta.cadastrar']);
 	Route::post('/aposta/salvar', ['uses'=>'ApostaController@salvar', 'as'=>'aposta.salvar']);
 	Route::get('/aposta/editar/{id}', ['uses'=>'ApostaController@editar', 'as'=>'aposta.editar']);
 	Route::put('/aposta/atualizar/{id}', ['uses'=>'ApostaController@atualizar', 'as'=>'aposta.atualizar']);
 	Route::get('/aposta/deletar/{id}', ['uses'=>'ApostaController@deletar', 'as'=>'aposta.deletar']);
 
-
-
-
 });
-Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
-
-});
-Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
-Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
-
+Route::get('/aposta/listar', ['uses'=>'ApostaController@listaAposta', 'as'=>'aposta.listaAposta']);

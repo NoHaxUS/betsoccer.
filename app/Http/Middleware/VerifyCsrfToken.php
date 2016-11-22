@@ -14,6 +14,8 @@ class VerifyCsrfToken extends BaseVerifier
     protected $except = [
         //
         '/aposta',
-        '/aposta/apostar'
+        '/aposta/apostar',
+        '/aposta/listar'
+
     ];
 }

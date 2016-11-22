@@ -8,7 +8,7 @@ use softDeletes;
 class Jogo extends Model
 {
 	  protected $table = 'jogos';
-    protected $fillable = ['data','ativo','valor_casa','valor_empate','valor_fora','valor_1_2','valor_dupla','max_gol_2','min_gol_3','ambas_gol','campeonatos_id'];
+    protected $fillable = ['data','ativo','valor_casa','valor_empate','valor_fora','valor_1_2','valor_dupla','max_gol_2','min_gol_3','ambas_gol','r_casa','r_fora','campeonatos_id'];
 
 
     public function campeonato(){

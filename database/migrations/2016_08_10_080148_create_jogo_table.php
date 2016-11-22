@@ -25,6 +25,8 @@ class CreateJogoTable extends Migration
         $table->double('max_gol_2', 3 , 2);
         $table->double('min_gol_3', 3 , 2);
         $table->double('ambas_gol', 3 , 2);
+        $table->integer('r_casa');
+        $table->integer('r_fora');
         $table->integer('campeonatos_id')->unsigned();           
         $table->timestamps();
         $table->softDeletes();

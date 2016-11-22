@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Aposta extends Model
 {
     //
-    protected $fillable = ['valor_aposta', 'nome_apostador', 'users_id'];
+    protected $fillable = ['valor_aposta', 'nome_apostador','pago', 'users_id'];
 
     //metodo que retorna jogos
     public function jogo()

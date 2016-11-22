@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['admin', 'apostador']);
+            $table->string('codigo_seguranca')->unique();
+            $table->boolean('ativo')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
