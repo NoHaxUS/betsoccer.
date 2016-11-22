@@ -6,5 +6,7 @@
  * Time: 16:01
  */
 return [
-    'porcentagem' => 10,
+    'porcentagem_simples' => 5,
+    'porcentagem_mediana' => 10,
+    'porcentagem_maxima' => 12,
 ];
