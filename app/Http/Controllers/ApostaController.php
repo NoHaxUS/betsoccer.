@@ -189,7 +189,6 @@ class ApostaController extends Controller
      */
     public function ganhosApostas($codigo_seguranca)
     {
-        $porcentagem = config('constantes.porcentagem') / 100;      //Definição de porcentagem por meio de constante
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
         $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
@@ -201,17 +200,27 @@ class ApostaController extends Controller
         $ganho_total = 0;                                           //Cria variável para acumular o ganho de cada aposta
         $lista_apostas = Array();                                   //Cria array para guardar lista de apostas
         foreach ($apostas as $aposta):                              //Itera pela lista de apostas
+            switch ($aposta->jogo()->count()) :
+                case 2:
+                    //Gera valor para cálculo de ganho para aposta com dois jogos
+                    $porcentagem = config('constantes.porcentagem_simples') / 100;
+                    break;
+                case 3:
+                    //Gera valor para cálculo de ganho para aposta com três jogos
+                    $porcentagem = config('constantes.porcentagem_mediana') / 100;
+                    break;
+                default:
+                    //Gera valor para cálculo de ganho para aposta com mais três jogos
+                    $porcentagem = config('constantes.porcentagem_maxima') / 100;
+                    break;
+            endswitch;
             $ganho_aposta = $aposta->valor_aposta * $porcentagem;   //Calcula o ganho por cada aposta
-            $lista_apostas [] = [
-                'aposta' => $aposta->id,
-                'ganho' => $ganho_aposta
-            ];                                                      //Cria array para armazenar id e ganho da aposta
+            //Cria array para armazenar id e ganho da aposta
+            $lista_apostas [] = ['aposta' => $aposta->id, 'ganho' => $ganho_aposta];
             $ganho_total += $ganho_aposta;                          //Soma o ganho de cada aposta para formar o montante
         endforeach;
-        $cambista = [
-            'numero' => $user->id,
-            'nome' => $user->name
-        ];                                                          //Guarda dados de cambista
+        //Guarda dados de cambista (id e nome)
+        $cambista = ['numero' => $user->id, 'nome' => $user->name];
         //Retorna o dados do cambista, lista de apostas, ganho total do cambista e valor total de apostas
         return response()->json([
             'cambista' => $cambista,
