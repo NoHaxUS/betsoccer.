@@ -39,8 +39,6 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/editarUser', ['uses' => 'Auth\AuthController@getAll', 'as'=>'user.editar']);
 	Route::get('/editarUser/{id}/ativ',['uses' => 'Auth\AuthController@ativar', 'as'=>'user.ativ']);
 	Route::get('/editarUser/{id}/desat',['uses' => 'Auth\AuthController@desativar', 'as'=>'user.desat']);
-
-
 	Route::get('/register', ['uses'=>'Auth\AuthController@getRegister', 'as'=>'reg.get']);
 	Route::post('/register', ['uses'=>'Auth\AuthController@postRegister', 'as'=>'reg.post']);
 	// Registration routes...
@@ -81,8 +79,6 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/jogo/cadastrar-placar', ['uses'=>'JogoController@allJogosPlacar', 'as'=>'jogo.allJogosPlacar']);
 	Route::post('/jogo/cadastrar-placar/post', ['uses'=>'JogoController@addPlacar', 'as'=>'jogo.addPlacar']);
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
-
-
 
 });
 
