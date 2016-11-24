@@ -18,7 +18,7 @@ class Aposta extends Model
     //metodo que retorna os usuários
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'users_id');
     }
 
     /**Método que busca apostas com menos de 7 dias de um determinado usuário
