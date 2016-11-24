@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
+        <table>
             <thead>
                 <tr>
                     <th>Cod</th>
@@ -41,7 +41,7 @@
                 @foreach($jogos as $jo)
                 @if ($camp->id == $jo->campeonatos_id)
                 <tr>
-                    <td scope="row">{{ $jo->id }}</td>
+                    <th scope="row">{{ $jo->id }}</th>
                     <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
                     <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                     <td>{{ $jo->valor_casa }}</td>

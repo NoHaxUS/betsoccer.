@@ -16,7 +16,8 @@ class CreateApostaTable extends Migration
             $table->increments('id');
             $table->double('valor_aposta');
             $table->string('nome_apostador');
-            $table->boolean('pago')->default(false);
+            $table->boolean('pago')->default(false);            
+            $table->boolean('ativo')->default(true);
             $table->integer('users_id')->unsigned();            
             $table->timestamps();
         });

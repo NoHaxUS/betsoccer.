@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-bordered table-condensed">
+        <table>
             <thead>
                 <tr>
                     <th>Cod</th>
@@ -32,7 +32,7 @@
                 
                 @foreach($apostaWins as $aposta)
                 <tr>
-                    <td scope="row">{{$aposta->id}}</td>
+                    <th>{{$aposta->id}}</th>
                     <td>{{$aposta->user->name}}</td>
                     <td>{{$aposta->nome_apostador}}</td>
                     <td>{{$aposta->valor_aposta}}</td>
@@ -46,15 +46,15 @@
                         
                     </td>
                 </tr>
-                <div class="md-modal md-effect-16" id="modal-{{$aposta->id}}">
+                <div class="md-modal md-effect-11" id="modal-{{$aposta->id}}">
                     <div class="md-content">
                         <h3>Detalhes da Aposta</h3>
                         <div>
                             @foreach ($aposta->jogo as $key => $jogo)
                            
-                            <p>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}......
-                                Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
-                            </p>
+                            <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
+                            <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
+                            </h5>
                             
                             @endforeach 
 

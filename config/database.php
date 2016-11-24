@@ -26,7 +26,7 @@ return [
     |'default' => env('DB_CONNECTION', 'mysql'),
     */
 
-    'default' => 'mysql1',
+    'default' => 'mysql',
 
     /*
     |--------------------------------------------------------------------------
@@ -68,11 +68,11 @@ return [
 
         'mysql1' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '209.99.16.14'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'betsocf5_betsoccer00'),
-            'username' => env('DB_USERNAME', 'betsocf5_admin'),
-            'password' => env('DB_PASSWORD', 'betsocker123'),
+            'host' => '209.99.16.14',
+            'port' => '3306',
+            'database' => 'betsocf5_betsoccer00',
+            'username' => 'betsocf5_admin',
+            'password' => 'betsocker123',
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',

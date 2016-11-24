@@ -95,3 +95,4 @@ Route::group(['middleware' => 'auth'], function() {
 
 });
 Route::get('/aposta/listar', ['uses'=>'ApostaController@listaAposta', 'as'=>'aposta.listaAposta']);
+//Route::get('/aposta/listar/all', ['uses'=>'ApostaController@listaAposta', 'as'=>'aposta.listar']);
