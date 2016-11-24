@@ -6,7 +6,7 @@
 
         <div class="panel panel-default">
            <ol class="breadcrumb panel-heading">
-            <li class="active">Jogo</li>
+            <li class="active">Apostas Vencedoras</li>
         </ol>
         <div class="panel-body">
             <p>
@@ -30,13 +30,13 @@
             <tbody>
                 {{ csrf_field() }}
                 
-                @foreach($apostaWins as $aposta)
+                @foreach($apostaWins as $key => $aposta)
                 <tr>
                     <th>{{$aposta->id}}</th>
                     <td>{{$aposta->user->name}}</td>
                     <td>{{$aposta->nome_apostador}}</td>
                     <td>{{$aposta->valor_aposta}}</td>
-                    <td>{{$aposta->valor_aposta}}</td>                        
+                    <td>{{$total[$key]}}</td>                        
                     <td>
                         <a class="btn btn-default">Detalhar</a>
                         

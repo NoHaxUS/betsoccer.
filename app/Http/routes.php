@@ -13,7 +13,6 @@
 
 
 //rotas não auteticadas (TEMPORARIAMENTE)
-
 Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.getJsonJogos']);
 Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
 Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
@@ -31,9 +30,6 @@ Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
-
-
-//rotas para tabelas times
 Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], function() {
 
 	Route::get('/editarUser', ['uses' => 'Auth\AuthController@getAll', 'as'=>'user.editar']);
@@ -43,6 +39,7 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::post('/register', ['uses'=>'Auth\AuthController@postRegister', 'as'=>'reg.post']);
 	// Registration routes...
 
+//rotas para tabelas times
 	Route::get('/time', ['uses'=>'TimeController@index', 'as'=>'time.index']);
 	Route::get('/time/cadastrar', ['uses'=>'TimeController@cadastrar', 'as'=>'time.cadastrar']);
 	Route::post('/time/salvar', ['uses'=>'TimeController@salvar', 'as'=>'time.salvar']);
