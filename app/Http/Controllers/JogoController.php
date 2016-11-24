@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Requests;
+use Hashids\Hashids;
 
 class JogoController extends Controller
 {
@@ -32,6 +33,8 @@ public function cadastrar(){
 public function salvar(\App\Http\Requests\JogoRequest $request){
     	//dd($request);
   $jogo = \App\Jogo::create($request->all());
+  $hashids = new Hashids('betsoccer', 5);
+  $jogo->codigo=$hashids->encode($jogo->id);
   $jogo->save();
   $time=[];
   $time []= $request->get('time_id');

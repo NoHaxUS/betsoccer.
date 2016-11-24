@@ -23,7 +23,7 @@
                     {{ csrf_field() }}
                     @foreach ($apostas as $key => $aposta)
                     <tr>
-                        <td>{{ $aposta->id }}</td>
+                        <td>{{ $aposta->codigo }}</td>
                         <td>{{ $aposta->valor_aposta}}</td>
                         <td>{{ $aposta->nome_apostador}}</td>
                         <td>{{ $total[$key]}}</td>

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "969a22b9312c377ee45071865e05f990",
-    "content-hash": "76a2ffff94f70fb9d60339be7013334d",
+    "hash": "aec12f87063a0b94cbb71bd848dfa1c4",
+    "content-hash": "cde8c3d4d484c974a13e7d649ae1dc93",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -562,6 +562,69 @@
                 "parser"
             ],
             "time": "2014-09-09 13:34:57"
+        },
+        {
+            "name": "hashids/hashids",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ivanakimov/hashids.php.git",
+                "reference": "57cf3bbfbb939868a37a201aa858071e6c1b4764"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ivanakimov/hashids.php/zipball/57cf3bbfbb939868a37a201aa858071e6c1b4764",
+                "reference": "57cf3bbfbb939868a37a201aa858071e6c1b4764",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": "^5.6.4 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hashids\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Akimov",
+                    "email": "ivan@barreleye.com",
+                    "homepage": "https://twitter.com/IvanAkimov"
+                },
+                {
+                    "name": "Vincent Klaiber",
+                    "email": "hello@vinkla.com",
+                    "homepage": "https://vinkla.com"
+                }
+            ],
+            "description": "Generate short, unique, non-sequential ids (like YouTube and Bitly) from numbers",
+            "homepage": "http://hashids.org/php",
+            "keywords": [
+                "bitly",
+                "decode",
+                "encode",
+                "hash",
+                "hashid",
+                "hashids",
+                "ids",
+                "obfuscate",
+                "youtube"
+            ],
+            "time": "2016-11-15 18:59:27"
         },
         {
             "name": "jakub-onderka/php-console-color",

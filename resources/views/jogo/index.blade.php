@@ -41,7 +41,7 @@
                 @foreach($jogos as $jo)
                 @if ($camp->id == $jo->campeonatos_id)
                 <tr>
-                    <th scope="row">{{ $jo->id }}</th>
+                    <th scope="row">{{ $jo->codigo }}</th>
                     <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
                     <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                     <td>{{ $jo->valor_casa }}</td>

@@ -32,7 +32,7 @@
                 
                 @foreach($apostaWins as $key => $aposta)
                 <tr>
-                    <th>{{$aposta->id}}</th>
+                    <th>{{$aposta->codigo}}</th>
                     <td>{{$aposta->user->name}}</td>
                     <td>{{$aposta->nome_apostador}}</td>
                     <td>{{$aposta->valor_aposta}}</td>

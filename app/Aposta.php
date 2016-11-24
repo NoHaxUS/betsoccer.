@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use softDeletes;
 class Aposta extends Model
 {
     //

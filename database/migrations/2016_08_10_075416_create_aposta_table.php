@@ -14,12 +14,14 @@ class CreateApostaTable extends Migration
     {
         Schema::create('apostas', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('codigo')->unique();
             $table->double('valor_aposta');
             $table->string('nome_apostador');
             $table->boolean('pago')->default(false);            
             $table->boolean('ativo')->default(true);
             $table->integer('users_id')->unsigned();            
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

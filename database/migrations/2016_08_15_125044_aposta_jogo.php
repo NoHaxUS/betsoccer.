@@ -16,7 +16,7 @@ class ApostaJogo extends Migration
          Schema::create('aposta_jogo', function (Blueprint $table) {           
             $table->integer('apostas_id')->unsigned();
             $table->integer('jogos_id')->unsigned();
-            $table->double('palpite', 3 , 2);
+            $table->double('palpite', 4 , 2);
             $table->string('tpalpite');
             $table->timestamps();
         });
