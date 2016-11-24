@@ -41,7 +41,7 @@
             </ul>
             @endcan
             <ul class="nav navbar-nav">
-                <li><a href="{{ route('aposta.index') }}">Aposta</a></li>
+                <li><a href="{{ route('aposta.index') }}">Apostar</a></li>
             </ul>
             @endif
             <!-- Right Side Of Navbar -->

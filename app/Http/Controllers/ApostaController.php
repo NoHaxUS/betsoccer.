@@ -36,7 +36,8 @@ class ApostaController extends Controller
 public function listaAposta(){
     $apostaWins=[];
     $count = 0;
-    $apostas = \App\Aposta::where('pago','<>', true)->get();        
+    $apostas = \App\Aposta::with('user')
+    ->where('pago','<>', true)->get();        
         //$apostas = \App\Aposta::all();
         //dd($apostas);
     foreach ($apostas as $aposta){
@@ -45,15 +46,17 @@ public function listaAposta(){
             $count++;
         }
     }
-    dd($apostaWins);
-
+return view('aposta.wins', compact('apostaWins'));
 }
 
 public function apostasWins ($aposta)
 {
     $i=0;
     foreach ($aposta->jogo as $key => $jogo) 
-    {    
+    {   
+        if((is_null($jogo->r_casa)) && (is_null($jogo->r_fora))) {           
+           return false;
+        }
         if(($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {               
             $i++;         
         }

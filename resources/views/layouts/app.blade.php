@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" class="no-js">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +10,8 @@
     <!-- Fonts -->
     {!! Html::style('css/bootstrap.min.css') !!}
     {!! Html::style('css/bootstrap-datetimepicker.min.css') !!}
+    {!! Html::style('css/default.css') !!}
+    {!! Html::style('css/component.css') !!}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700"/>
 
@@ -67,8 +69,17 @@
 {!! Html::script('/js/bootstrap-datetimepicker.min.js') !!}
 {!! Html::script('/js/date.js') !!}
 {!! Html::script('/js/form.js') !!}
+{!! Html::script('/js/modernizr.custom.js') !!}
+{!! Html::script('/js/classie.js') !!}
+{!! Html::script('/js/modalEffects.js') !!}
+<script>
+            // this is important for IEs
+            var polyfilter_scriptpath = '/js/';
+        </script>
+        {!! Html::script('/js/cssParser.js') !!}
+        {!! Html::script('/js/css-filters-polyfill.js') !!}
 
-{{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-{{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-</body>
-</html>
+        {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+        {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+    </body>
+    </html>
