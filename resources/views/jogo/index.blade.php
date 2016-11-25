@@ -38,7 +38,7 @@
                     <th>+2.5</th>
                     <th>-2.5</th>
                     <th>Ambas</th>                    
-                    <th>Ação</th>
+                    <th>Ação</th> 
                 </tr>
             </thead>
             <tbody>

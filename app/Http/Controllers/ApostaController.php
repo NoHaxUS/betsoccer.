@@ -154,7 +154,7 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
         $aposta = $this->registrarAposta($request, $user);              //Registra aposta
         //$codigo = 'bit' . substr('00000' . $aposta->id, -6);            //Cria código de aposta
         return response()->json(
-            ['aposta' => $aposta, 'codigo' => $aposta->codigo]);                //Retorna json com a aposta feita e código
+            ['aposta' => $aposta]);                //Retorna json com a aposta feita e código
     }
 
     /** Método que verifica se usuário possui alguma restrição
