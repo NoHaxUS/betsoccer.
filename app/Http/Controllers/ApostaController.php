@@ -20,107 +20,107 @@ class ApostaController extends Controller
     {
 
 
-     $jogos = \App\Jogo::with('time', 'campeonato')
-     ->whereBetween( 'data',[Carbon::now()->addMinute(5),Carbon::now()->addDay(1)->setTime(23,59,59)])
-     ->get();
-     return response()->json(array("jogos" => $jogos));
- }
+        $jogos = \App\Jogo::with('time', 'campeonato')
+            ->whereBetween('data', [Carbon::now()->addMinute(5), Carbon::now()->addDay(1)->setTime(23, 59, 59)])
+            ->get();
+        return response()->json(array("jogos" => $jogos));
+    }
 
- public function index()
- {
-    $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-    $jogos = \App\Jogo::with('time', 'campeonato')->get();
-    $campeonatos = \App\Campeonato::all();
-    return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
-}
-public function listaAposta(){
-    $apostaWins=[];
-    $count = 0;
-    $apostas = \App\Aposta::where('pago','<>', true)->get();        
+    public function index()
+    {
+        $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
+        $jogos = \App\Jogo::with('time', 'campeonato')->get();
+        $campeonatos = \App\Campeonato::all();
+        return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
+    }
+
+    public function listaAposta()
+    {
+        $apostaWins = [];
+        $count = 0;
+        $apostas = \App\Aposta::where('pago', '<>', true)->get();
         //$apostas = \App\Aposta::all();
         //dd($apostas);
-    foreach ($apostas as $aposta){
-        if ($this->apostasWins($aposta)) {
-            $apostaWins[$count]=$aposta;
-            $count++;
+        foreach ($apostas as $aposta) {
+            if ($this->apostasWins($aposta)) {
+                $apostaWins[$count] = $aposta;
+                $count++;
+            }
+        }
+        dd($apostaWins);
+    }
+
+    public function apostasWins($aposta)
+    {
+        $i = 0;
+        foreach ($aposta->jogo as $key => $jogo) {
+            if (($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "valor_fora") && ($jogo->r_casa < $jogo->r_fora)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "valor_empate") && ($jogo->r_casa == $jogo->r_fora)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "ambas_gol") && ($jogo->r_casa > 0 && $jogo->r_fora > 0)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "min_gol_3") && ($jogo->r_casa + $jogo->r_fora >= 3)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "max_gol_2") && ($jogo->r_casa + $jogo->r_fora == 2)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "valor_1_2") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa - $jogo->r_fora >= 2)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "valor_1_2") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_fora - $jogo->r_casa >= 2)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_casa >= $jogo->r_fora)) {
+                $i++;
+            }
+            if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
+                $i++;
+            }
+        }
+        if ($i != count($aposta->jogo)) {
+            return false;
+        } else {
+            return true;
         }
     }
-    dd($apostaWins);
 
-}
-
-public function apostasWins ($aposta)
-{
-    $i=0;
-    foreach ($aposta->jogo as $key => $jogo) 
-    {    
-        if(($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {               
-            $i++;         
-        }
-        if(($jogo->pivot->tpalpite == "valor_fora") && ($jogo->r_casa < $jogo->r_fora)){
-            $i++;
-        }
-        if(($jogo->pivot->tpalpite == "valor_empate") && ($jogo->r_casa == $jogo->r_fora)){
-            $i++;
-        }
-        if(($jogo->pivot->tpalpite == "ambas_gol") && ($jogo->r_casa > 0 && $jogo->r_fora > 0)){
-            $i++;
-        }
-        if(($jogo->pivot->tpalpite == "min_gol_3") && ($jogo->r_casa + $jogo->r_fora >= 3)){
-            $i++;
-        }
-        if(($jogo->pivot->tpalpite == "max_gol_2") &&  ($jogo->r_casa + $jogo->r_fora == 2)){
-            $i++;
-        }
-        if (($jogo->pivot->tpalpite=="valor_1_2") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa-$jogo->r_fora >=2)) {
-            $i++;
-        }
-        if (($jogo->pivot->tpalpite=="valor_1_2") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_fora-$jogo->r_casa >=2)){
-            $i++;
-        }
-        if (($jogo->pivot->tpalpite=="valor_dupla") &&($jogo->valor_casa > $jogo->valor_fora && $jogo->r_casa >= $jogo->r_fora)) {
-            $i++;
-        }
-        if (($jogo->pivot->tpalpite=="valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
-            $i++;
-        }  
-    } 
-    if ($i!= count($aposta->jogo)) {
-        return false;
-    }else{
-        return true;
+    public function cadastrar()
+    {
+        $time = \App\Jogo::all();
+        return view('aposta.cadastrar', compact('time'));
     }
-}
 
-public function cadastrar()
-{
-    $time = \App\Jogo::all();
-    return view('aposta.cadastrar', compact('time'));
-}
-
-public function salvar(\App\Http\Requests\ApostaRequest $request)
-{
-    $jogo = [];
-    $palpite = [];
-    $jogo = $request->get('jogo');
+    public function salvar(\App\Http\Requests\ApostaRequest $request)
+    {
+        $jogo = [];
+        $palpite = [];
+        $jogo = $request->get('jogo');
         //dd($request->all());
-    $aposta = \App\Aposta::create($request->all());
-    foreach ($jogo as $jogos => $value) {
-        $jo = Jogo::find($value);
-        $text = "palpite";
-        $text .= $value;
-        $consu = $request->get($text);
-        $palpite ['palpite'] = $jo->$consu;
-        $palpite ['tpalpite'] = $consu;
-        $aposta->jogo()->attach($value, $palpite);
-    }
-    $aposta->save();
-    \Session::flash('flash_message', [
-        'msg' => "Aposta realizada com Sucesso",
-        'class' => "alert-success"
+        $aposta = \App\Aposta::create($request->all());
+        foreach ($jogo as $jogos => $value) {
+            $jo = Jogo::find($value);
+            $text = "palpite";
+            $text .= $value;
+            $consu = $request->get($text);
+            $palpite ['palpite'] = $jo->$consu;
+            $palpite ['tpalpite'] = $consu;
+            $aposta->jogo()->attach($value, $palpite);
+        }
+        $aposta->save();
+        \Session::flash('flash_message', [
+            'msg' => "Aposta realizada com Sucesso",
+            'class' => "alert-success"
         ]);
-    return redirect()->route('aposta.index');
-}
+        return redirect()->route('aposta.index');
+    }
 
     /**Método para realização de aposta via Web Service
      * @param Request $request dados da aposta
@@ -132,10 +132,10 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
         $resposta = $this->verificarUsuario($user);                         //Verifica restrição usuário
         if (!is_null($resposta)):                                           //Se retornou restrição
             return response()->json($resposta, 400);                        //Retorna json com restrição encontrada
-            endif;
+        endif;
         $jogos_invalidos = $this->verificarJogos($request->jogo);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
-        return response()->json(
+            return response()->json(
                 ['jogos_invalidos' => $jogos_invalidos], 400);          //retorna json com array com todos os jogos inválidos
         endif;
         /*$palpites_invalidos = $this->verificarPalpites($palpites);    //Verifica se há palpites inválidos
@@ -157,10 +157,10 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
     {
         if (is_null($user)):                        //Verificar se usuário existe
             return ['status' => 'Inexistente'];     //Retorna status de usuário inexistente
-            endif;
+        endif;
         if (!$user->ativo):                         //Verificar se usuário não está ativo
             return ['status' => 'Inativo'];         //Retorna status de usuário inativo
-            endif;
+        endif;
         return null;                                //Retorn null
     }
 
@@ -180,7 +180,7 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
             if ($jogo == null || (new Carbon($jogo->data)) < Carbon::now()->subMinute(5)):
                 $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
             endif;
-            endforeach;
+        endforeach;
         return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
     }
 
@@ -195,8 +195,8 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
             $jogo = Jogo::find($palpite['jogo_id']);    //Busca jogo pelo id
             if ($jogo->$palpite['tpalpite'] == 0):       //Verifica se valor do palpite no jogo é zero
                 $palpites_invalidos[] = $palpite;       //Passa palpite inválido para array
-                endif;
-                endforeach;
+            endif;
+        endforeach;
         return $palpites_invalidos;                     //Retorna array com palpites inválidos
     }
 
@@ -215,10 +215,9 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
             $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
             $palpite['tpalpite'] = $request->tpalpite[$i];          //Passa texto do palpite para array
             $aposta->jogo()->attach($request->jogo[$i], $palpite);  //Relaciona aposta com jogo incluindo os dados de palpite
-            endfor;
+        endfor;
         return $aposta;                                             //Retorna a aposta
     }
-
 
 
     /** Método que cálcula o valor a ser recebido pelas apostas feitas
@@ -232,55 +231,59 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
         $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
         if (!is_null($resposta)):                                   //Se retornou restrição
             return response()->json($resposta);                     //Retorna json com restrição encontrada
-            endif;
+        endif;
         $apostas = Aposta::recentes($user->id);                     //Busca as apostas recentes feitas pelo usuário
-        $total = $apostas->sum('valor_aposta');                     //Calcula o valor total
-        $ganho_total = 0;                                           //Cria variável para acumular o ganho de cada aposta
-        $lista_apostas = Array();                                   //Cria array para guardar lista de apostas
+        $ganho_simples = 0;                                         //Cria variável para acumular comissão com apostas simples (2 jogos)
+        $ganho_mediano = 0;                                         //Cria variável para acumular comissão com apostas medianas (3 jogos)
+        $ganho_maximo = 0;                                          //Cria variável para acumular comissão com apostas máximas (mais de 2 jogos)
+        $qtd_jogos = 0;                                             //Cria variável para acumular quantidade de jogos
         foreach ($apostas as $aposta):                              //Itera pela lista de apostas
-        switch ($aposta->jogo()->count()) :
-        case 2:
-                    //Gera valor para cálculo de ganho para aposta com dois jogos
-        $porcentagem = config('constantes.porcentagem_simples') / 100;
-        break;
-        case 3:
-                    //Gera valor para cálculo de ganho para aposta com três jogos
-        $porcentagem = config('constantes.porcentagem_mediana') / 100;
-        break;
-        default:
-                    //Gera valor para cálculo de ganho para aposta com mais três jogos
-        $porcentagem = config('constantes.porcentagem_maxima') / 100;
-        break;
-        endswitch;
-            $ganho_aposta = $aposta->valor_aposta * $porcentagem;   //Calcula o ganho por cada aposta
-            //Cria array para armazenar id e ganho da aposta
-            $lista_apostas [] = ['aposta' => $aposta->id, 'ganho' => $ganho_aposta];
-            $ganho_total += $ganho_aposta;                          //Soma o ganho de cada aposta para formar o montante
-            endforeach;
-        //Guarda dados de cambista (id e nome)
-            $cambista = ['numero' => $user->id, 'nome' => $user->name];
-        //Retorna o dados do cambista, lista de apostas, ganho total do cambista e valor total de apostas
-            return response()->json([
-                'cambista' => $cambista,
-                'apostas' => $lista_apostas,
-                'ganho_total' => $ganho_total,
-                'total' => $total,
-                ]);
-        }
+            switch ($aposta->jogo()->count()) :                     //Seleciona quantidade de jogos como parâmetro
+                case 2:
+                    //Cálcula ganho para aposta com dois jogos
+                    $ganho_simples += $aposta->valor_aposta * (config('constantes.porcentagem_simples') / 100);
+                    break;
+                case 3:
+                    //Cálcula ganho para aposta com três jogos
+                    $ganho_mediano += $aposta->valor_aposta * (config('constantes.porcentagem_mediana') / 100);
+                    break;
+                default:
+                    //Cálcula ganho para aposta com mais três jogos
+                    $ganho_maximo += $aposta->valor_aposta * (config('constantes.porcentagem_maxima') / 100);
+                    break;
+            endswitch;
+            $qtd_jogos += $aposta->jogo()->count();                 //Acrescenta quantidade de jogos a variável
 
-        public function show($id)
-        {
+        endforeach;
+        //Obtém o valor total da comissão somando as comissões de aposta simples, mediana e máxima
+        $ganho_total = $ganho_simples + $ganho_mediano + $ganho_maximo;
+        /*Retorna o id e nome do cambista, quantidade de apostas, quantidade de jogos, comissão de apostas simples,
+        mediana e máxima, comissão total do cambista*/
+        return response()->json([
+            'id' => $user->id,
+            'cambista' => $user->name,
+            'qtd_apostas' => $apostas->count(),
+            'qtd_jogos' => $qtd_jogos,
+            'comissao_simples' => $ganho_simples,
+            'comissao_mediana' => $ganho_mediano,
+            'comissao_maxima' => $ganho_maximo,
+            'comissao_total' => $ganho_total
+        ]);
+    }
 
-        }
+    public function show($id)
+    {
 
-        public function showAll()
-        {
-            $jogos = \App\Aposta::find(4)->jogo()->get();
-            foreach ($jogos as $jogo) {
-                dd($jogo->pivot->palpite);
-            }
-            dd($jogos);
+    }
+
+    public function showAll()
+    {
+        $jogos = \App\Aposta::find(4)->jogo()->get();
+        foreach ($jogos as $jogo) {
+            dd($jogo->pivot->palpite);
         }
+        dd($jogos);
+    }
 
     /*
     * Metodo calcula valor a pagar por aposta
