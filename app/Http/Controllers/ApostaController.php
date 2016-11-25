@@ -20,14 +20,14 @@ class ApostaController extends Controller
     {
 
 
-       $jogos = \App\Jogo::with('time', 'campeonato')
-       ->whereBetween( 'data',[Carbon::now()->addMinute(5),Carbon::now()->addDay(1)->setTime(23,59,59)])
-       ->get();
-       return response()->json(array("jogos" => $jogos));
-   }
+     $jogos = \App\Jogo::with('time', 'campeonato')
+     ->whereBetween( 'data',[Carbon::now()->addMinute(5),Carbon::now()->addDay(1)->setTime(23,59,59)])
+     ->get();
+     return response()->json(array("jogos" => $jogos));
+ }
 
-   public function index()
-   {
+ public function index()
+ {
     $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
     $jogos = \App\Jogo::with('time', 'campeonato')->get();
     $campeonatos = \App\Campeonato::all();
@@ -59,9 +59,9 @@ public function apostasWins ($aposta)
     foreach ($aposta->jogo as $key => $jogo) 
     {   
         if((is_null($jogo->r_casa)) && (is_null($jogo->r_fora))) {           
-         return false;
-     }
-     if(($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {               
+           return false;
+       }
+       if(($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {               
         $i++;         
     }
     if(($jogo->pivot->tpalpite == "valor_fora") && ($jogo->r_casa < $jogo->r_fora)){
@@ -218,9 +218,10 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
     {
         $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
         $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
-        $aposta->save();                                            //Salva aposta        
         $hashids = new Hashids('betsoccer', 5, 'ASDFGHJKLZXCVBNMQWERTYUIOP');
         $aposta->codigo=$hashids->encode($aposta->id);
+        $aposta->save();                                            //Salva aposta        
+        
         for ($i = 0; $i < count($request->jogo); $i++):             //Criar iteração com base no número de jogos
             $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
             $palpite['tpalpite'] = $request->tpalpite[$i];          //Passa texto do palpite para array
