@@ -26,6 +26,9 @@
                     <th>Cod</th>
                     <th>Hora</th>
                     <th>Casa</th>
+                    <th>R</th>
+                    <th></th>
+                    <th>R</th>
                     <th>Fora</th>
                     <th>Casa</th>
                     <th>Emp</th>
@@ -46,6 +49,9 @@
                     <th scope="row">{{ $jo->codigo }}</th>
                     <td>{{date('H:i', strtotime(toHora($jo->data))) }}</td>
                     <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
+                    <td>{{ $jo->r_casa or "?" }}</td>
+                    <td>X</td>
+                    <td>{{ $jo->r_casa or "?" }}</td>
                     <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                     <td>{{ $jo->valor_casa }}</td>
                     <td>{{ $jo->valor_empate }}</td>

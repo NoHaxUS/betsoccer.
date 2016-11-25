@@ -218,7 +218,7 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
     {
         $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
         $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
-        $hashids = new Hashids('betsoccer', 5, 'ASDFGHJKLZXCVBNMQWERTYUIOP');
+        $hashids = new Hashids('betsoccer', 5);
         $aposta->codigo=$hashids->encode($aposta->id);
         $aposta->save();                                            //Salva aposta        
         
