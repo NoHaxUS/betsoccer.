@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Jogo;
 use Carbon\Carbon;
 use DB;
-use Hashids\Hashids;
+
 class ApostaController extends Controller
 {
     public function __construct()
@@ -34,70 +34,62 @@ class ApostaController extends Controller
     return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
 }
 public function listaAposta(){
-
     $apostaWins=[];
     $count = 0;
-    $apostas = \App\Aposta::with('user')
-    ->where('pago','<>', true)->get();
-    $temp=$this->calcRetorno($apostas);               
+    $apostas = \App\Aposta::where('pago','<>', true)->get();        
         //$apostas = \App\Aposta::all();
         //dd($apostas);
-    foreach ($apostas as $key => $aposta){
+    foreach ($apostas as $aposta){
         if ($this->apostasWins($aposta)) {
             $apostaWins[$count]=$aposta;
-            $total[$count]= $temp[$key];
             $count++;
-            
         }
-    }    
-    return view('aposta.wins', compact('apostaWins','total'));
+    }
+    dd($apostaWins);
+
 }
 
 public function apostasWins ($aposta)
 {
     $i=0;
     foreach ($aposta->jogo as $key => $jogo) 
-    {   
-        if((is_null($jogo->r_casa)) && (is_null($jogo->r_fora))) {           
-           return false;
-       }
-       if(($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {               
-        $i++;         
+    {    
+        if(($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {               
+            $i++;         
+        }
+        if(($jogo->pivot->tpalpite == "valor_fora") && ($jogo->r_casa < $jogo->r_fora)){
+            $i++;
+        }
+        if(($jogo->pivot->tpalpite == "valor_empate") && ($jogo->r_casa == $jogo->r_fora)){
+            $i++;
+        }
+        if(($jogo->pivot->tpalpite == "ambas_gol") && ($jogo->r_casa > 0 && $jogo->r_fora > 0)){
+            $i++;
+        }
+        if(($jogo->pivot->tpalpite == "min_gol_3") && ($jogo->r_casa + $jogo->r_fora >= 3)){
+            $i++;
+        }
+        if(($jogo->pivot->tpalpite == "max_gol_2") &&  ($jogo->r_casa + $jogo->r_fora == 2)){
+            $i++;
+        }
+        if (($jogo->pivot->tpalpite=="valor_1_2") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa-$jogo->r_fora >=2)) {
+            $i++;
+        }
+        if (($jogo->pivot->tpalpite=="valor_1_2") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_fora-$jogo->r_casa >=2)){
+            $i++;
+        }
+        if (($jogo->pivot->tpalpite=="valor_dupla") &&($jogo->valor_casa > $jogo->valor_fora && $jogo->r_casa >= $jogo->r_fora)) {
+            $i++;
+        }
+        if (($jogo->pivot->tpalpite=="valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
+            $i++;
+        }  
+    } 
+    if ($i!= count($aposta->jogo)) {
+        return false;
+    }else{
+        return true;
     }
-    if(($jogo->pivot->tpalpite == "valor_fora") && ($jogo->r_casa < $jogo->r_fora)){
-        $i++;
-    }
-    if(($jogo->pivot->tpalpite == "valor_empate") && ($jogo->r_casa == $jogo->r_fora)){
-        $i++;
-    }
-    if(($jogo->pivot->tpalpite == "ambas_gol") && ($jogo->r_casa > 0 && $jogo->r_fora > 0)){
-        $i++;
-    }
-    if(($jogo->pivot->tpalpite == "min_gol_3") && ($jogo->r_casa + $jogo->r_fora >= 3)){
-        $i++;
-    }
-    if(($jogo->pivot->tpalpite == "max_gol_2") &&  ($jogo->r_casa + $jogo->r_fora == 2)){
-        $i++;
-    }
-    if (($jogo->pivot->tpalpite=="valor_1_2") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa-$jogo->r_fora >=2)) {
-        $i++;
-    }
-    if (($jogo->pivot->tpalpite=="valor_1_2") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_fora-$jogo->r_casa >=2)){
-        $i++;
-    }
-    if (($jogo->pivot->tpalpite=="valor_dupla") &&($jogo->valor_casa > $jogo->valor_fora && $jogo->r_casa >= $jogo->r_fora)) {
-        $i++;
-    }
-    if (($jogo->pivot->tpalpite=="valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
-        $i++;
-    }  
-} 
-if ($i!= count($aposta->jogo)) 
-{
-    return false;
-}else{
-    return true;
-}
 }
 
 public function cadastrar()
@@ -152,9 +144,9 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
                 ['palpites_invalidos' => $palpites_invalidos]);         //retorna json com array com todos os palpites inválidos
                 endif;*/
         $aposta = $this->registrarAposta($request, $user);              //Registra aposta
-        //$codigo = 'bit' . substr('00000' . $aposta->id, -6);            //Cria código de aposta
+        $codigo = 'bit' . substr('00000' . $aposta->id, -6);            //Cria código de aposta
         return response()->json(
-            ['aposta' => $aposta, 'codigo' => $aposta->codigo]);                //Retorna json com a aposta feita e código
+            ['aposta' => $aposta, 'codigo' => $codigo]);                //Retorna json com a aposta feita e código
     }
 
     /** Método que verifica se usuário possui alguma restrição
@@ -218,10 +210,7 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
     {
         $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
         $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
-        $hashids = new Hashids('betsoccer', 5, 'ASDFGHJKLZXCVBNMQWERTYUIOP');
-        $aposta->codigo=$hashids->encode($aposta->id);
-        $aposta->save();                                            //Salva aposta        
-        
+        $aposta->save();                                            //Salva aposta
         for ($i = 0; $i < count($request->jogo); $i++):             //Criar iteração com base no número de jogos
             $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
             $palpite['tpalpite'] = $request->tpalpite[$i];          //Passa texto do palpite para array
@@ -278,31 +267,29 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
                 'total' => $total,
                 ]);
         }
+
+        public function show($id)
+        {
+
+        }
+
+        public function showAll()
+        {
+            $jogos = \App\Aposta::find(4)->jogo()->get();
+            foreach ($jogos as $jogo) {
+                dd($jogo->pivot->palpite);
+            }
+            dd($jogos);
+        }
+
     /*
     * Metodo calcula valor a pagar por aposta
     * */
-    public function calcRetorno($apostas)
-    {
-
-        $total=[];                
-        foreach ($apostas as $key => $aposta) {
-            $total[$key]=$aposta->valor_aposta;
-            foreach ($aposta->jogo as $jogo) {
-                $total[$key]*=$jogo->pivot->palpite;
-
-            }
-            $total[$key]=number_format($total[$key],2,',','.');
-        }
-        return $total;
-    }
     public function resumoAposta()
     {
         //Obtenho todas as apostas
-
-
-        $apostas = Aposta::with(['jogo'])->get();       
-        $total=$this->calcRetorno($apostas);
+        $apostas = Aposta::with(['jogo'])->get();
         //Lista de apostas é passada para a view
-        return view('apostaJogo.index', compact('apostas','total'));
+        return view('apostaJogo.index', compact('apostas'));
     }
 }
