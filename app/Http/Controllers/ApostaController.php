@@ -218,8 +218,9 @@ public function salvar(\App\Http\Requests\ApostaRequest $request)
     {
         $aposta = new \App\Aposta($request->all());                 //Instancia uma aposta
         $aposta->users_id = $user->id;                              //Passa id do usuário responsável pela aposta
-        $hashids = new Hashids('betsoccer', 5);
+        $hashids = new Hashids('betsoccer2', 5);        
         $aposta->codigo=$hashids->encode($aposta->id);
+        dd($aposta->codigo);x
         $aposta->save();                                            //Salva aposta        
         
         for ($i = 0; $i < count($request->jogo); $i++):             //Criar iteração com base no número de jogos
