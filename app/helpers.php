@@ -1,10 +1,5 @@
 <?php
 
-// ************************
-// Criado em 05/02/2015
-// Helper com utilidades criado por Felipe D.
-// ************************
-
     /**
      * Retorna data e hora.
      *
