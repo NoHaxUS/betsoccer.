@@ -14,11 +14,17 @@
             </p>
         </div>
     </div>
+    {{ csrf_field() }}
+    @foreach($datas as $d)
+    <h3>{{date('d/m/Y',strtotime(toData($d)))}}</h3>
+    @foreach(campsHora($d,$jogos) as $camp)
+    <h5>{{$camp}}</h5> 
     <div class="table-responsive">
         <table>
             <thead>
                 <tr>
                     <th>Cod</th>
+                    <th>Hora</th>
                     <th>Casa</th>
                     <th>Fora</th>
                     <th>Casa</th>
@@ -28,20 +34,17 @@
                     <th>Dupla</th>
                     <th>+2.5</th>
                     <th>-2.5</th>
-                    <th>Ambas</th>
-                    <th>Campeonato</th>
-                    <th>data</th>
+                    <th>Ambas</th>                    
                     <th>Ação</th>
                 </tr>
             </thead>
             <tbody>
-
-                {{ csrf_field() }}
-                @foreach($campeonatos as $camp)
                 @foreach($jogos as $jo)
-                @if ($camp->id == $jo->campeonatos_id)
+                @if ($camp == $jo->campeonato->descricao_campeonato)
+                
                 <tr>
                     <th scope="row">{{ $jo->codigo }}</th>
+                    <td>{{date('H:i', strtotime(toHora($jo->data))) }}</td>
                     <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
                     <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                     <td>{{ $jo->valor_casa }}</td>
@@ -52,23 +55,25 @@
                     <td>{{ $jo->max_gol_2 }}</td>
                     <td>{{ $jo->min_gol_3 }}</td>
                     <td>{{ $jo->ambas_gol }}</td>
-                    <td>{{ $jo->campeonato->descricao_campeonato }}</td>
-                    <td>{{date('d/m/Y H:i:s', strtotime($jo->data)) }}</td>
+                                       
                     <td>
                         <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Editar</a>
+                        <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">AddResult</a>
                         @if($jo->ativo == false)
                         <a class="btn btn-success" href="javascript:(confirm('Ativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Ativar</a>
                         @else
-                        <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Desativar</a>
+                        <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Desati.</a>
                         @endif
                     </td>
                 </tr>
                 @endif
                 @endforeach
-                @endforeach
             </tbody>
         </table>
     </div>
+    @endforeach
+    @endforeach
+
 
 </div>
 </div>

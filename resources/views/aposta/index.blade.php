@@ -17,7 +17,8 @@
                         <div class="row">
                             <div class="form-group">
                                 <p>
-                                    <button class="btn btn-success ">Apostar</button>
+                                    <h1>TELA SOBRE ALTERAÇÂO EFETUAR APOSTAS VIA APLICATIVO</h1>
+                                    <button class="btn btn-success" disabled="EM MANUTENÇÂO">Apostar</button>
                                 </p>
                             </div>
                         </div>
