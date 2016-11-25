@@ -81,8 +81,6 @@
         {!! Html::script('/js/cssParser.js') !!}
         {!! Html::script('/js/css-filters-polyfill.js') !!}
         {!! Html::script('http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js') !!}
-        
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
         {!! Html::script('js/js/jquery.stickyheader.js') !!}
 
         {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}

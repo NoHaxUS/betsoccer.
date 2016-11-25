@@ -16,7 +16,9 @@
     </div>
     {{ csrf_field() }}
     @foreach($datas as $d)
-    <h3>{{date('d/m/Y',strtotime(toData($d)))}}</h3>
+    <div >
+        <h3 align="center">{{date('d/m/Y',strtotime($d))}}</h3>
+    </div>
     @foreach(campsHora($d,$jogos) as $camp)
     <h5>{{$camp}}</h5> 
     <div class="table-responsive">
@@ -43,7 +45,7 @@
             </thead>
             <tbody>
                 @foreach($jogos as $jo)
-                @if ($camp == $jo->campeonato->descricao_campeonato)
+                @if (($camp == $jo->campeonato->descricao_campeonato) && (toData($jo->data) == $d))
                 
                 <tr>
                     <th scope="row">{{ $jo->codigo }}</th>
@@ -51,7 +53,7 @@
                     <td>{{ $jo->time->get(0)['descricao_time'] }}</td>
                     <td>{{ $jo->r_casa or "?" }}</td>
                     <td>X</td>
-                    <td>{{ $jo->r_casa or "?" }}</td>
+                    <td>{{ $jo->r_fora or "?" }}</td>
                     <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
                     <td>{{ $jo->valor_casa }}</td>
                     <td>{{ $jo->valor_empate }}</td>
