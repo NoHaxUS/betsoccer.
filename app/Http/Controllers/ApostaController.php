@@ -312,7 +312,26 @@ class ApostaController extends Controller
                   $premios[$key] *= $jogo->pivot->palpite;
                 }
             }
-       //     $premios[$key] = number_format($premios[$key], 2, ',', '.');
+        }
+        return $premios;
+    }
+    /**
+     * Método que cálcula o valor a ser pago com premios por cada aposta
+     * Passada por paramentro e reotnar um array com a lista dos premios
+     * @param $apostas Aposta Listas de aposta
+     * @return Array com coleção dos premios das apotas passadas.  
+     */
+    public function calcApostasPagas($apostas)
+    {
+
+        $premios = [];
+        foreach ($apostas as $key => $aposta) {
+            $premios[$key] = $aposta->valor_aposta;
+            foreach ($aposta->jogo as $jogo) {
+                if ($jogo->pivot->palpite != 0) {
+                  $premios[$key] *= $jogo->pivot->palpite;
+                }
+            }
         }
         return $premios;
     }
@@ -322,12 +341,19 @@ class ApostaController extends Controller
         $apostas = Aposta::with(['jogo'])
         ->where('pago', '<>', true)
         ->get();
+        $apostasPagas = Aposta::with(['jogo'])
+        ->where('pago', '=', true)
+        ->get();
+        
         $total=0;
+        $totalPago=0;
         $premios = $this->calcRetorno($apostas);
+        $premiosPago = $this->calcRetorno($apostasPagas);
+        $totalPago+=array_sum($premiosPago);
         $total+=array_sum($premios);
        
 
         //Lista de apostas é passada para a view
-        return view('aposta.allapostas', compact('apostas', 'premios','total'));
+        return view('aposta.allapostas', compact('apostas', 'premios','total','apostasPagas','premiosPago','totalPago'));
     }
 }
