@@ -40,7 +40,7 @@
                             <tr>
                                 <td>{{ $aposta->codigo }}</td>
                                 <td>{{date('d/m/Y - H:i', strtotime($aposta->created_at)) }}</td>
-                                <td>{{ $aposta->valor_aposta}}</td>
+                                <td>{{ number_format($aposta->valor_aposta, 2, ',', '.')}}</td>
                                 <td>{{ $aposta->nome_apostador}}</td>
                                 <td>{{ number_format($premios[$key], 2, ',', '.')}}</td>
                             </tr>
