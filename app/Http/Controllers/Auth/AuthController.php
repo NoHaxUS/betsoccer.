@@ -84,6 +84,7 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
             'role' => $data['role'],
             'codigo_seguranca' => $data['codigo_seguranca'],
+            'ultimo_pagamento' => \Carbon\Carbon::now(),
         ]);
     }
 

@@ -26,7 +26,7 @@ return [
     |'default' => env('DB_CONNECTION', 'mysql'),
     */
 
-    'default' => 'mysql1',
+    'default' => 'mysql',
 
     /*
     |--------------------------------------------------------------------------
@@ -54,11 +54,11 @@ return [
 
         'mysql' => [
         'driver' => 'mysql',
-        'host' => 'localhost',
+        'host' => '209.99.16.14',
         'port' => '3306',
-        'database' => 'homestead',
-        'username' => 'root',
-        'password' => '',
+        'database' => 'betsocf5_betsoccer00',
+        'username' => 'betsocf5',
+        'password' => '%8#3B8!d*gCn',
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix' => '',

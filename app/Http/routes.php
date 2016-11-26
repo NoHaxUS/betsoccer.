@@ -16,6 +16,7 @@
 Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.getJsonJogos']);
 Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
 Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
+Route::get('/aposta/premiosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@premiosApostas', 'as'=>'aposta.premiosApostas']);
 
 
 //rotas não auteticadas (TEMPORARIAMENTE)

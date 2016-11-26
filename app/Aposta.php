@@ -29,9 +29,7 @@ class Aposta extends Model
      */
     public function scopeRecentes($query, $user)
     {
-        /*return $query->where('users_id', $user_id)
-            ->whereDate('created_at', '>=', \Carbon\Carbon::now()->subDay(7))->get();*/
-        return $query->where('users_id', $user->id)
+       return $query->where('users_id', $user->id)
             ->whereDate('created_at', '>=', $user->ultimo_pagamento)->get();
     }
 

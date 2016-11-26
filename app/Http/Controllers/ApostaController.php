@@ -55,8 +55,8 @@ class ApostaController extends Controller
         }
         return view('aposta.wins', compact('apostaWins', 'total'));
     }
-     
-     /**
+
+    /**
      * Método que verifica se uma aposta foi vencedora ou não pega a lista de jogos de uma aposta
      * e verificar o resultados do jogo em relaçao aos palpites do apostador
      * Caso ele acerte todo os palpites retorna um true.
@@ -224,6 +224,7 @@ class ApostaController extends Controller
     {
         //Instancia uma aposta com dados vindos do request e passando id do usuário
         $aposta = \App\Aposta::create($request->all());
+        $aposta->users_id=$user->id;
         $hashids = new Hashids('betsoccer2', 5);
         $aposta->codigo = $hashids->encode($aposta->id);
         $aposta->save();                                            //Salva aposta
@@ -270,7 +271,7 @@ class ApostaController extends Controller
                     break;
             endswitch;
             if ($this->apostasWins($aposta)):                       //Verifica se aposta foi vencedora
-                $premiacao += $this->calcRetorno($aposta);          //soma a premiação
+                $premiacao += $this->calcularPremio($aposta);       //soma a premiação
             endif;
             $qtd_jogos += $aposta->jogo()->count();                 //Acrescenta quantidade de jogos a variável
             //dd($premiacao);
@@ -282,7 +283,7 @@ class ApostaController extends Controller
         $liquido = $apostas->sum('valor_aposta') - $premiacao - $ganho_total;
         //dd($liquido);
         return response()->json([
-            'id' => $user->id,
+            'codigo' => $user->codigo,
             'cambista' => $user->name,
             'qtd_apostas' => $apostas->count(),
             'qtd_jogos' => $qtd_jogos,
@@ -295,11 +296,109 @@ class ApostaController extends Controller
         ]);
     }
 
+    /** Método que verifica a relação de premiações das apostas
+     * @param $codigo_seguranca string codigo de segurança do cambista
+     * @return \Illuminate\Http\JsonResponse informações relacionadas a apostas e premiação
+     */
+    public function premiosApostas($codigo_seguranca)
+    {
+        //Busca o usuário pelo código de segurança
+        $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
+        $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
+        if (!is_null($resposta)):                                   //Se retornou restrição
+            return response()->json($resposta, 400);                //Retorna json com restrição encontrada
+        endif;
+        $apostas = Aposta::recentes($user);                         //Busca as apostas recentes feitas pelo usuário
+        $premiacao_total = 0;
+        $ganho_total = 0;                                             //Cria variável para acumular quantidade de jogos
+        $premiacao_paga = 0;
+        $premiacao_nao_paga = 0;
+        $lista_apostas = Array();
+        $apostas_vencedoras = Array();
+        foreach ($apostas as $aposta):                              //Itera pela lista de apostas
+            switch ($aposta->jogo()->count()) :                     //Seleciona a quantidade de jogos como parâmetro
+                case 2:
+                    //Gera valor para cálculo de ganho para aposta com dois jogos
+                    $porcentagem = config('constantes.porcentagem_simples') / 100;
+                    break;
+                case 3:
+                    //Gera valor para cálculo de ganho para aposta com três jogos
+                    $porcentagem = config('constantes.porcentagem_mediana') / 100;
+                    break;
+                default:
+                    //Gera valor para cálculo de ganho para aposta com mais três jogos
+                    $porcentagem = config('constantes.porcentagem_maxima') / 100;
+                    break;
+            endswitch;
+            $ganho_aposta = $aposta->valor_aposta * $porcentagem;   //Calcula o ganho por cada aposta
+            //Cria array para armazenar id e ganho da aposta
+            $lista_apostas [] = [
+                'aposta' => $aposta->codigo,
+                'ganho' => $ganho_aposta,
+                'jogos' => $this->dadosJogos($aposta->jogo)];
+
+            if ($this->apostasWins($aposta)):                       //Se aposta for vencedora
+                $premiacao_aposta = $this->calcularPremio($aposta); //Calcula prêmio
+                //Gera array de dados da aposta
+                $apostas_vencedoras[] = $this->dadosAposta($aposta, $premiacao_aposta);
+                if ($aposta->pago):                                 //Verifica se aposta foi paga (o prêmio)
+                    $premiacao_paga += $premiacao_aposta;           //Soma valor a de premiações pagas
+                else:
+                    $premiacao_nao_paga += $premiacao_aposta;       //Soma valor a premiações não pagas
+                endif;
+                $premiacao_total += $premiacao_aposta;              //Acrescenta a premiação da aposta a premiação total
+            endif;
+            $ganho_total += $ganho_aposta;                          //Soma o ganho de cada aposta para formar o montante
+        endforeach;
+
+        //dd($premiacao_total);
+        return response()->json([
+            'codigo' => $user->codigo,
+            'cambista' => $user->name,
+            'apostas_vencedoras' => $apostas_vencedoras,
+            'total_premiacao' => $premiacao_total,
+            'apostas' => $lista_apostas,
+        ]);
+    }
+
+    private function dadosAposta($aposta, $premiacao_aposta = 0)
+    {
+        return [
+            'codigo' => $aposta->codigo,
+            'data' => $aposta->created_at,
+            'apostador' => $aposta->nome_apostador,
+            'valor_apostado' => $aposta->valor_aposta,
+            'premio' => $premiacao_aposta,
+            'paga' => $aposta->pago,
+            'jogos' => $this->dadosJogos($aposta->jogo)
+        ];
+    }
+
+    private function dadosJogos($jogos)
+    {
+        $lista = Array();
+        foreach ($jogos as $jogo):
+            $lista[] = ['times' => $jogo->time()->get()->toArray(),
+                'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
+                'data' => $jogo->data];
+        endforeach;
+        return $lista;
+    }
+
+    private function calcularPremio($aposta)
+    {
+        $premio = $aposta->valor_aposta;
+        foreach ($aposta->jogo as $jogo):
+            $premio *= $jogo->pivot->palpite;
+        endforeach;
+        return $premio;
+    }
+
     /**
      * Método que cálcula o valor a ser pago com premios por cada aposta
      * Passada por paramentro e reotnar um array com a lista dos premios
      * @param $apostas Aposta Listas de aposta
-     * @return Array com coleção dos premios das apotas passadas.  
+     * @return Array com coleção dos premios das apotas passadas.
      */
     public function calcRetorno($apostas)
     {
@@ -309,27 +408,27 @@ class ApostaController extends Controller
             $premios[$key] = $aposta->valor_aposta;
             foreach ($aposta->jogo as $jogo) {
                 if ($jogo->pivot->palpite != 0) {
-                  $premios[$key] *= $jogo->pivot->palpite;
+                    $premios[$key] *= $jogo->pivot->palpite;
                 }
             }
         }
         return $premios;
     }
+
     /**
      * Método que cálcula o valor a ser pago com premios por cada aposta
      * Passada por paramentro e reotnar um array com a lista dos premios
      * @param $apostas Aposta Listas de aposta
-     * @return Array com coleção dos premios das apotas passadas.  
+     * @return Array com coleção dos premios das apotas passadas.
      */
     public function calcApostasPagas($apostas)
     {
-
         $premios = [];
         foreach ($apostas as $key => $aposta) {
             $premios[$key] = $aposta->valor_aposta;
             foreach ($aposta->jogo as $jogo) {
                 if ($jogo->pivot->palpite != 0) {
-                  $premios[$key] *= $jogo->pivot->palpite;
+                    $premios[$key] *= $jogo->pivot->palpite;
                 }
             }
         }
@@ -339,21 +438,21 @@ class ApostaController extends Controller
     public function resumoAposta()
     {
         $apostas = Aposta::with(['jogo'])
-        ->where('pago', '<>', true)
-        ->get();
+            ->where('pago', '<>', true)
+            ->get();
         $apostasPagas = Aposta::with(['jogo'])
-        ->where('pago', '=', true)
-        ->get();
-        
-        $total=0;
-        $totalPago=0;
+            ->where('pago', '=', true)
+            ->get();
+
+        $total = 0;
+        $totalPago = 0;
         $premios = $this->calcRetorno($apostas);
         $premiosPago = $this->calcRetorno($apostasPagas);
-        $totalPago+=array_sum($premiosPago);
-        $total+=array_sum($premios);
-       
+        $totalPago += array_sum($premiosPago);
+        $total += array_sum($premios);
+
 
         //Lista de apostas é passada para a view
-        return view('aposta.allapostas', compact('apostas', 'premios','total','apostasPagas','premiosPago','totalPago'));
+        return view('aposta.allapostas', compact('apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
     }
 }
