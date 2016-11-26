@@ -16,11 +16,12 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('codigo')->unique();
+            $table->string('codigo')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'apostador']);
             $table->string('codigo_seguranca')->unique();
             $table->boolean('ativo')->default(true);
+            $table->timestamp('ultimo_pagamento');
             $table->rememberToken();
             $table->timestamps();
         });
