@@ -223,7 +223,7 @@ class ApostaController extends Controller
     private function registrarAposta(Request $request, \App\User $user)
     {
         //Instancia uma aposta com dados vindos do request e passando id do usuário
-        $aposta = \App\Aposta::create([$request->all(), 'users_id' => $user->id]);
+        $aposta = \App\Aposta::create($request->all());
         $hashids = new Hashids('betsoccer2', 5);
         $aposta->codigo = $hashids->encode($aposta->id);
         $aposta->save();                                            //Salva aposta
@@ -304,23 +304,30 @@ class ApostaController extends Controller
     public function calcRetorno($apostas)
     {
 
-        $total = [];
+        $premios = [];
         foreach ($apostas as $key => $aposta) {
-            $total[$key] = $aposta->valor_aposta;
+            $premios[$key] = $aposta->valor_aposta;
             foreach ($aposta->jogo as $jogo) {
-                $total[$key] *= $jogo->pivot->palpite;
-
+                if ($jogo->pivot->palpite != 0) {
+                  $premios[$key] *= $jogo->pivot->palpite;
+                }
             }
-            $total[$key] = number_format($total[$key], 2, ',', '.');
+       //     $premios[$key] = number_format($premios[$key], 2, ',', '.');
         }
-        return $total;
+        return $premios;
     }
 
     public function resumoAposta()
     {
-        $apostas = Aposta::with(['jogo'])->get();
-        $total = $this->calcRetorno($apostas);
+        $apostas = Aposta::with(['jogo'])
+        ->where('pago', '<>', true)
+        ->get();
+        $total=0;
+        $premios = $this->calcRetorno($apostas);
+        $total+=array_sum($premios);
+       
+
         //Lista de apostas é passada para a view
-        return view('apostaJogo.index', compact('apostas', 'total'));
+        return view('aposta.allapostas', compact('apostas', 'premios','total'));
     }
 }

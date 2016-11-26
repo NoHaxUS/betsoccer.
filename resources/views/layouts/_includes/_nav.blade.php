@@ -30,15 +30,15 @@
                 </ul>
                 <ul class="nav navbar-nav">
                     <li><a href="{{ route('jogo.index') }}">Jogos</a></li>
-                </ul>
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ route('apostaJogo.index') }}">Pagar</a></li>
-                </ul>
+                </ul>               
                 <ul class="nav navbar-nav">
                     <li><a href="{{ route('jogo.allJogosPlacar') }}">Placar</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
                     <li><a href="{{ route('aposta.listaAposta') }}">ApostasVencedoras</a></li>
+                </ul>
+                 <ul class="nav navbar-nav">
+                    <li><a href="{{ route('apostaJogo.index') }}">Prêmios</a></li>
                 </ul>
                 @endcan
                 <ul class="nav navbar-nav">
