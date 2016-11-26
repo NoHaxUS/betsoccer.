@@ -55,7 +55,14 @@ class ApostaController extends Controller
         }
         return view('aposta.wins', compact('apostaWins', 'total'));
     }
-
+     
+     /**
+     * Método que verifica se uma aposta foi vencedora ou não pega a lista de jogos de uma aposta
+     * e verificar o resultados do jogo em relaçao aos palpites do apostador
+     * Caso ele acerte todo os palpites retorna um true.
+     * @param $apostas Aposta
+     * @return Boolean true or false
+     */
     public function apostasWins($aposta)
     {
         $i = 0;
@@ -288,9 +295,12 @@ class ApostaController extends Controller
         ]);
     }
 
-    /*
-    * Metodo calcula valor a pagar por aposta
-    * */
+    /**
+     * Método que cálcula o valor a ser pago com premios por cada aposta
+     * Passada por paramentro e reotnar um array com a lista dos premios
+     * @param $apostas Aposta Listas de aposta
+     * @return Array com coleção dos premios das apotas passadas.  
+     */
     public function calcRetorno($apostas)
     {
 
@@ -308,9 +318,6 @@ class ApostaController extends Controller
 
     public function resumoAposta()
     {
-        //Obtenho todas as apostas
-
-
         $apostas = Aposta::with(['jogo'])->get();
         $total = $this->calcRetorno($apostas);
         //Lista de apostas é passada para a view
