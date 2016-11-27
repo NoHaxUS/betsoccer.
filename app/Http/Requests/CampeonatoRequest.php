@@ -34,7 +34,7 @@ class CampeonatoRequest extends Request
     {
         return [
 
-            'descricao_campeonato'=>'required|max:50|unique:campeonatos,descricao_campeonato'',
+            'descricao_campeonato'=>'required|max:50|unique:campeonatos,descricao_campeonato',
         ];
     }
 }
