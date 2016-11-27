@@ -15,7 +15,7 @@
                         {{ csrf_field() }}
                         <div class="form-group {{ $errors->has('descricao_time') ? 'has-error' : ''}} ">
                             <label for="descricao_time">Descricao do Time</label>
-                            <input type="text" style="text-transform:uppercase" name="descricao_time" class="form-control" placeholder="Insira o nome do time que será cadastrado">
+                            <input type="text" id="upper" name="descricao_time" class="form-control upper" placeholder="Insira o nome do time que será cadastrado">
                            @if($errors->has('descricao_time'))
                             <span class="help-block">
                                 <strong> {{ $errors->first('descricao_time') }} </strong>

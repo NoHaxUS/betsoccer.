@@ -1,6 +1,14 @@
 var teste;
 var allRadios = [];
 var booRadio;
+//Deixa nome dos time em letra maiscula
+$(function() {
+    $('#upper').keyup(function() {
+        this.value = this.value.toLocaleUpperCase()
+    });
+});
+
+//check e uncheck do iputs radio da tela de apostar
 $('input:radio').click(function() { 
 	if(allRadios[teste = $(this).attr('name')]!=null){
 		this.checked = false;
@@ -11,6 +19,7 @@ $('input:radio').click(function() {
 		allRadios[$(this).attr('name')] = booRadio;		
 	}
 });
+//mudando o layout do checkbox da tela de login
 $(function(){
     $('.button-checkbox').each(function(){
         var $widget = $(this),
@@ -69,45 +78,3 @@ $(function(){
         init();
     });
 });
-/*
-$('input:radio').click(function() { 
-InitRadio($(this).attr('name'));
-});
-
-function InitRadio(name){
- val=0;
-    //$.each($(':radio[name="'+name+'"]'), function(){
-    console.log(1);
-    $(this).val(val++);
-    $(this).attr('chk', '0');
-    $(this).on("click", function(event){
-    SetRadioButtonChkProperty($(this).val(), name);    
-    //});    
-});
-}
-
-function SetRadioButtonChkProperty(val, name){
-    $.each($(':radio[name="'+name+'"]'), function(){
-        if ($(this).val()!=val)
-            $(this).attr('chk', '0');
-        else {if ($(this).attr('chk') == '0')
-            $(this).attr('chk', '1');
-        else {
-            $(this).attr('chk', '0');
-           $(this).prop('checked', false); 
-        }}            
-    });
-}
-
-*/
-
-
-/*
-$(document).ready(function(){
-	$('input:radio[name=palpite1]').click(function() {
-		
-		var ans1 = $('input[name=teste]:radio:checked').val();
-		console.log(teste);
-	});
-});
-*/

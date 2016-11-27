@@ -20,6 +20,8 @@ class CampeonatoRequest extends Request
         return [
             'descricao_campeonato.required'=>'Informe a descricao do campeonato',
             'descricao_campeonato.max'=>'A descrição do time deve ter no maximo 50 caracteres',
+            'descricao_campeonato.unique'=>'Campeonato já está Cadastrado!! Insira outro',
+
         ];
     }
 
@@ -32,7 +34,7 @@ class CampeonatoRequest extends Request
     {
         return [
 
-            'descricao_campeonato'=>'required|max:50',
+            'descricao_campeonato'=>'required|max:50|unique:campeonatos,descricao_campeonato'',
         ];
     }
 }
