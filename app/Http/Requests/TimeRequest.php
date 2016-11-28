@@ -33,7 +33,7 @@ class TimeRequest extends Request
     public function rules()
     {
         return [
-            'descricao_time'=>'required|max:30|unique:times,descricao_time',
+            'descricao_time'=>'required|max:50|unique:times,descricao_time',
         ];
     }
 }
