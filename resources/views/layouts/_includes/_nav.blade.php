@@ -30,7 +30,7 @@
                         <li><a href="{{ route('time.index') }}">Listar</a></li>
                     </ul>
                 </li>  
-                <li class="dropdown  active">                   
+                <li class="dropdown">                   
                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Campeonato <span class="caret"></span>
                 </a>

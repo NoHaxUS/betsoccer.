@@ -54,12 +54,12 @@
                         <td>{{ $jo->ambas_gol }}</td>
 
                         <td>
-                            <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Editar</a>
-                            <button class="md-trigger btn btn-default" data-modal="modal-{{$jo->id}}">Add Placar</button>
+                            <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Edit</a>
+                            <button class="md-trigger btn-danger" data-modal="modal-{{$jo->id}}">Plac</button>
                             @if($jo->ativo == false)
-                            <a class="btn btn-success" href="javascript:(confirm('Ativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Ativar</a>
+                            <a class="btn btn-success" href="javascript:(confirm('Ativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Ati</a>
                             @else
-                            <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Desati.</a>
+                            <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Des.</a>
                             @endif
                         </td>
                     </tr>

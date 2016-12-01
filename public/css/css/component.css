@@ -29,6 +29,10 @@ table {
 td, th {
     padding: 0.30em 0.5em;
     text-align: center;
+    
+}
+td{
+	font-size: 0.80em;	
 }
 	td.err {
 		background-color: #e992b9;
