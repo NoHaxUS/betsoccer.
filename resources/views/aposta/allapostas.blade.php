@@ -11,7 +11,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                   <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Apostas Abertas</a></li>
-                  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Apostas Vencedoras</a></li>
+                  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Apostas Pagas</a></li>
                   <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Apostas Canceladas</a></li>
                   <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Outros</a></li>
               </ul>
@@ -75,7 +75,7 @@
 
             </div>
             <div role="tabpanel" class="tab-pane" id="profile">
-                <h1>Premio total possível a ser Pago : R$ {{number_format($totalPago, 2, ',', '.')}}</h1>
+                <h1>Premio total já Pago : R$ {{number_format($totalPago, 2, ',', '.')}}</h1>
                 <div class="table-responsive">
                     <table class="table table-bordered table-condensed">
                         <thead>

@@ -30,7 +30,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('time_id') ? 'has-error' : ''}}">
                             <label for="time_id">Time Casa</label>
-                            <select id="time_id"  name="time_id" class="form-control">
+                            <select id="time_id"  name="time_id" class="form-control selectpicker" data-live-search="true">
                                 <option value="">Selecione</option>
                                 @foreach ($times as $time)
                                 <option value="{{ $time->id }}">{{ $time->descricao_time }}</option>
@@ -44,7 +44,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('timef_id') ? 'has-error' : ''}}">
                             <label for="timef_id">Time Fora</label>
-                            <select id="timef_id"  name="timef_id" class="form-control">
+                            <select id="timef_id"  name="timef_id" class="form-control selectpicker" data-live-search="true">
                                 <option value="">Selecione</option>
                                 @foreach ($times as $time)
                                 <option value="{{ $time->id }}">{{ $time->descricao_time }}</option>

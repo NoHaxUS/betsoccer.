@@ -7,6 +7,18 @@ $(function() {
         this.value = this.value.toLocaleUpperCase()
     });
 });
+$(function(){
+    $(".dropdown").hover(            
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).fadeIn("fast");
+            $(this).toggleClass('open');
+        },
+        function() {
+            $('.dropdown-menu', this).stop( true, true ).fadeOut("fast");
+            $(this).toggleClass('open');
+        });
+});
+
 
 //check e uncheck do iputs radio da tela de apostar
 $('input:radio').click(function() { 
@@ -23,17 +35,17 @@ $('input:radio').click(function() {
 $(function(){
     $('.button-checkbox').each(function(){
         var $widget = $(this),
-            $button = $widget.find('button'),
-            $checkbox = $widget.find('input:checkbox'),
-            color = $button.data('color'),
-            settings = {
-                    on: {
-                        icon: 'glyphicon glyphicon-check'
-                    },
-                    off: {
-                        icon: 'glyphicon glyphicon-unchecked'
-                    }
-            };
+        $button = $widget.find('button'),
+        $checkbox = $widget.find('input:checkbox'),
+        color = $button.data('color'),
+        settings = {
+            on: {
+                icon: 'glyphicon glyphicon-check'
+            },
+            off: {
+                icon: 'glyphicon glyphicon-unchecked'
+            }
+        };
 
         $button.on('click', function () {
             $checkbox.prop('checked', !$checkbox.is(':checked'));
@@ -52,20 +64,20 @@ $(function(){
 
             // Set the button's icon
             $button.find('.state-icon')
-                .removeClass()
-                .addClass('state-icon ' + settings[$button.data('state')].icon);
+            .removeClass()
+            .addClass('state-icon ' + settings[$button.data('state')].icon);
 
             // Update the button's color
             if (isChecked) {
                 $button
-                    .removeClass('btn-default')
-                    .addClass('btn-' + color + ' active');
+                .removeClass('btn-default')
+                .addClass('btn-' + color + ' active');
             } 
             else 
             { 
                 $button
-                    .removeClass('btn-' + color + ' active')
-                    .addClass('btn-default');
+                .removeClass('btn-' + color + ' active')
+                .addClass('btn-default');
             }
         }
         function init() {

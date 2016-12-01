@@ -15,36 +15,36 @@
                 </a>
             </div>
 
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
+            <div class="collapse navbar-collapse" id="app-navbar-collapse show-on-hover">
                 <!-- Left Side Of Navbar -->
 
                 @if (!Auth::guest())
                 @can('show', Auth::user())
-                <ul class="nav navbar-nav">                    
+                <ul class="nav navbar-nav ">                    
                     <li class="dropdown">                   
-                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                       <a href="#" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="false">
                         Time <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu" role="menu">
+                    <ul class="dropdown-menu">
                         <li><a href="{{ route('time.cadastrar') }}">Cadastrar</a></li>
                         <li><a href="{{ route('time.index') }}">Listar</a></li>
                     </ul>
                 </li>  
-                <li class="dropdown">                   
-                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                <li class="dropdown  active">                   
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Campeonato <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu">
                     <li><a href="{{ route('campeonato.cadastrar') }}">Cadastrar</a></li>
                     <li><a href="{{ route('campeonato.index') }}">Listar</a></li>
                 </ul>
             </li>        
 
             <li class="dropdown">                   
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 Jogos <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu" role="menu">
+            <ul class="dropdown-menu">
                 <li><a href="{{ route('jogo.cadastrar') }}">Cadastrar</a></li>
                 <li><a href="{{ route('jogo.index') }}">Listar</a></li>
             </ul>
@@ -68,10 +68,10 @@
         <li><a href="{{ url('/login') }}">Entrar</a></li>
         @else
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 {{ Auth::user()->name }} <span class="caret"></span>
             </a>
-            <ul class="dropdown-menu" role="menu">
+            <ul class="dropdown-menu">
                 @can('show', Auth::user())
                 <li><a href="{{ route('reg.get') }}">Registrar</a></li>
                 <li><a href="{{ route('user.editar') }}">Editar Cambista</a></li>
