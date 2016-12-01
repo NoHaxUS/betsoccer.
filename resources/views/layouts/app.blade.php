@@ -13,8 +13,7 @@
     {!! Html::style('css/default.css') !!}
     {!! Html::style('css/component.css') !!}
     {!! Html::style('css/css/component.css') !!}
-    {!! Html::style('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css') !!}
-    {!! Html::style('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js') !!}
+    {!! Html::style('css/bootstrap-select.min.css') !!}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700"/>
@@ -76,7 +75,7 @@
 {!! Html::script('/js/modernizr.custom.js') !!}
 {!! Html::script('/js/classie.js') !!}
 {!! Html::script('/js/modalEffects.js') !!}
-{!! Html::script('/js/bootstrap-select.js') !!}
+{!! Html::script('/js/bootstrap-select.min.js') !!}
 
 <script>
             // this is important for IEs
