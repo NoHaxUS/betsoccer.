@@ -3,18 +3,9 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                 <ol class="breadcrumb panel-heading">
-                    <li class="active">Campeonato</li>
-                </ol>
-
-                <div class="panel-body">
-                    <p>
-                        <a class="btn btn-info" href="{{ route('campeonato.cadastrar') }}">Cadastrar</a>
-                    </p>
-
-                    <table class="table table-bordered">
+     <h1 style="text-align: center;">Lista De Todos os Campeonatos Cadastrados</h1>  
+        <div class="table-responsive col-md-offset-2 col-md-8"> 
+                    <table>
                         <thead>
                             <tr>
                                 <th>Codigo</th>
@@ -43,12 +34,7 @@
 
                     <div align="center">
                         {!! $campeonatos->links() !!}
-
-                    </div>
-
-
-                </div>
-            </div>
+                    </div>            
         </div>
     </div>
 </div>

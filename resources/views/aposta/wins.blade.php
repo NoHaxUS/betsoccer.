@@ -36,7 +36,7 @@
                     <td>{{$aposta->user->name}}</td>
                     <td>{{$aposta->nome_apostador}}</td>
                     <td>{{$aposta->valor_aposta}}</td>
-                    <td>{{$total[$key]}}</td>                        
+                    <td>{{number_format($total[$key], 2, ',', '.')}}</td>                        
                     <td>
                         <a class="btn btn-default">Detalhar</a>
                         

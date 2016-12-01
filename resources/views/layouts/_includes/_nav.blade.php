@@ -1,8 +1,6 @@
-<div class="navbar-wrapper">
-    <div class="container">
         <nav class="navbar navbar-fixed-top">
             <div class="container">
-             <div class="navbar-header">
+               <div class="navbar-header">
                 <!-- Collapsed Hamburger -->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
                     <span class="sr-only">Toggle Navigation</span>
@@ -22,50 +20,66 @@
 
                 @if (!Auth::guest())
                 @can('show', Auth::user())
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ route('time.index') }}">Times</a></li>
+                <ul class="nav navbar-nav">                    
+                    <li class="dropdown">                   
+                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        Time <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ route('time.cadastrar') }}">Cadastrar</a></li>
+                        <li><a href="{{ route('time.index') }}">Listar</a></li>
+                    </ul>
+                </li>  
+                <li class="dropdown">                   
+                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    Campeonato <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{ route('campeonato.cadastrar') }}">Cadastrar</a></li>
+                    <li><a href="{{ route('campeonato.index') }}">Listar</a></li>
                 </ul>
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ route('campeonato.index') }}">Campeonatos</a></li>
-                </ul>
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ route('jogo.index') }}">Jogos</a></li>
-                </ul>               
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ route('jogo.allJogosPlacar') }}">Placar</a></li>
-                </ul>
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ route('aposta.listaAposta') }}">ApostasVencedoras</a></li>
-                </ul>
-                 <ul class="nav navbar-nav">
-                    <li><a href="{{ route('apostaJogo.index') }}">Prêmios</a></li>
-                </ul>
+            </li>        
+
+            <li class="dropdown">                   
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Jogos <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ route('jogo.cadastrar') }}">Cadastrar</a></li>
+                <li><a href="{{ route('jogo.index') }}">Listar</a></li>
+            </ul>
+        </li>                    
+
+
+        <li><a href="{{ route('jogo.allJogosPlacar') }}">Placar</a></li>
+
+        <li><a href="{{ route('aposta.listaAposta') }}">ApostasVencedoras</a></li>
+
+        <li><a href="{{ route('apostaJogo.index') }}">Prêmios</a></li>
+        @endcan
+
+        <li><a href="{{ route('aposta.index') }}">Apostar</a></li>
+        @endif
+    </ul> 
+    <!-- Right Side Of Navbar -->
+    <ul class="nav navbar-nav navbar-right">
+        <!-- Authentication Links -->
+        @if (Auth::guest())
+        <li><a href="{{ url('/login') }}">Entrar</a></li>
+        @else
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                {{ Auth::user()->name }} <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                @can('show', Auth::user())
+                <li><a href="{{ route('reg.get') }}">Registrar</a></li>
+                <li><a href="{{ route('user.editar') }}">Editar Cambista</a></li>
                 @endcan
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ route('aposta.index') }}">Apostar</a></li>
-                </ul>
-                @endif
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                    <li><a href="{{ url('/login') }}">Entrar</a></li>
-                    @else
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            {{ Auth::user()->name }} <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            @can('show', Auth::user())
-                            <li><a href="{{ route('reg.get') }}">Registrar</a></li>
-                            <li><a href="{{ route('user.editar') }}">Editar Cambista</a></li>
-                            @endcan
-                            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
-                        </ul>
-                    </li>
-                    @endif
-                </ul>
-            </div>
-        </nav>
-    </div>
+                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
+            </ul>
+        </li>
+        @endif
+    </ul>
 </div>
+</nav>

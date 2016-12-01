@@ -9,13 +9,13 @@
                     <li class="active">Valores a pagar</li>
                 </ol>
                 <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Apostas Abertas</a></li>
-              <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Apostas Vencedoras</a></li>
-              <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Apostas Canceladas</a></li>
-              <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Outros</a></li>
-          </ul>
-            </div>
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Apostas Abertas</a></li>
+                  <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Apostas Vencedoras</a></li>
+                  <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Apostas Canceladas</a></li>
+                  <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Outros</a></li>
+              </ul>
+          </div>
 
 
 
@@ -32,6 +32,7 @@
                                 <th>Valor Apostado</th>
                                 <th>Apostador</th>
                                 <th>Total a Pagar</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,7 +44,29 @@
                                 <td>{{ number_format($aposta->valor_aposta, 2, ',', '.')}}</td>
                                 <td>{{ $aposta->nome_apostador}}</td>
                                 <td>{{ number_format($premios[$key], 2, ',', '.')}}</td>
+                                <td>
+
+                                    <button class="md-trigger md-setperspective" data-modal="modal-{{$aposta->id}}">Detalhe</button>
+
+                                </td>
                             </tr>
+                            <div class="md-modal md-effect-11" id="modal-{{$aposta->id}}">
+                                <div class="md-content">
+                                    <h3>Detalhes da Aposta</h3>
+                                    <div>
+                                        @foreach ($aposta->jogo as $key => $jogo)
+
+                                        <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
+                                        <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
+                                        </h5>
+
+                                        @endforeach 
+
+                                        <button class="md-close">FECHAR!</button>
+                                    </div>
+                                </div>
+                            </div>
+
                             @endforeach
                         </tbody>
                     </table>
@@ -62,6 +85,7 @@
                                 <th>Valor Apostado</th>
                                 <th>Apostador</th>
                                 <th>Total pago</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,7 +97,28 @@
                                 <td>{{ $aposta->valor_aposta}}</td>
                                 <td>{{ $aposta->nome_apostador}}</td>
                                 <td>{{ number_format($premiosPago[$key], 2, ',', '.')}}</td>
+                                <td>
+
+                                    <button class="md-trigger md-setperspective" data-modal="modal-{{$aposta->id}}">Detalhe</button>
+
+                                </td>
                             </tr>
+                            <div class="md-modal md-effect-11" id="modal-{{$aposta->id}}">
+                                <div class="md-content">
+                                    <h3>Detalhes da Aposta</h3>
+                                    <div>
+                                        @foreach ($aposta->jogo as $key => $jogo)
+
+                                        <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
+                                        <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
+                                        </h5>
+
+                                        @endforeach 
+
+                                        <button class="md-close">FECHAR!</button>
+                                    </div>
+                                </div>
+                            </div>
                             @endforeach
                         </tbody>
                     </table>
