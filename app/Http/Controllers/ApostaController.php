@@ -19,8 +19,6 @@ class ApostaController extends Controller
 
     public function getJsonJogos()
     {
-
-
         $jogos = \App\Jogo::with('time', 'campeonato')
         ->whereBetween('data', [Carbon::now()->addMinute(5), Carbon::now()->addDay(1)->setTime(23, 59, 59)])
         ->get();
@@ -101,7 +99,6 @@ class ApostaController extends Controller
             if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
                 $i++;
             }
-           
         }
         if ($i != count($aposta->jogo)) {
             return false;
@@ -363,6 +360,11 @@ class ApostaController extends Controller
                 ]);
         }
 
+    /** Método que formata dados de aposta em array
+     * @param $aposta Aposta aposta cujos dados serão passados para array
+     * @param int $premiacao_aposta valor da premiação da aposta
+     * @return array array com dados da aposta
+     */
         private function dadosAposta($aposta, $premiacao_aposta = 0)
         {
             return [
@@ -376,6 +378,10 @@ class ApostaController extends Controller
             ];
         }
 
+    /** Método que formata dados de jogos em array
+     * @param $jogos array lista de jogos
+     * @return array array com dados dos jogos
+     */
         private function dadosJogos($jogos)
         {
             $lista = Array();
@@ -387,6 +393,10 @@ class ApostaController extends Controller
             return $lista;
         }
 
+    /** Método que calcula valor do prêmio de uma aposta vencedora
+     * @param $aposta Aposta vencedora
+     * @return mixed valor do prêmio
+     */
         private function calcularPremio($aposta)
         {
             $premio = $aposta->valor_aposta;
@@ -452,8 +462,6 @@ class ApostaController extends Controller
         $premiosPago = $this->calcRetorno($apostasPagas);
         $totalPago += array_sum($premiosPago);
         $total += array_sum($premios);
-
-
         //Lista de apostas é passada para a view
         return view('aposta.allapostas', compact('apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
     }
