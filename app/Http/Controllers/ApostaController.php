@@ -192,8 +192,8 @@ class ApostaController extends Controller
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
             $jogo = Jogo::find($valor);             //Busca jogo pelo id (valor)
             //Verificar  jogo é nulo ou se data e hora do jogo é menor horário que a data atual menos 5 minutos
-            if ($jogo == null || (new Carbon($jogo->data)) < Carbon::now()->subMinute(5)):
-                $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
+            if ($jogo == null || $jogo->data < Carbon::now()->addMinute(5)):
+               $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
             endif;
             endforeach;
         return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
