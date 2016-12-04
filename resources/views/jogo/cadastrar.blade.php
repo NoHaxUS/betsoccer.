@@ -164,11 +164,8 @@
                         <div class="form-group {{ $errors->has('campeonatos_id') ? 'has-error' : ''}}">
                             <label for="campeonatos_id">Descrição do Campeonato</label>
                             <select id="campeonatos_id"  name="campeonatos_id" class="form-control">
-                                @if($errors->has())
-                                <option value="{{old('campeonatos_id')}}">{{ \App\Campeonato::find(old('campeonatos_id'))->descricao_campeonato }}</option>
-                                @else
+                                
                                 <option value="">Selecione</option>
-                                @endif
                                 @foreach ($campeonatos as $campeonato)
                                 <option value="{{ $campeonato->id }}">{{ $campeonato->descricao_campeonato }}</option>
                                 @endforeach
