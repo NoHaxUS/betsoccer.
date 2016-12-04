@@ -101,6 +101,9 @@ class ApostaController extends Controller
             if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
                 $i++;
             }
+            if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->r_casa == $jogo->r_fora)) {
+                $i++;
+            }
         }
         if ($i != count($aposta->jogo)) {
             return false;
