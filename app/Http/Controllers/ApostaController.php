@@ -19,6 +19,19 @@ class ApostaController extends Controller
 
     public function getJsonJogos()
     {
+        /*
+        $users = DB::table('jogos')
+            ->join('campeonatos', 'jogos.id', '=', 'campeonatos.id')
+
+            ->join('times', function ($join) {
+              $join
+              ->on('jogo_time.jogos_id', '=', 'jogos.id')
+              ->on('jogo_time.times_id', '=', 'times.id');               
+             })            
+            ->select('jogos.*', 'times.descricao_time', 'campeonatos.descricao_campeonato')
+            ->get();
+            dd($users);
+        */
         $jogos = \App\Jogo::with('time', 'campeonato')
         ->where('ativo', true)
         ->whereBetween('data', [Carbon::now()->addMinute(5), Carbon::now()->addDay(1)->setTime(23, 59, 59)])

@@ -51,11 +51,11 @@
                         <h3>Detalhes da Aposta</h3>
                         <div>
                             @foreach ($aposta->jogo as $key => $jogo)
-                           
+                           <div class="mx-auto" style="width: 200px;">
+
                             <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
-                            <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
-                            </h5>
-                            
+                            <h5>Palpite..:{{$jogo->pivot->tpalpite}}......R$..:{{$jogo->pivot->palpite}}</h5>
+                            </div>
                             @endforeach 
 
                             <button class="md-close">FECHAR!</button>

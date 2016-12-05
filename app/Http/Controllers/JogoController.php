@@ -119,7 +119,15 @@ return view('jogo.editar',compact('jogo','campeonatos','datas','times'));
 }
 
 public function atualizar(\App\Http\Requests\JogoRequest $request, $id){
-  \App\Jogo::find($id)->update($request->all());
+  $jogo = \App\Jogo::find($id);
+  $jogo->update($request->all());
+  $timeOld []= $jogo->time->get(0)['id'];
+  $timeOld []= $jogo->time->get(1)['id'];
+  $jogo->time()->detach($timeOld);
+  $time []= $request->get('time_id');
+  $time []= $request->get('timef_id');
+  $jogo->time()->attach($time);
+  $jogo->save();
 
   \Session::flash('flash_message',[
     'msg'=>"Jogo atualizado com sucesso!!!",
