@@ -77,7 +77,7 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/jogo/cadastrar-placar', ['uses'=>'JogoController@allJogosPlacar', 'as'=>'jogo.allJogosPlacar']);
 	Route::post('/jogo/cadastrar-placar/post', ['uses'=>'JogoController@addPlacar', 'as'=>'jogo.addPlacar']);
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
-
+	Route::get('/jogo/total-palpites/{id}', ['uses'=>'JogoController@totalPalpites', 'as'=>'jogo.totalPalpites']);
 });
 
 	//rotas para a tabela de aposta

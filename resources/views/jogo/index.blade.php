@@ -2,14 +2,14 @@
 
 @section('content')
 <div class="container">
-    <div class="row">   
+    <div class="row">
         @foreach($datas as $d)
         {{ csrf_field() }}
         <div >
             <h3 align="center">{{date('d/m/Y',strtotime($d))}}</h3>
         </div>
         @foreach(campsHora($d,$jogos) as $camp)
-        <h5>{{$camp}}</h5> 
+        <h5>{{$camp}}</h5>
         <div class="table-responsive">
             <table>
                 <thead>
@@ -28,14 +28,14 @@
                         <th>Dupla</th>
                         <th>+2.5</th>
                         <th>-2.5</th>
-                        <th>Ambas</th>                    
-                        <th>Ação</th> 
+                        <th>Ambas</th>
+                        <th>Ação</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($jogos as $jo)
                     @if (($camp == $jo->campeonato->descricao_campeonato) && (toData($jo->data) == $d))
-                    
+
                     <tr>
                         <th scope="row">{{ $jo->codigo }}</th>
                         <td>{{date('H:i', strtotime(toHora($jo->data))) }}</td>
@@ -61,6 +61,7 @@
                             @else
                             <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Des.</a>
                             @endif
+                            <a class="btn btn-default" href="{{ route('jogo.totalPalpites',$jo->id) }}">Palpites</a>
                         </td>
                     </tr>
                     <div class="md-modal md-effect-11" id="modal-{{$jo->id}}">
@@ -68,21 +69,20 @@
                             <h3>Detalhes da jo</h3>
                             <div>
                                <form action="{{ route('jogo.addPlacar') }}" method="post">
-                                 {{ csrf_field() }}           
+                                 {{ csrf_field() }}
 
                                  <p>
                                   <label>
                                      <input type="checkbox" name="jogo[]" value="{{ $jo->id }}" checked class="hide">
                                      {{ $jo->codigo }}
                                  </label>
-                                 {{ $jo->time->get(0)['descricao_time'] }}                
+                                 {{ $jo->time->get(0)['descricao_time'] }}
                                  <input class="form-group" name="r_casa{{$jo->id}}" value="{{$jo->r_casa or '?'}}" maxlength="2" size="2" required>
                                  X
                                  <input  class="form-group" name="r_fora{{$jo->id}}" value="{{$jo->r_fora or '?'}}" maxlength="2" size="2" required>
                                  {{ $jo->time->get(1)['descricao_time'] }}
-                                 
                                  <button class="btn btn-info">Cadastrar Placar</button>
-                             </p>                        
+                             </p>
 
                          </form>
                          <button class="md-close">FECHAR!</button>

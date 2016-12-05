@@ -26,7 +26,7 @@ class JogoController extends Controller
     $jogos = \App\Jogo::with('campeonato')->get();
     $datas = $this->arrayDatas($jogos);
     $campeonatos = $this->arrayCamps($jogos);
-    
+
     return view('jogo.index',compact('jogos','campeonatos','datas'));
   }
   public function arrayDatas($jogos)
@@ -38,7 +38,6 @@ class JogoController extends Controller
       }elseif (!in_array(toData($jogo->data), $datas)) {
         array_push($datas,toData($jogo->data));
       }
-
     }
     return $datas;
   }
@@ -160,4 +159,32 @@ public function deletar($id){
             return redirect()->route('jogo.index');
 
           }
-        }
+
+    /** Método que realiza estatistica de palpites de jogo
+     * @param $id int identificador do jogo
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function totalPalpites($id){
+    $jogo = \App\Jogo::find($id);                       //Busca jogo pelo id passado
+        if(is_null($jogo)):                             //Verifica se jogo é nulo
+            return redirect()->back();                  //Redireciona a página anterior
+        endif;
+        $apostas = $jogo->apostas()->get();             //Pega todas as aposta vinculadas ao jogo
+        $palpites = array();                            //Cria array para guardar dados de palpites
+        foreach($apostas as $aposta):                   //Itera pelas apostas
+            $indice = $aposta->pivot->tpalpite;         //Cria indice com texto do palpite
+           if(array_key_exists($indice,$palpites)):     //Verifica se índice já existe no array
+                $palpites[$indice]['qtd_'.$indice]++;   //Incrementa quantidade de palpites
+               /*Calcula o valor do prêmio para o palpite com base no valor da aposta e do palpite
+               adicionando ao que consta no array*/
+                $palpites[$indice]['total_'.$indice]+=$aposta->pivot->palpite * $aposta->valor_aposta;
+            else:
+                $palpites[$indice]['qtd_'.$indice]=1;   //Atribui 1 para a quantidade de palpites
+                //Calcula o valor do prêmio para o palpite com base no valor da aposta e do palpite
+                $palpites[$indice]['total_'.$indice]=$aposta->pivot->palpite * $aposta->valor_aposta;
+           endif;
+        endforeach;
+        //Retorna a view de exibição passando jogo e array de palpites
+        return view('jogo.palpites',compact('jogo','palpites'));
+    }
+ }
