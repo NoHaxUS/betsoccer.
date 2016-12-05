@@ -306,7 +306,7 @@ class ApostaController extends Controller
         $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
         if (!is_null($resposta)):                                   //Se retornou restrição
             return response()->json($resposta, 400);                //Retorna json com restrição encontrada
-            endif;
+        endif;
         $apostas = Aposta::recentes($user);                         //Busca as apostas recentes feitas pelo usuário
         $premiacao_total = 0;
         $ganho_total = 0;                                             //Cria variável para acumular quantidade de jogos
@@ -386,7 +386,7 @@ class ApostaController extends Controller
         {
             $lista = Array();
             foreach ($jogos as $jogo):
-                $lista[] = ['times' => $jogo->time()->get()->toArray(),
+                $lista[] = ['times' => $jogo->time()->lists('descricao_time','id')->toArray(),
             'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
             'data' => $jogo->data];
             endforeach;
