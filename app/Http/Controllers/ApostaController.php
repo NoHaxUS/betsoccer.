@@ -84,7 +84,7 @@ class ApostaController extends Controller
             if (($jogo->pivot->tpalpite == "min_gol_3") && ($jogo->r_casa + $jogo->r_fora >= 3)) {
                 $i++;
             }
-            if (($jogo->pivot->tpalpite == "max_gol_2") && ($jogo->r_casa + $jogo->r_fora == 2)) {
+            if (($jogo->pivot->tpalpite == "max_gol_2") && ($jogo->r_casa + $jogo->r_fora < 3)) {
                 $i++;
             }
             if (($jogo->pivot->tpalpite == "valor_1_2") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa - $jogo->r_fora >= 2)) {
@@ -286,12 +286,12 @@ class ApostaController extends Controller
             'cambista' => $user->name,
             'qtd_apostas' => $apostas->count(),
             'qtd_jogos' => $qtd_jogos,
-            'comissao_simples' => number_format($ganho_simples, 2, ',', '.'),
-            'comissao_mediana' => number_format($ganho_mediano, 2, ',', '.'),
-            'comissao_maxima' => number_format($ganho_maximo, 2, ',', '.'),
-            'comissao_total' => number_format($ganho_total, 2, ',', '.'),
-            'total_premiação' => number_format($premiacao, 2, ',', '.'),
-            'liquido' => number_format($liquido, 2, ',', '.'),
+            'comissao_simples' => $ganho_simples,
+            'comissao_mediana' => $ganho_mediano,
+            'comissao_maxima' => $ganho_maximo,
+            'comissao_total' => $ganho_total,
+            'total_premiação' => $premiacao,
+            'liquido' => $liquido,
             ]);
     }
 
@@ -333,7 +333,7 @@ class ApostaController extends Controller
             //Cria array para armazenar id e ganho da aposta
             $lista_apostas [] = [
             'aposta' => $aposta->codigo,
-            'ganho' => number_format($ganho_aposta, 2, ',', '.'),
+            'ganho' => $ganho_aposta,
             'jogos' => $this->dadosJogos($aposta->jogo)];
 
             if ($this->apostasWins($aposta)):                       //Se aposta for vencedora
@@ -355,7 +355,7 @@ class ApostaController extends Controller
                 'codigo' => $user->codigo,
                 'cambista' => $user->name,
                 'apostas_vencedoras' => $apostas_vencedoras,
-                'total_premiacao' => number_format($premiacao_total, 2, ',', '.'),
+                'total_premiacao' => $premiacao_total,
                 'apostas' => $lista_apostas,
                 ]);
         }
@@ -372,7 +372,7 @@ class ApostaController extends Controller
             'data' => $aposta->created_at,
             'apostador' => $aposta->nome_apostador,
             'valor_apostado' => $aposta->valor_aposta,
-            'premio' => number_format($premiacao_aposta, 2, ',', '.'),
+            'premio' => $premiacao_aposta,
             'paga' => $aposta->pago,
             'jogos' => $this->dadosJogos($aposta->jogo)
             ];
