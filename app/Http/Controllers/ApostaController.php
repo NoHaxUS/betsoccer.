@@ -145,14 +145,15 @@ class ApostaController extends Controller
     public function apostar(Request $request)
     {
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        $resposta = $this->verificarUsuario($user);                         //Verifica restrição usuário
-        if (!is_null($resposta)):                                           //Se retornou restrição
-            return response()->json($resposta, 400);                        //Retorna json com restrição encontrada
+        $resposta = $this->verificarUsuario($user);                      //Verifica restrição usuário
+        if (!is_null($resposta)):                                        //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);       //Retorna json com restrição encontrada
             endif;
         $jogos_invalidos = $this->verificarJogos($request->jogo);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
         return response()->json(
-                ['jogos_invalidos' => $jogos_invalidos], 400);          //retorna json com array com todos os jogos inválidos
+                ['jogos_invalidos' => $jogos_invalidos],
+                $jogos_invalidos['erro']);                              //retorna json com array com todos os jogos inválidos
         endif;
         /*$palpites_invalidos = $this->verificarPalpites($palpites);    //Verifica se há palpites inválidos
         if (count($palpites_invalidos) > 0):                            //Verifica se quantidade de palpites inválidos é maior que zero
@@ -169,13 +170,13 @@ class ApostaController extends Controller
      */
     private function verificarUsuario($user)
     {
-        if (is_null($user)):                        //Verificar se usuário existe
-            return ['status' => 'Inexistente'];     //Retorna status de usuário inexistente
-            endif;
-        if (!$user->ativo):                         //Verificar se usuário não está ativo
-            return ['status' => 'Inativo'];         //Retorna status de usuário inativo
-            endif;
-        return null;                                //Retorn null
+        if (is_null($user)):                                    //Verificar se usuário existe
+            return ['status' => 'Inexistente', 'erro'=>400];    //Retorna status de usuário inexistente
+        endif;
+        if (!$user->ativo):                                     //Verificar se usuário não está ativo
+            return ['status' => 'Inativo','erro'=>401];         //Retorna status de usuário inativo
+        endif;
+        return null;                                            //Retorn null
     }
 
     /** Método que verifica se jogos estão válidos para realização de aposta
@@ -185,7 +186,7 @@ class ApostaController extends Controller
     private function verificarJogos($jogos)
     {
         if (count($jogos) < 2):                     //Verifica se quantidade de jogos é menor que 2
-            return "Minimo 2 jogos";                //Retorna mensagem
+            return ['status'=>"Minimo 2 jogos", 'erro'=>402];                //Retorna mensagem
             endif;
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
@@ -193,6 +194,7 @@ class ApostaController extends Controller
             //Verificar  jogo é nulo ou se data e hora do jogo é menor horário que a data atual menos 5 minutos
             if ($jogo == null || $jogo->data < Carbon::now()->addMinute(5)):
                $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
+               $jogos_invalidos['erro'] = 403;
             endif;
             endforeach;
         return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
@@ -247,7 +249,7 @@ class ApostaController extends Controller
         $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
         $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
         if (!is_null($resposta)):                                   //Se retornou restrição
-            return response()->json($resposta, 400);                //Retorna json com restrição encontrada
+            return response()->json($resposta, $resposta['erro']);  //Retorna json com restrição encontrada
             endif;
         $apostas = Aposta::recentes($user);                         //Busca as apostas recentes feitas pelo usuário
         $ganho_simples = 0;                                         //Cria variável para acumular comissão com apostas simples (2 jogos)
@@ -306,7 +308,7 @@ class ApostaController extends Controller
         $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
         $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
         if (!is_null($resposta)):                                   //Se retornou restrição
-            return response()->json($resposta, 400);                //Retorna json com restrição encontrada
+            return response()->json($resposta, $resposta['erro']);  //Retorna json com restrição encontrada
         endif;
         $apostas = Aposta::recentes($user);                         //Busca as apostas recentes feitas pelo usuário
         $premiacao_total = 0;
