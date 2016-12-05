@@ -20,6 +20,7 @@ class ApostaController extends Controller
     public function getJsonJogos()
     {
         $jogos = \App\Jogo::with('time', 'campeonato')
+        ->where('ativo','==', true)
         ->whereBetween('data', [Carbon::now()->addMinute(5), Carbon::now()->addDay(1)->setTime(23, 59, 59)])
         ->get();
         return response()->json(array("jogos" => $jogos));
