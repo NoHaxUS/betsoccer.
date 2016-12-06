@@ -9,5 +9,5 @@ return [
     'porcentagem_simples' => 6,
     'porcentagem_mediana' => 10,
     'porcentagem_maxima' => 12,
-    'jogos_mais_apostados'=>10,
+    'jogos_mais_apostados' => 10,
 ];
