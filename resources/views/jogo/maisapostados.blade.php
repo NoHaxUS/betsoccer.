@@ -10,7 +10,7 @@
             {{ csrf_field() }}
             @foreach($jogos as $indice => $jogo)
             <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
-                <h4>{{'Quantidade de apostas: '.$jogo->apostas()->count()}} </h4>
+                <h4>{{'Total de apostas: '.$jogo->apostas()->count()}} </h4>
             <div class="table-responsive">
                 <table>
                     <thead>
