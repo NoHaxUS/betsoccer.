@@ -7,7 +7,7 @@
         {{ csrf_field() }}
         <div >
             <h3 align="center">{{date('d/m/Y',strtotime($d))}}</h3>
-            <a class="btn btn-success" href="{{ route('jogo.maisApostados') }}">Jogos com mais apostas</a>
+            <p class="text-center"><a class="btn btn-success" href="{{ route('jogo.maisApostados') }}">Jogos com mais apostas</a></p>
         </div>
         @foreach(campsHora($d,$jogos) as $camp)
         <h5>{{$camp}}</h5>
