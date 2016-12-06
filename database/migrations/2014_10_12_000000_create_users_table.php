@@ -16,7 +16,6 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('codigo')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'apostador']);
             $table->string('codigo_seguranca')->unique();

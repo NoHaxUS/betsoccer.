@@ -12,7 +12,6 @@ class ApostaJogo extends Migration
      */
     public function up()
     {
-        //
          Schema::create('aposta_jogo', function (Blueprint $table) {           
             $table->integer('apostas_id')->unsigned();
             $table->integer('jogos_id')->unsigned();

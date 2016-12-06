@@ -13,7 +13,22 @@
                 <div class="panel-body">
                     <form action="{{ route('jogo.salvar')}}" method="post">
                         {{ csrf_field() }}
-                        
+
+                        <div class="form-group {{ $errors->has('campeonatos_id') ? 'has-error' : ''}}">
+                            <label for="campeonatos_id">Descrição do Campeonato</label>
+                            <select id="campeonatos_id"  name="campeonatos_id" class="form-control selectpicker" data-live-search="true" required>
+                                
+                                <option value="">Selecione</option>
+                                @foreach ($campeonatos as $campeonato)
+                                <option value="{{ $campeonato->id }}">{{ $campeonato->descricao_campeonato }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('campeonatos_id'))
+                            <span class="help-block">
+                                <strong> {{ $errors->first('campeonatos_id') }} </strong>
+                            </span>
+                            @endif
+                        </div>
                         <div class="form-group {{ $errors->has('data') ? 'has-error' : ''}}">
                             <label for="data">Horário</label>
                             <div class='input-group date form-group' id='datetimepicker1' name="data">
@@ -160,22 +175,7 @@
                                 <strong> {{ $errors->first('ambas_gol') }} </strong>
                             </span>
                             @endif
-                        </div>
-                        <div class="form-group {{ $errors->has('campeonatos_id') ? 'has-error' : ''}}">
-                            <label for="campeonatos_id">Descrição do Campeonato</label>
-                            <select id="campeonatos_id"  name="campeonatos_id" class="form-control">
-                                
-                                <option value="">Selecione</option>
-                                @foreach ($campeonatos as $campeonato)
-                                <option value="{{ $campeonato->id }}">{{ $campeonato->descricao_campeonato }}</option>
-                                @endforeach
-                            </select>
-                            @if($errors->has('campeonatos_id'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('campeonatos_id') }} </strong>
-                            </span>
-                            @endif
-                        </div>
+                        </div>                        
                         <div class="form-group">
                             <button class="btn btn-info">Cadastrar</button>
                         </div>
