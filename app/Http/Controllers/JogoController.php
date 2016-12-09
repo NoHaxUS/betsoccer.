@@ -24,7 +24,9 @@ class JogoController extends Controller
         //buscando todas as informacoes dos times
         //$datas = DB::select('select DISTINCT  descricao_campeonato AS dataDay , campeonatos_id from jogos');
         //dd($datas);
-        $jogos = \App\Jogo::with('campeonato')->get();
+        $jogos = \App\Jogo::with('campeonato')
+        ->where('data','>', Carbon::now()->subDay(2))
+        ->get();
         $datas = $this->arrayDatas($jogos);
         $campeonatos = $this->arrayCamps($jogos);
 
