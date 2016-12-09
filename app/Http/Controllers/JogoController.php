@@ -61,8 +61,8 @@ class JogoController extends Controller
 
     public function cadastrar()
     {
-        $campeonatos = \App\Campeonato::all();
-        $times = \App\Time::all();
+        $campeonatos = \App\Campeonato::orderBy('descricao_campeonato', 'asc')->get();
+        $times = \App\Time::orderBy('descricao_time', 'asc')->get();
         return view('jogo.cadastrar', compact('campeonatos', 'datas', 'times'));
     }
 
