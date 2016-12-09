@@ -31,6 +31,7 @@
                                 <th>Data</th>
                                 <th>Valor Apostado</th>
                                 <th>Apostador</th>
+                                <th>Agente</th>
                                 <th>Total a Pagar</th>
                                 <th>Ações</th>
                             </tr>
@@ -43,6 +44,7 @@
                                 <td>{{date('d/m/Y - H:i', strtotime($aposta->created_at)) }}</td>
                                 <td>{{ number_format($aposta->valor_aposta, 2, ',', '.')}}</td>
                                 <td>{{ $aposta->nome_apostador}}</td>
+                                <td>{{ $aposta->user->name}}</td>
                                 <td>{{ number_format($premios[$key], 2, ',', '.')}}</td>
                                 <td>
 
@@ -57,7 +59,7 @@
                                         @foreach ($aposta->jogo as $key => $jogo)
 
                                         <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
-                                        <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
+                                        <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......R$:{{$jogo->pivot->palpite}}
                                         </h5>
 
                                         @endforeach 

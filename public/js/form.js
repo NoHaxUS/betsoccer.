@@ -2,6 +2,9 @@ var teste;
 var allRadios = [];
 var booRadio;
 //Deixa nome dos time em letra maiscula
+$(document).ready(function() {
+    $("select.special-flexselect").flexselect({ hideDropdownOnEmptyInput: true });
+});
 $(function() {
     $('#upper').keyup(function() {
         this.value = this.value.toLocaleUpperCase()

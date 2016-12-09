@@ -13,7 +13,10 @@
     {!! Html::style('css/default.css') !!}
     {!! Html::style('css/component.css') !!}
     {!! Html::style('css/css/component.css') !!}
-    {!! Html::style('css/bootstrap-select.min.css') !!}
+    {!! Html::style('css/flexselect.css') !!}
+    {!! Html::script('/js/jquery.min.js') !!}
+    {!! Html::script('/js/liquidmetal.js') !!}
+    {!! Html::script('/js/jquery.flexselect.js') !!}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700"/>
@@ -37,6 +40,8 @@
             margin-right: 6px;
         }
     </style>
+    
+</script>
 </head>
 <body id="app-layout">
 
@@ -64,29 +69,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 -->
-{!! Html::script('/js/jquery.min.js') !!}
+
 {!! Html::script('/js/moment.min.js') !!}
 {!! Html::script('/js/collapse.js') !!}
 {!! Html::script('/js/transition.js') !!}
 {!! Html::script('/js/bootstrap.min.js') !!}
 {!! Html::script('/js/bootstrap-datetimepicker.min.js') !!}
 {!! Html::script('/js/date.js') !!}
+
 {!! Html::script('/js/form.js') !!}
 {!! Html::script('/js/modernizr.custom.js') !!}
 {!! Html::script('/js/classie.js') !!}
 {!! Html::script('/js/modalEffects.js') !!}
-{!! Html::script('/js/bootstrap-select.min.js') !!}
-
 <script>
-            // this is important for IEs
-            var polyfilter_scriptpath = '/js/';
-        </script>
-        {!! Html::script('/js/cssParser.js') !!}
-        {!! Html::script('/js/css-filters-polyfill.js') !!}
-        {!! Html::script('http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js') !!}
-        {!! Html::script('js/js/jquery.stickyheader.js') !!}
+    // this is important for IEs
+    var polyfilter_scriptpath = '/js/';
+</script>
+{!! Html::script('/js/cssParser.js') !!}
+{!! Html::script('/js/css-filters-polyfill.js') !!}
+{!! Html::script('http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js') !!}
+{!! Html::script('js/js/jquery.stickyheader.js') !!}
 
-        {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-        {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-    </body>
-    </html>
+{{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+{{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+</body>
+</html>
