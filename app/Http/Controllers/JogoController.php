@@ -91,6 +91,7 @@ class JogoController extends Controller
     {
         $jogos = \App\Jogo::with('time', 'campeonato')
             ->where('data', '<', Carbon::now())
+            ->where('data', '>', Carbon::now()->subDay(2))
             ->where('r_casa', '=', null)
             ->where('r_fora', '=', null)
             ->get();
