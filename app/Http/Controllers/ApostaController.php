@@ -400,14 +400,10 @@ class ApostaController extends Controller
     {
         $lista = Array();
         foreach ($jogos as $jogo):
-            $lista[] = ['id' => $jogo->id,
-                'times' => [
-                    'casa'=>['id'=>$jogo->time->first()->id, 'descricao'=>$jogo->time->first()->descricao_time],
-                    'fora'=>['id'=>$jogo->time->last()->id, 'descricao'=>$jogo->time->last()->descricao_time],
-                ],
-                'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
-                'data' => $jogo->data];
-        endforeach;
+            $lista[] = ['times' => $jogo->time->toArray(),
+            'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
+            'data' => $jogo->data];
+         endforeach;
         return $lista;
     }
 
