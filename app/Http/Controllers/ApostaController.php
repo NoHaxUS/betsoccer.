@@ -489,12 +489,16 @@ class ApostaController extends Controller
     {
         //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
-        $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
-        if (!is_null($resposta)):                                   //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);  //Retorna json com restrição encontrada
+        $resposta = $this->verificarUsuario($user);                     //Verifica restrição usuário
+        if (!is_null($resposta)):                                       //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);      //Retorna json com restrição encontrada
         endif;
-        $aposta = $user->apostas->last();                           //Busca última aposta feita pelo usuário
-        $dados_aposta = $this->dadosAposta($aposta);
+        $aposta = $user->apostas->last();                               //Busca última aposta feita pelo usuário
+        if (is_null($aposta)):                                          //Se aposta for nula
+            return response()->json(['aposta'=>'inexistente'], 403);    //Retorna json informando
+        endif;
+        $dados_aposta = $this->dadosAposta($aposta);                    //Busca dados de aposta
+        //Remove dados desnecessário de jogos
         $dados_aposta['jogos'] = $this->removerDadosDeJogos($dados_aposta['jogos']);
         //Retorna json com dados da última aposta feita pelo usuário
         return response()->json([
@@ -510,15 +514,15 @@ class ApostaController extends Controller
      */
     private function dadosPalpites($jogos)
     {
-        $palpites = array();                            //Cria array para armazenar dados de palpites
-        foreach ($jogos as $jogo):                      //Percorre coleção de jogos
+        $palpites = array();                                //Cria array para armazenar dados de palpites
+        foreach ($jogos as $jogo):                          //Percorre coleção de jogos
             $palpites[] = [
-                'jogos_id' => $jogo->pivot->jogos_id,     //Passa id do jogo
-                'palpite' => $jogo->pivot->palpite,      //Passa valor para o palpite
-                'tpalpite' => $jogo->pivot->tpalpite      //Passa texto do palpite
+                'jogos_id' => $jogo->pivot->jogos_id,       //Passa id do jogo
+                'palpite' => $jogo->pivot->palpite,         //Passa valor para o palpite
+                'tpalpite' => $jogo->pivot->tpalpite        //Passa texto do palpite
             ];
         endforeach;
-        return $palpites;                               //Retorna array com dados de palpites
+        return $palpites;                                   //Retorna array com dados de palpites
     }
 
     /** Método que remove dados desnecessários de jogos
@@ -527,14 +531,14 @@ class ApostaController extends Controller
      */
     private function removerDadosDeJogos($jogos)
     {
-        for ($i = 0; $i < count($jogos); $i++):
-            unset($jogos[$i]['times'][0]['created_at']);
-            unset($jogos[$i]['times'][0]['updated_at']);
-            unset($jogos[$i]['times'][0]['pivot']);
-            unset($jogos[$i]['times'][1]['created_at']);
-            unset($jogos[$i]['times'][1]['updated_at']);
-            unset($jogos[$i]['times'][1]['pivot']);
+        for ($i = 0; $i < count($jogos); $i++):             //Percorre array de jogos
+            unset($jogos[$i]['times'][0]['created_at']);    //Remove campo created_at do primeiro time
+            unset($jogos[$i]['times'][0]['updated_at']);    //Remove campo updated_at do primeiro time
+            unset($jogos[$i]['times'][0]['pivot']);         //Remove dados de pivot do primeiro time
+            unset($jogos[$i]['times'][1]['created_at']);    //Remove campo created_at do segundo time
+            unset($jogos[$i]['times'][1]['updated_at']);    //Remove campo updated_at do segundoo time
+            unset($jogos[$i]['times'][1]['pivot']);         //Remove dados de pivot do segundo time
         endfor;
-        return $jogos;
+        return $jogos;                                      //Retorna array de jogos com campos dados desnecessários removidos
     }
 }
