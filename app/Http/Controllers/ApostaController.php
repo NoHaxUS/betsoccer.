@@ -400,10 +400,11 @@ class ApostaController extends Controller
     {
         $lista = Array();
         foreach ($jogos as $jogo):
-            $lista[] = ['times' => $jogo->time->toArray(),
-            'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
-            'data' => $jogo->data];
-         endforeach;
+            $lista[] = ['id' => $jogo->id,
+                'times' => $jogo->time->toArray(),
+                'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
+                'data' => $jogo->data];
+        endforeach;
         return $lista;
     }
 
@@ -481,8 +482,8 @@ class ApostaController extends Controller
     }
 
     /** Método que busca e retorna última aposta do cambista
-     * @param $codigo_seguranca
-     * @return \Illuminate\Http\JsonResponse
+     * @param $codigo_seguranca string com código de segurança do cambista
+     * @return \Illuminate\Http\JsonResponse dados da última aposta feita pelo cambista
      */
     public function ultima($codigo_seguranca)
     {
@@ -493,12 +494,14 @@ class ApostaController extends Controller
             return response()->json($resposta, $resposta['erro']);  //Retorna json com restrição encontrada
         endif;
         $aposta = $user->apostas->last();                           //Busca última aposta feita pelo usuário
+        $dados_aposta = $this->dadosAposta($aposta);
+        $dados_aposta['jogos'] = $this->removerDadosDeJogos($dados_aposta['jogos']);
         //Retorna json com dados da última aposta feita pelo usuário
         return response()->json([
-            'cambista' => $user->name,                              //Nome do cambista
-            'aposta' => $this->dadosAposta($aposta),                //Dados da aposta
-            'palpites'=>$this->dadosPalpites($aposta->jogo),        //Dados dos palpites
-            'possivel_premio'=>$this->calcularPremio($aposta)]);    //Valor do possível prêmio
+            'cambista' => $user->name,                                  //Nome do cambista
+            'aposta' => $dados_aposta,                                  //Dados da aposta
+            'palpites' => $this->dadosPalpites($aposta->jogo),          //Dados dos palpites
+            'possivel_premio' => $this->calcularPremio($aposta)]);      //Valor do possível prêmio
     }
 
     /** Método que formata dados de palpites de jogos em array
@@ -509,12 +512,29 @@ class ApostaController extends Controller
     {
         $palpites = array();                            //Cria array para armazenar dados de palpites
         foreach ($jogos as $jogo):                      //Percorre coleção de jogos
-            $palpites[] =[
-                'jogos_id'=>$jogo->pivot->jogos_id,     //Passa id do jogo
-                'palpite'=> $jogo->pivot->palpite,      //Passa valor para o palpite
-                'tpalpite'=>$jogo->pivot->tpalpite      //Passa texto do palpite
-            ] ;
+            $palpites[] = [
+                'jogos_id' => $jogo->pivot->jogos_id,     //Passa id do jogo
+                'palpite' => $jogo->pivot->palpite,      //Passa valor para o palpite
+                'tpalpite' => $jogo->pivot->tpalpite      //Passa texto do palpite
+            ];
         endforeach;
         return $palpites;                               //Retorna array com dados de palpites
+    }
+
+    /** Método que remove dados desnecessários de jogos
+     * @param $jogos array com dados de jogos com os desnecessário
+     * @return mixed array com dados de jogos sem os desnecessário
+     */
+    private function removerDadosDeJogos($jogos)
+    {
+        for ($i = 0; $i < count($jogos); $i++):
+            unset($jogos[$i]['times'][0]['created_at']);
+            unset($jogos[$i]['times'][0]['updated_at']);
+            unset($jogos[$i]['times'][0]['pivot']);
+            unset($jogos[$i]['times'][1]['created_at']);
+            unset($jogos[$i]['times'][1]['updated_at']);
+            unset($jogos[$i]['times'][1]['pivot']);
+        endfor;
+        return $jogos;
     }
 }
