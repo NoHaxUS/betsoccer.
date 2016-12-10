@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->enum('role', ['admin', 'apostador']);
             $table->string('codigo_seguranca')->unique();
             $table->boolean('ativo')->default(true);
-            $table->timestamp('ultimo_pagamento');
+            $table->timestamp('ultimo_pagamento')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
