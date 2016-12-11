@@ -8,13 +8,8 @@
                 <ol class="breadcrumb panel-heading">
                     <li class="active">Valores a pagar</li>
                 </ol>
+                
                 <!-- Nav tabs -->
-                <select class="cs-select cs-skin-underline">
-                    <option value="" disabled selected>Prêmios por Cambista</option>
-                    @foreach ($users as $user)
-                    <option value="{{$user->id}}">{{$user->name}}</option>
-                    @endforeach
-                </select>
                 <ul class="nav nav-tabs" role="tablist">
                   <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Apostas Abertas</a></li>
                   <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Apostas Pagas</a></li>

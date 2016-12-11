@@ -16,9 +16,7 @@
 
                         <div class="form-group {{ $errors->has('campeonatos_id') ? 'has-error' : ''}}">
                             <label for="campeonatos_id">Descrição do Campeonato</label>
-                            <select id="campeonatos_id"  name="campeonatos_id" class="form-control special-flexselect" required>
-
-                                <option value="">Selecione</option>
+                            <select id="campeonatos_id"  name="campeonatos_id" class="form-control special-flexselect " required>
                                 @foreach ($campeonatos as $campeonato)
                                 <option value="{{ $campeonato->id }}">{{ $campeonato->descricao_campeonato }}</option>
                                 @endforeach

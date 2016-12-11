@@ -14,9 +14,14 @@
     {!! Html::style('css/component.css') !!}
     {!! Html::style('css/css/component.css') !!}
     {!! Html::style('css/flexselect.css') !!}
+    {!! Html::style('css/cs-select.css') !!}
+    {!! Html::style('css/cs-skin-underline.css') !!}
     {!! Html::script('/js/jquery.min.js') !!}
     {!! Html::script('/js/liquidmetal.js') !!}
     {!! Html::script('/js/jquery.flexselect.js') !!}
+    {!! Html::script('/js/selectFx.js') !!}
+
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700"/>
@@ -45,18 +50,18 @@
 </head>
 <body id="app-layout">
 
- @include('layouts._includes._nav')
+   @include('layouts._includes._nav')
 
- @if(Session::has('flash_message'))
- <div class="container">
+   @if(Session::has('flash_message'))
+   <div class="container">
     <div class="row">
         <div class="col-md-12">
             <div align="center" class="alert {{ Session::get('flash_message')['class'] }}">
-               {{ Session::get('flash_message')['msg'] }}
+             {{ Session::get('flash_message')['msg'] }}
 
-           </div>
-       </div>
-   </div>
+         </div>
+     </div>
+ </div>
 </div>
 
 @endif
@@ -76,14 +81,21 @@
 {!! Html::script('/js/bootstrap.min.js') !!}
 {!! Html::script('/js/bootstrap-datetimepicker.min.js') !!}
 {!! Html::script('/js/date.js') !!}
-
 {!! Html::script('/js/form.js') !!}
 {!! Html::script('/js/modernizr.custom.js') !!}
 {!! Html::script('/js/classie.js') !!}
 {!! Html::script('/js/modalEffects.js') !!}
+
 <script>
     // this is important for IEs
     var polyfilter_scriptpath = '/js/';
+
+    (function() {
+        [].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {    
+            new SelectFx(el);
+        } );
+    })();
+   
 </script>
 {!! Html::script('/js/cssParser.js') !!}
 {!! Html::script('/js/css-filters-polyfill.js') !!}

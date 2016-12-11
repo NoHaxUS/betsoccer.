@@ -32,40 +32,40 @@ class ApostaController extends Controller
             ->get();
             dd($users);
         */
-        $jogos = \App\Jogo::with('time', 'campeonato')
+            $jogos = \App\Jogo::with('time', 'campeonato')
             ->where('ativo', true)
             ->whereBetween('data', [Carbon::now()->addMinute(5), Carbon::now()->addDay(1)->setTime(23, 59, 59)])
             ->get();
-        return response()->json(array("jogos" => $jogos));
-    }
+            return response()->json(array("jogos" => $jogos));
+        }
 
-    public function index()
-    {
-        $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
-        $jogos = \App\Jogo::with('time', 'campeonato')->get();
-        $campeonatos = \App\Campeonato::all();
-        return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
-    }
+        public function index()
+        {
+            $results = DB::select('select DISTINCT  CAST(data AS date) AS dataS , campeonatos_id from jogos order by data');
+            $jogos = \App\Jogo::with('time', 'campeonato')->get();
+            $campeonatos = \App\Campeonato::all();
+            return view('aposta.index', compact('jogos', 'campeonatos', 'results'));
+        }
 
-    public function listaAposta()
-    {
+        public function listaAposta()
+        {
 
-        $apostaWins = [];
-        $total = [];
-        $apostas = \App\Aposta::with('user')
+            $apostaWins = [];
+            $total = [];
+            $apostas = \App\Aposta::with('user')
             ->where('pago', '<>', true)->get();
 
-        $temp = $this->calcRetorno($apostas);
+            $temp = $this->calcRetorno($apostas);
 
-        foreach ($apostas as $key => $aposta) {
-            if ($this->apostasWins($aposta)) {
-                array_push($apostaWins, $aposta);
-                array_push($total, $temp[$key]);
+            foreach ($apostas as $key => $aposta) {
+                if ($this->apostasWins($aposta)) {
+                    array_push($apostaWins, $aposta);
+                    array_push($total, $temp[$key]);
+                }
             }
-        }
         // dd($apostaWins);
-        return view('aposta.wins', compact('apostaWins', 'total'));
-    }
+            return view('aposta.wins', compact('apostaWins', 'total'));
+        }
 
     /**
      * Método que verifica se uma aposta foi vencedora ou não pega a lista de jogos de uma aposta
@@ -145,7 +145,7 @@ class ApostaController extends Controller
         \Session::flash('flash_message', [
             'msg' => "Aposta realizada com Sucesso",
             'class' => "alert-success"
-        ]);
+            ]);
         return redirect()->route('aposta.index');
     }
 
@@ -159,11 +159,11 @@ class ApostaController extends Controller
         $resposta = $this->verificarUsuario($user);                      //Verifica restrição usuário
         if (!is_null($resposta)):                                        //Se retornou restrição
             return response()->json($resposta, $resposta['erro']);       //Retorna json com restrição encontrada
-        endif;
+            endif;
         $jogos_invalidos = $this->verificarJogos($request->jogo);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
-            return response()->json(
-                ['jogos_invalidos' => $jogos_invalidos],
+        return response()->json(
+            ['jogos_invalidos' => $jogos_invalidos],
                 $jogos_invalidos['erro']);                              //retorna json com array com todos os jogos inválidos
         endif;
         /*$palpites_invalidos = $this->verificarPalpites($palpites);    //Verifica se há palpites inválidos
@@ -183,10 +183,10 @@ class ApostaController extends Controller
     {
         if (is_null($user)):                                    //Verificar se usuário existe
             return ['status' => 'Inexistente', 'erro' => 400];    //Retorna status de usuário inexistente
-        endif;
+            endif;
         if (!$user->ativo):                                     //Verificar se usuário não está ativo
             return ['status' => 'Inativo', 'erro' => 401];         //Retorna status de usuário inativo
-        endif;
+            endif;
         return null;                                            //Retorn null
     }
 
@@ -198,16 +198,16 @@ class ApostaController extends Controller
     {
         if (count($jogos) < 2):                     //Verifica se quantidade de jogos é menor que 2
             return ['status' => "Minimo 2 jogos", 'erro' => 402];                //Retorna mensagem
-        endif;
+            endif;
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
             $jogo = Jogo::find($valor);             //Busca jogo pelo id (valor)
             //Verificar  jogo é nulo ou se data e hora do jogo é menor horário que a data atual menos 5 minutos
             if ($jogo == null || $jogo->data < Carbon::now()->addMinute(5)):
                 $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
-                $jogos_invalidos['erro'] = 403;
+            $jogos_invalidos['erro'] = 403;
             endif;
-        endforeach;
+            endforeach;
         return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
     }
 
@@ -222,8 +222,8 @@ class ApostaController extends Controller
             $jogo = Jogo::find($palpite['jogo_id']);    //Busca jogo pelo id
             if ($jogo->$palpite['tpalpite'] == 0):       //Verifica se valor do palpite no jogo é zero
                 $palpites_invalidos[] = $palpite;       //Passa palpite inválido para array
-            endif;
-        endforeach;
+                endif;
+                endforeach;
         return $palpites_invalidos;                     //Retorna array com palpites inválidos
     }
 
@@ -245,7 +245,7 @@ class ApostaController extends Controller
             $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
             $palpite['tpalpite'] = $request->tpalpite[$i];          //Passa texto do palpite para array
             $aposta->jogo()->attach($request->jogo[$i], $palpite);  //Relaciona aposta com jogo incluindo os dados de palpite
-        endfor;
+            endfor;
         return $aposta;                                             //Retorna a aposta
     }
 
@@ -261,7 +261,7 @@ class ApostaController extends Controller
         $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
         if (!is_null($resposta)):                                   //Se retornou restrição
             return response()->json($resposta, $resposta['erro']);  //Retorna json com restrição encontrada
-        endif;
+            endif;
         $apostas = Aposta::recentes($user);                         //Busca as apostas recentes feitas pelo usuário
         $ganho_simples = 0;                                         //Cria variável para acumular comissão com apostas simples (2 jogos)
         $ganho_mediano = 0;                                         //Cria variável para acumular comissão com apostas medianas (3 jogos)
@@ -270,27 +270,27 @@ class ApostaController extends Controller
         $qtd_jogos = 0;                                             //Cria variável para acumular quantidade de jogos
         foreach ($apostas as $aposta):                              //Itera pela lista de apostas
             switch ($aposta->jogo()->count()) :                     //Seleciona quantidade de jogos como parâmetro
-                case 2:
+            case 2:
                     //Cálcula ganho para aposta com dois jogos
-                    $ganho_simples += $aposta->valor_aposta * (config('constantes.porcentagem_simples') / 100);
-                    break;
-                case 3:
+            $ganho_simples += $aposta->valor_aposta * (config('constantes.porcentagem_simples') / 100);
+            break;
+            case 3:
                     //Cálcula ganho para aposta com três jogos
-                    $ganho_mediano += $aposta->valor_aposta * (config('constantes.porcentagem_mediana') / 100);
-                    break;
-                default:
+            $ganho_mediano += $aposta->valor_aposta * (config('constantes.porcentagem_mediana') / 100);
+            break;
+            default:
                     //Cálcula ganho para aposta com mais três jogos
-                    $ganho_maximo += $aposta->valor_aposta * (config('constantes.porcentagem_maxima') / 100);
-                    break;
+            $ganho_maximo += $aposta->valor_aposta * (config('constantes.porcentagem_maxima') / 100);
+            break;
             endswitch;
             if ($this->apostasWins($aposta)):                       //Verifica se aposta foi vencedora
                 $premiacao += $this->calcularPremio($aposta);       //soma a premiação
-            endif;
+                endif;
             $qtd_jogos += $aposta->jogo()->count();                 //Acrescenta quantidade de jogos a variável
             //dd($premiacao);
-        endforeach;
+            endforeach;
         //Obtém o valor total da comissão somando as comissões de aposta simples, mediana e máxima
-        $ganho_total = $ganho_simples + $ganho_mediano + $ganho_maximo;
+            $ganho_total = $ganho_simples + $ganho_mediano + $ganho_maximo;
         /*Retorna o id e nome do cambista, quantidade de apostas, quantidade de jogos, comissão de apostas simples,
         mediana e máxima, comissão total do cambista*/
         $liquido = $apostas->sum('valor_aposta') - $premiacao - $ganho_total;
@@ -306,7 +306,7 @@ class ApostaController extends Controller
             'comissao_total' => $ganho_total,
             'total_premiação' => $premiacao,
             'liquido' => $liquido,
-        ]);
+            ]);
     }
 
     /** Método que verifica a relação de premiações das apostas
@@ -320,7 +320,7 @@ class ApostaController extends Controller
         $resposta = $this->verificarUsuario($user);                 //Verifica restrição usuário
         if (!is_null($resposta)):                                   //Se retornou restrição
             return response()->json($resposta, $resposta['erro']);  //Retorna json com restrição encontrada
-        endif;
+            endif;
         $apostas = Aposta::recentes($user);                         //Busca as apostas recentes feitas pelo usuário
         $premiacao_total = 0;
         $ganho_total = 0;                                             //Cria variável para acumular quantidade de jogos
@@ -330,25 +330,25 @@ class ApostaController extends Controller
         $apostas_vencedoras = Array();
         foreach ($apostas as $aposta):                              //Itera pela lista de apostas
             switch ($aposta->jogo()->count()) :                     //Seleciona a quantidade de jogos como parâmetro
-                case 2:
+            case 2:
                     //Gera valor para cálculo de ganho para aposta com dois jogos
-                    $porcentagem = config('constantes.porcentagem_simples') / 100;
-                    break;
-                case 3:
+            $porcentagem = config('constantes.porcentagem_simples') / 100;
+            break;
+            case 3:
                     //Gera valor para cálculo de ganho para aposta com três jogos
-                    $porcentagem = config('constantes.porcentagem_mediana') / 100;
-                    break;
-                default:
+            $porcentagem = config('constantes.porcentagem_mediana') / 100;
+            break;
+            default:
                     //Gera valor para cálculo de ganho para aposta com mais três jogos
-                    $porcentagem = config('constantes.porcentagem_maxima') / 100;
-                    break;
+            $porcentagem = config('constantes.porcentagem_maxima') / 100;
+            break;
             endswitch;
             $ganho_aposta = $aposta->valor_aposta * $porcentagem;   //Calcula o ganho por cada aposta
             //Cria array para armazenar id e ganho da aposta
             $lista_apostas [] = [
-                'aposta' => $aposta->codigo,
-                'ganho' => $ganho_aposta,
-                'jogos' => $this->dadosJogos($aposta->jogo)];
+            'aposta' => $aposta->codigo,
+            'ganho' => $ganho_aposta,
+            'jogos' => $this->dadosJogos($aposta->jogo)];
 
             if ($this->apostasWins($aposta)):                       //Se aposta for vencedora
                 $premiacao_aposta = $this->calcularPremio($aposta); //Calcula prêmio
@@ -356,23 +356,23 @@ class ApostaController extends Controller
                 $apostas_vencedoras[] = $this->dadosAposta($aposta, $premiacao_aposta);
                 if ($aposta->pago):                                 //Verifica se aposta foi paga (o prêmio)
                     $premiacao_paga += $premiacao_aposta;           //Soma valor a de premiações pagas
-                else:
+                    else:
                     $premiacao_nao_paga += $premiacao_aposta;       //Soma valor a premiações não pagas
                 endif;
                 $premiacao_total += $premiacao_aposta;              //Acrescenta a premiação da aposta a premiação total
-            endif;
+                endif;
             $ganho_total += $ganho_aposta;                          //Soma o ganho de cada aposta para formar o montante
-        endforeach;
+            endforeach;
 
         //dd($premiacao_total);
-        return response()->json([
-            'codigo' => $user->codigo,
-            'cambista' => $user->name,
-            'apostas_vencedoras' => $apostas_vencedoras,
-            'total_premiacao' => $premiacao_total,
-            'apostas' => $lista_apostas,
-        ]);
-    }
+            return response()->json([
+                'codigo' => $user->codigo,
+                'cambista' => $user->name,
+                'apostas_vencedoras' => $apostas_vencedoras,
+                'total_premiacao' => $premiacao_total,
+                'apostas' => $lista_apostas,
+                ]);
+        }
 
     /** Método que formata dados de aposta em array
      * @param $aposta Aposta aposta cujos dados serão passados para array
@@ -382,13 +382,13 @@ class ApostaController extends Controller
     private function dadosAposta($aposta, $premiacao_aposta = 0)
     {
         return [
-            'codigo' => $aposta->codigo,
-            'data' => $aposta->created_at,
-            'apostador' => $aposta->nome_apostador,
-            'valor_apostado' => $aposta->valor_aposta,
-            'premio' => $premiacao_aposta,
-            'paga' => $aposta->pago,
-            'jogos' => $this->dadosJogos($aposta->jogo)
+        'codigo' => $aposta->codigo,
+        'data' => $aposta->created_at,
+        'apostador' => $aposta->nome_apostador,
+        'valor_apostado' => $aposta->valor_aposta,
+        'premio' => $premiacao_aposta,
+        'paga' => $aposta->pago,
+        'jogos' => $this->dadosJogos($aposta->jogo)
         ];
     }
 
@@ -401,9 +401,9 @@ class ApostaController extends Controller
         $lista = Array();
         foreach ($jogos as $jogo):
             $lista[] = ['id' => $jogo->id,
-                'times' => $jogo->time->toArray(),
-                'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
-                'data' => $jogo->data];
+        'times' => $jogo->time->toArray(),
+        'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
+        'data' => $jogo->data];
         endforeach;
         return $lista;
     }
@@ -465,12 +465,12 @@ class ApostaController extends Controller
     public function resumoAposta()
     {
         $apostas = Aposta::with(['jogo'])
-            ->where('pago', '<>', true)
-            ->get();
+        ->where('pago', '<>', true)
+        ->get();
         $apostasPagas = Aposta::with(['jogo'])
-            ->where('pago', '=', true)
-            ->get();
-
+        ->where('pago', '=', true)
+        ->get();
+        $users = DB::table('users')->select('id','name')->get();    
         $total = 0;
         $totalPago = 0;
         $premios = $this->calcRetorno($apostas);
@@ -478,7 +478,7 @@ class ApostaController extends Controller
         $totalPago += array_sum($premiosPago);
         $total += array_sum($premios);
         //Lista de apostas é passada para a view
-        return view('aposta.allapostas', compact('apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
+        return view('aposta.allapostas', compact('users','apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
     }
 
     /** Método que busca e retorna última aposta do cambista
@@ -492,11 +492,11 @@ class ApostaController extends Controller
         $resposta = $this->verificarUsuario($user);                     //Verifica restrição usuário
         if (!is_null($resposta)):                                       //Se retornou restrição
             return response()->json($resposta, $resposta['erro']);      //Retorna json com restrição encontrada
-        endif;
+            endif;
         $aposta = $user->apostas->last();                               //Busca última aposta feita pelo usuário
         if (is_null($aposta)):                                          //Se aposta for nula
             return response()->json(['aposta'=>'inexistente'], 403);    //Retorna json informando
-        endif;
+            endif;
         $dados_aposta = $this->dadosAposta($aposta);                    //Busca dados de aposta
         //Remove dados desnecessário de jogos
         $dados_aposta['jogos'] = $this->removerDadosDeJogos($dados_aposta['jogos']);
@@ -516,12 +516,12 @@ class ApostaController extends Controller
     {
         $palpites = array();                                //Cria array para armazenar dados de palpites
         foreach ($jogos as $jogo):                          //Percorre coleção de jogos
-            $palpites[] = [
+        $palpites[] = [
                 'jogos_id' => $jogo->pivot->jogos_id,       //Passa id do jogo
                 'palpite' => $jogo->pivot->palpite,         //Passa valor para o palpite
                 'tpalpite' => $jogo->pivot->tpalpite        //Passa texto do palpite
-            ];
-        endforeach;
+                ];
+                endforeach;
         return $palpites;                                   //Retorna array com dados de palpites
     }
 
@@ -538,7 +538,31 @@ class ApostaController extends Controller
             unset($jogos[$i]['times'][1]['created_at']);    //Remove campo created_at do segundo time
             unset($jogos[$i]['times'][1]['updated_at']);    //Remove campo updated_at do segundoo time
             unset($jogos[$i]['times'][1]['pivot']);         //Remove dados de pivot do segundo time
-        endfor;
+            endfor;
         return $jogos;                                      //Retorna array de jogos com campos dados desnecessários removidos
+    }
+
+    /** Método que muda o atributo ultimo_pagamento do usuario para o momento atual
+     * @param $codigo_c codigo do Cambista , $codigo_a codigo de um Admin
+     * @return mixed array confirmação da alteração
+     */
+
+    public function acerto($codigo_c,$codigo_a){
+
+        $cambista = \App\User::buscarPorCodigoSeguranca($codigo_c)->first();
+        $resposta = $this->verificarUsuario($cambista);                          //Verifica restrição usuário
+        if (!is_null($resposta)){                                          //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);          //Retorna json com restrição encontrada
+        }
+        $adm = \App\User::buscarPorCodigoSeguranca($codigo_a)->first();
+        $resposta = $this->verificarUsuario($adm);                          //Verifica restrição usuário
+        if (!is_null($resposta)){                                          //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);          //Retorna json com restrição encontrada
+        }
+        if ($adm->role != "admin"){                                          //Se retornou restrição
+            return response()->json(['status' => 'Credenciais Insuficientes'], 400);          //Retorna json com restrição encontrada
+        }
+        $cambista->ultimo_pagamento = Carbon::now();
+        $cambista->save();       
     }
 }
