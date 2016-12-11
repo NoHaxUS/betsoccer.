@@ -550,19 +550,42 @@ class ApostaController extends Controller
     public function acerto($codigo_c,$codigo_a){
 
         $cambista = \App\User::buscarPorCodigoSeguranca($codigo_c)->first();
-        $resposta = $this->verificarUsuario($cambista);                          //Verifica restrição usuário
-        if (!is_null($resposta)){                                          //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);          //Retorna json com restrição encontrada
+        $resposta = $this->verificarUsuario($cambista);                                       //Verifica restrição usuário
+        if (!is_null($resposta)){                                                             //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);                            //Retorna json com restrição encontrada
         }
         $adm = \App\User::buscarPorCodigoSeguranca($codigo_a)->first();
-        $resposta = $this->verificarUsuario($adm);                          //Verifica restrição usuário
-        if (!is_null($resposta)){                                          //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);          //Retorna json com restrição encontrada
+        $resposta = $this->verificarUsuario($adm);                                            //Verifica restrição usuário
+        if (!is_null($resposta)){                                                             //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);                            //Retorna json com restrição encontrada
         }
-        if ($adm->role != "admin"){                                          //Se retornou restrição
+        if ($adm->role != "admin"){                                                           //Se retornou restrição
             return response()->json(['status' => 'Credenciais Insuficientes'], 400);          //Retorna json com restrição encontrada
         }
         $cambista->ultimo_pagamento = Carbon::now();
         $cambista->save();       
+    }
+
+
+
+    public function apostaCambista(Request $request){
+        $id = $request->get('cambista');    
+        $users = \App\User::find($id);        
+        $apostas = Aposta::with(['jogo'])
+        ->where('users_id','=', $id)
+        ->where('created_at','>', $users->ultimo_pagamento)
+        ->get();
+        $apostasPagas = Aposta::with(['jogo'])
+        ->where('pago', '=', true)
+        ->get();
+        $total = 0;
+        $totalPago = 0;
+        $premios = $this->calcRetorno($apostas);
+        $premiosPago = $this->calcRetorno($apostasPagas);
+        $totalPago += array_sum($premiosPago);
+        $total += array_sum($premios);
+
+        return view('aposta.apostaCambista', compact('users','apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
+
     }
 }

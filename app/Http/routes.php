@@ -19,6 +19,8 @@ Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaControlle
 Route::get('/aposta/premiosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@premiosApostas', 'as'=>'aposta.premiosApostas']);
 Route::get('/aposta/ultima/{codigo_seguranca}', ['uses'=>'ApostaController@ultima', 'as'=>'aposta.ultima']);
 Route::get('/cabista/acerto/{codigo_c}/{codigo_a}', ['uses'=>'ApostaController@acerto', 'as'=>'aposta.acerto']);
+Route::post('/aposta/cabista', ['uses'=>'ApostaController@apostaCambista', 'as'=>'aposta.cambista']);
+
 
 
 

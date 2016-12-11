@@ -9,10 +9,6 @@
             <li class="active">Apostas Vencedoras</li>
         </ol>
         <div class="panel-body">
-            <p>
-                <input type="search" name="busca-aposta">
-                <a class="btn btn-info" href="{{ route('jogo.cadastrar') }}">Aposta Detalhada</a>
-            </p>
         </div>
     </div>
     <div class="table-responsive">
