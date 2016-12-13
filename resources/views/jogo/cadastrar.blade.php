@@ -102,22 +102,11 @@
 
                     <label for="valor_fora">Valor Fora</label>
                     <div class="input-group {{ $errors->has('valor_fora') ? 'has-error' : ''}}">
-                     <span class="input-group-addon" id="sizing-addon2">$</span>
-                     <input type="text" value="{{old('valor_fora')}}" name="valor_fora" class="form-control" placeholder="Insira o valor para o vencedor do time de fora" aria-describedby="sizing-addon2"/>
-                     @if($errors->has('valor_fora'))
-                     <span class="help-block">
+                       <span class="input-group-addon" id="sizing-addon2">$</span>
+                       <input type="text" value="{{old('valor_fora')}}" name="valor_fora" class="form-control" placeholder="Insira o valor para o vencedor do time de fora" aria-describedby="sizing-addon2"/>
+                       @if($errors->has('valor_fora'))
+                       <span class="help-block">
                         <strong> {{ $errors->first('valor_fora') }} </strong>
-                    </span>
-                    @endif
-                </div>
-                <label for="max_gol_2">Valor -2.5</label>
-                <div class="input-group {{ $errors->has('max_gol_2') ? 'has-error' : ''}}">
-                    <span class="input-group-addon" id="sizing-addon2">$</span>
-
-                    <input type="text" value="{{old('max_gol_2')}}" name="max_gol_2" class="form-control" placeholder="Insira o valor para se a partida tiver no maximo 2 gols" aria-describedby="sizing-addon2">
-                    @if($errors->has('max_gol_2'))
-                    <span class="help-block">
-                        <strong> {{ $errors->first('max_gol_2') }} </strong>
                     </span>
                     @endif
                 </div>
@@ -134,24 +123,35 @@
                     @endif
                 </div>
 
+                <label for="max_gol_2">Valor -2.5</label>
+                <div class="input-group {{ $errors->has('max_gol_2') ? 'has-error' : ''}}">
+                    <span class="input-group-addon" id="sizing-addon2">$</span>
+
+                    <input type="text" value="{{old('max_gol_2')}}" name="max_gol_2" class="form-control" placeholder="Insira o valor para se a partida tiver no maximo 2 gols" aria-describedby="sizing-addon2">
+                    @if($errors->has('max_gol_2'))
+                    <span class="help-block">
+                        <strong> {{ $errors->first('max_gol_2') }} </strong>
+                    </span>
+                    @endif
+                </div>
                 <label for="valor_dupla">Valor Dupla</label>
                 <div class="input-group {{ $errors->has('valor_dupla') ? 'has-error' : ''}}">
-                 <span class="input-group-addon" id="sizing-addon2">$</span>
+                   <span class="input-group-addon" id="sizing-addon2">$</span>
 
-                 <input type="text"  value="{{old('valor_dupla')}}" name="valor_dupla" class="form-control" placeholder="Insira o valor para a vitória da zebra ou empate" aria-describedby="sizing-addon2">
-                 @if($errors->has('valor_dupla'))
-                 <span class="help-block">
+                   <input type="text"  value="{{old('valor_dupla')}}" name="valor_dupla" class="form-control" placeholder="Insira o valor para a vitória da zebra ou empate" aria-describedby="sizing-addon2">
+                   @if($errors->has('valor_dupla'))
+                   <span class="help-block">
                     <strong> {{ $errors->first('valor_dupla') }} </strong>
                 </span>
                 @endif
             </div>       
             <label for="valor_1_2">Valor Gol</label>
             <div class="input-group {{ $errors->has('valor_1_2') ? 'has-error' : ''}}">
-             <span class="input-group-addon" id="sizing-addon2">$</span>
+               <span class="input-group-addon" id="sizing-addon2">$</span>
 
-             <input type="text" value="{{old('valor_1_2')}}" name="valor_1_2" class="form-control" placeholder="Insira o valor para o vencedor de mais de um gol" aria-describedby="sizing-addon2">
-             @if($errors->has('valor_1_2'))
-             <span class="help-block">
+               <input type="text" value="{{old('valor_1_2')}}" name="valor_1_2" class="form-control" placeholder="Insira o valor para o vencedor de mais de um gol" aria-describedby="sizing-addon2">
+               @if($errors->has('valor_1_2'))
+               <span class="help-block">
                 <strong> {{ $errors->first('valor_1_2') }} </strong>
             </span>
             @endif
