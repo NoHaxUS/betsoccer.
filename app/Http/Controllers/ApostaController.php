@@ -376,12 +376,12 @@ class ApostaController extends Controller
     private function dadosAposta($aposta, $ganho = 0)
     {
         return [
-            'codigo' => $aposta->codigo,
-            'data' => $aposta->created_at,
-            'apostador' => $aposta->nome_apostador,
-            'valor_apostado' => number_format($aposta->valor_aposta, 2, ',', '.'),
-            'ganho' => number_format($ganho, 2, ',', '.'),
-            'jogos' => $this->dadosJogos($aposta->jogo)
+            'codigo' => $aposta->codigo,                                            //Código
+            'data' => $aposta->created_at,                                          //Data
+            'apostador' => $aposta->nome_apostador,                                 //Nome do apostador
+            'valor_apostado' => number_format($aposta->valor_aposta, 2, ',', '.'),  //Valor apostado
+            'ganho' => number_format($ganho, 2, ',', '.'),                          //Ganho do cambista
+            'jogos' => $this->dadosJogos($aposta->jogo)                             //Relação de jogos
         ];
     }
 
