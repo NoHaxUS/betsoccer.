@@ -203,20 +203,10 @@ class JogoController extends Controller
      */
     public function maisApostados()
     {
-        $resultado = DB::table('aposta_jogo')                           //Realiza consulta na tabela aposta_jogo
-            ->select(DB::raw('count(*) as qtd, jogos_id as jogo'))      //Seleciona a quantidade e jogos_id
-            ->join('jogos', 'aposta_jogo.jogos_id','=', 'jogos.id')     //Realiza junção com tabela jogos
-            ->where('jogos.data','>',Carbon::now())                     //Estabelece como claúsula que data do jogo deve ser maior que atual
-            ->groupBy('jogos_id')                                       //Agrupa por jogos_id
-            ->orderBy('qtd', 'desc')                                    //Ordena de forma decrescente pela quantidade
-            ->take(config('constantes.jogos_mais_apostados'))           //Pega os primeiros de acordo com quantidade definida
-            ->get();
         $palpites = array();                                            //Cria array para armazenar os palpites
-        $jogos = array();                                               //Cria array para armazenar os jogos
-        foreach ($resultado as $item):                                  //Percorre a lista de resultado
-            $jogo = \App\Jogo::find($item->jogo);                       //Busca jogo pelo id
+        $jogos = \App\Jogo::maisApostados();                            //Busca jogos com mais apostas
+        foreach($jogos as $jogo):                                       //Percorre lista de jogos
             $palpites[] = $this->calcularPalpites($jogo->apostas);      //Solicita cálculo de de palpites e armazena no array
-            $jogos[] = $jogo;                                           //Armazena o jogo no array
         endforeach;
         return view('jogo.maisapostados', compact('jogos', 'palpites'));//Retorna view para exibição
     }
