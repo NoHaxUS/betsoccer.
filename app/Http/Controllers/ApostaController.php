@@ -238,11 +238,17 @@ class ApostaController extends Controller
     private function registrarAposta(Request $request, \App\User $user)
     {
         //Instancia uma aposta com dados vindos do request e passando id do usuário
-        $aposta = \App\Aposta::create($request->all());
+        /*$aposta = \App\Aposta::create($request->all());
         $aposta->users_id = $user->id;
         $hashids = new Hashids('betsoccer2', 5);
         $aposta->codigo = $hashids->encode($aposta->id);
-        $aposta->save();                                            //Salva aposta
+        $aposta->save();*/                                            //Salva aposta
+        $aposta =  new \App\Aposta($request->all());
+        $aposta->users_id = $user->id;
+        $hashids = new Hashids('betsoccer2', 5);
+        $aposta->codigo = $hashids->encode(DB::table('apostas')->max('id')+1);
+        $aposta->save();
+
         for ($i = 0; $i < count($request->jogo); $i++):             //Criar iteração com base no número de jogos
             $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
             $palpite['tpalpite'] = $request->tpalpite[$i];          //Passa texto do palpite para array
