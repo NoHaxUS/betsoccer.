@@ -508,7 +508,7 @@ class ApostaController extends Controller
             'cambista' => $user->name,                                  //Nome do cambista
             'aposta' => $dados_aposta,                                  //Dados da aposta
             'palpites' => $this->dadosPalpites($aposta->jogo),          //Dados dos palpites
-            'possivel_premio' => $this->calcularPremio($aposta)]);      //Valor do possível prêmio
+            'possivel_premio' => number_format($this->calcularPremio($aposta), 2, ',', '.')]);      //Valor do possível prêmio
     }
 
     /** Método que formata dados de palpites de jogos em array

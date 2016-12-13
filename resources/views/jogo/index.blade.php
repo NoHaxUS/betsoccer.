@@ -45,15 +45,46 @@
                         <td>X</td>
                         <td>{{ $jo->r_fora or "?" }}</td>
                         <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
-                        <td>{{ $jo->valor_casa }}</td>
-                        <td>{{ $jo->valor_empate }}</td>
-                        <td>{{ $jo->valor_fora }}</td>
-                        <td>{{ $jo->valor_1_2 }}</td>
-                        <td>{{ $jo->valor_dupla }}</td>
-                        <td>{{ $jo->max_gol_2 }}</td>
-                        <td>{{ $jo->min_gol_3 }}</td>
-                        <td>{{ $jo->ambas_gol }}</td>
-
+                        @if($jo->valor_casa== null)
+                        <td>{{ "--"}}</td>
+                        @else
+                        <td>{{ $jo->valor_casa}}</td>
+                        @endif
+                        @if($jo->valor_empate == null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{  $jo->valor_empate }}</td>
+                        @endif
+                        @if($jo->valor_fora==null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{$jo->valor_fora}}</td>
+                        @endif
+                        @if($jo->valor_1_2==null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{$jo->valor_1_2}}</td>
+                        @endif
+                        @if($jo->valor_dupla==null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{$jo->valor_dupla}}</td>
+                        @endif
+                        @if($jo->max_gol_2==null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{$jo->valor_1_2}}</td>
+                        @endif
+                        @if($jo->min_gol_3==null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{$jo->min_gol_3}}</td>
+                        @endif
+                        @if($jo->ambas_gol==null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{$jo->ambas_gol}}</td>
+                        @endif
                         <td>
                             <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Edit</a>
                             <button class="md-trigger btn-danger" data-modal="modal-{{$jo->id}}">Plac</button>
@@ -69,34 +100,34 @@
                         <div class="md-content">
                             <h3>Detalhes da jo</h3>
                             <div>
-                               <form action="{{ route('jogo.addPlacar') }}" method="post">
-                                 {{ csrf_field() }}
+                             <form action="{{ route('jogo.addPlacar') }}" method="post">
+                               {{ csrf_field() }}
 
-                                 <p>
+                               <p>
                                   <label>
-                                     <input type="checkbox" name="jogo[]" value="{{ $jo->id }}" checked class="hide">
-                                     {{ $jo->codigo }}
-                                 </label>
-                                 {{ $jo->time->get(0)['descricao_time'] }}
-                                 <input class="form-group" name="r_casa{{$jo->id}}" value="{{$jo->r_casa or '?'}}" maxlength="2" size="2" required>
-                                 X
-                                 <input  class="form-group" name="r_fora{{$jo->id}}" value="{{$jo->r_fora or '?'}}" maxlength="2" size="2" required>
-                                 {{ $jo->time->get(1)['descricao_time'] }}
-                                 <button class="btn btn-info">Cadastrar Placar</button>
-                             </p>
+                                   <input type="checkbox" name="jogo[]" value="{{ $jo->id }}" checked class="hide">
+                                   {{ $jo->codigo }}
+                               </label>
+                               {{ $jo->time->get(0)['descricao_time'] }}
+                               <input class="form-group" name="r_casa{{$jo->id}}" value="{{$jo->r_casa or '?'}}" maxlength="2" size="2" required>
+                               X
+                               <input  class="form-group" name="r_fora{{$jo->id}}" value="{{$jo->r_fora or '?'}}" maxlength="2" size="2" required>
+                               {{ $jo->time->get(1)['descricao_time'] }}
+                               <button class="btn btn-info">Cadastrar Placar</button>
+                           </p>
 
-                         </form>
-                         <button class="md-close">FECHAR!</button>
-                     </div>
-                 </div>
-             </div>
-             @endif
-             @endforeach
-         </tbody>
-     </table>
- </div>
- @endforeach
- @endforeach
+                       </form>
+                       <button class="md-close">FECHAR!</button>
+                   </div>
+               </div>
+           </div>
+           @endif
+           @endforeach
+       </tbody>
+   </table>
+</div>
+@endforeach
+@endforeach
 
 
 </div>
