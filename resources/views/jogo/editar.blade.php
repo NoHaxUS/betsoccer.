@@ -13,6 +13,22 @@
                 <div class="panel-body">
                     <form action="{{ route('jogo.atualizar',$jogo->id) }}" method="post">
                         {{ csrf_field() }}
+                        <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
+                            <label for="campeonatos_id">Descrição do Campeonato</label>
+                            <select id="campeonatos_id"  name="campeonatos_id" class="form-control special-flexselect" required>
+                                <option value="{{$jogo->campeonatos_id}}">{{ $jogo->campeonato->descricao_campeonato }}</option>
+                                @foreach ($campeonatos as $campeonato)
+                                @if($jogo->campeonatos_id != $campeonato->id)
+                                <option value="{{ $campeonato->id }}">{{ $campeonato->descricao_campeonato }}</option>
+                                @endif
+                                @endforeach
+                            </select>
+                            @if($errors->has('campeonatos_id'))
+                            <span class="help-block">
+                                <strong> {{ $errors->first('campeonatos_id') }} </strong>
+                            </span>
+                            @endif
+                        </div>
                         
                         <div class="form-group {{ $errors->has('data') ? 'has-error' : ''}}">
                             <label for="data">Horário</label>
@@ -30,10 +46,10 @@
                         </div>
                         <div class="form-group {{ $errors->has('time_id') ? 'has-error' : ''}}">
                             <label for="time_id">Time Casa</label>
-                            <select id="time_id"  name="time_id" class="form-control">
+                            <select id="time_id"  name="time_id" class="form-control special-flexselect" required>
                                 <option value="{{$jogo->time->get(0)['id']}}">{{$jogo->time->get(0)['descricao_time']}}</option>
                                 @foreach ($times as $time)
-                                 @if($jogo->time->get(0)['descricao_time'] != $time->descricao_time)
+                                @if($jogo->time->get(0)['descricao_time'] != $time->descricao_time)
                                 <option value="{{ $time->id }}">{{ $time->descricao_time }}</option>
                                 @endif
                                 @endforeach     
@@ -46,7 +62,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('timef_id') ? 'has-error' : ''}}">
                             <label for="timef_id">Time Fora</label>
-                            <select id="timef_id"  name="timef_id" class="form-control">
+                            <select id="timef_id"  name="timef_id" class="form-control special-flexselect" required>
                                 <option value="{{$jogo->time->get(1)['id']}}">{{$jogo->time->get(1)['descricao_time']}}</option>
                                 @foreach ($times as $time)
                                 @if($jogo->time->get(1)['descricao_time'] != $time->descricao_time)
@@ -151,22 +167,6 @@
                             @if($errors->has('ambas_gol'))
                             <span class="help-block">
                                 <strong> {{ $errors->first('ambas_gol') }} </strong>
-                            </span>
-                            @endif
-                        </div>
-                        <div class="form-group {{ $errors->has('horarios_id') ? 'has-error' : ''}}">
-                            <label for="campeonatos_id">Descrição do Campeonato</label>
-                            <select id="campeonatos_id"  name="campeonatos_id" class="form-control">
-                                <option value="{{$jogo->campeonatos_id}}">{{ $jogo->campeonato->descricao_campeonato }}</option>
-                                @foreach ($campeonatos as $campeonato)
-                                @if($jogo->campeonatos_id != $campeonato->id)
-                                <option value="{{ $campeonato->id }}">{{ $campeonato->descricao_campeonato }}</option>
-                                @endif
-                                @endforeach
-                            </select>
-                            @if($errors->has('campeonatos_id'))
-                            <span class="help-block">
-                                <strong> {{ $errors->first('campeonatos_id') }} </strong>
                             </span>
                             @endif
                         </div>

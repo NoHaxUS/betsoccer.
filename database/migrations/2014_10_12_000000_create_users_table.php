@@ -17,10 +17,11 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('role', ['admin', 'apostador']);
+            $table->enum('role', ['admin','gerente','apostador']);
             $table->string('codigo_seguranca')->unique();
             $table->boolean('ativo')->default(true);
             $table->timestamp('ultimo_pagamento')->nullable();
+            $table->integer('users_id')->unsigned();            
             $table->rememberToken();
             $table->timestamps();
         });

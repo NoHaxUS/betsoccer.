@@ -23,6 +23,8 @@
           <!-- Tab panes -->
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="home">
+                <h1>Valor total receber do Cambista : R$ {{number_format($receber, 2, ',', '.')}}</h1>
+
                 <h1>Premio total possível a ser Pago : R$ {{number_format($total, 2, ',', '.')}}</h1>
                 <div class="table-responsive">
                     <table class="table table-bordered table-condensed">

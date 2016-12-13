@@ -25,7 +25,7 @@ class JogoController extends Controller
         //$datas = DB::select('select DISTINCT  descricao_campeonato AS dataDay , campeonatos_id from jogos');
         //dd($datas);
         $jogos = \App\Jogo::with('campeonato')
-        ->where('data','>', Carbon::now()->subDay(2))
+        ->whereDate('data','>', Carbon::now()->subDay(2))
         ->get();
         $datas = $this->arrayDatas($jogos);
         $campeonatos = $this->arrayCamps($jogos);
@@ -91,7 +91,7 @@ class JogoController extends Controller
     {
         $jogos = \App\Jogo::with('time', 'campeonato')
             ->where('data', '<', Carbon::now())
-            ->where('data', '>', Carbon::now()->subDay(2))
+            ->whereDate('data', '>', Carbon::now()->subDay(2))
             ->where('r_casa', '=', null)
             ->where('r_fora', '=', null)
             ->get();

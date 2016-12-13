@@ -350,14 +350,14 @@ class ApostaController extends Controller
             $lista_apostas [] = $dados_aposta
                                 +['retorno_possivel'=>$premiacao_aposta];   //Passa para array dados da aposta mais retorno possível
             if ($this->apostasWins($aposta)):                               //Se aposta for vencedora
-                $apostas_vencedoras[] = $dados_aposta
-                                      +['premio'=> $premiacao_aposta,
+            $apostas_vencedoras[] = $dados_aposta
+            +['premio'=> $premiacao_aposta,
                                         'paga'=>$aposta->pago];             //Passa dados de aposta mais premiação e informação se já pago
                 if ($aposta->pago):                                         //Verifica se aposta foi paga (o prêmio)
                     $premiacao_paga += $premiacao_aposta;                   //Soma valor a de premiações pagas
                     else:                                                   //Se não foi paga
                     $premiacao_nao_paga += $premiacao_aposta;               //Soma valor a premiações não pagas
-                endif;
+                    endif;
                 $premiacao_total += $premiacao_aposta;                      //Acrescenta a premiação da aposta a premiação total
                 endif;
             $ganho_total += $ganho_aposta;                                  //Soma o ganho de cada aposta para formar o montante
@@ -380,12 +380,12 @@ class ApostaController extends Controller
     private function dadosAposta($aposta, $ganho=0)
     {
         return [
-            'codigo' => $aposta->codigo,
-            'data' => $aposta->created_at,
-            'apostador' => $aposta->nome_apostador,
-            'valor_apostado' => $aposta->valor_aposta,
-            'ganho' => $ganho,
-            'jogos' => $this->dadosJogos($aposta->jogo)
+        'codigo' => $aposta->codigo,
+        'data' => $aposta->created_at,
+        'apostador' => $aposta->nome_apostador,
+        'valor_apostado' => $aposta->valor_aposta,
+        'ganho' => $ganho,
+        'jogos' => $this->dadosJogos($aposta->jogo)
         ];
     }
 
@@ -403,9 +403,9 @@ class ApostaController extends Controller
                             'r_casa' => $jogo->r_casa,      //Resultado de casa
                             'r_fora' => $jogo->r_fora],     //Resultado de fora
                         'data' => $jogo->data];             //Passa data
-        endforeach;
-        return $lista;
-    }
+                        endforeach;
+                        return $lista;
+                    }
 
     /** Método que calcula valor do prêmio de uma aposta vencedora
      * @param $aposta Aposta vencedora
@@ -498,10 +498,10 @@ class ApostaController extends Controller
             endif;
         $dados_aposta = $this->dadosAposta($aposta);                    //Busca dados de aposta
         $apostas_vencedoras[] = $dados_aposta
-            +['premio'=> $this->calcularPremio($aposta),
+        +['premio'=> $this->calcularPremio($aposta),
                 'paga'=>$aposta->pago];             //Passa dados de aposta mais premiação e informação se já pago
         //Remove dados desnecessário de jogos
-        $dados_aposta['jogos'] = $this->removerDadosDeJogos($dados_aposta['jogos']);
+                $dados_aposta['jogos'] = $this->removerDadosDeJogos($dados_aposta['jogos']);
         unset($dados_aposta['ganho']);                                  //Remove o indice ganho
         //Retorna json com dados da última aposta feita pelo usuário
         return response()->json([
@@ -565,12 +565,22 @@ class ApostaController extends Controller
         if ($adm->role != "admin"){                                                           //Se retornou restrição
             return response()->json(['status' => 'Credenciais Insuficientes'], 400);          //Retorna json com restrição encontrada
         }
+        $ultimo_p =$cambista->ultimo_pagamento;
+        \App\Aposta::where('users_id',$cambista->id)
+        ->where('created_at','>',$ultimo_p)
+        ->update(['pago' => true]);
         $cambista->ultimo_pagamento = Carbon::now();
-        $cambista->save();       
+        $cambista->save(); 
     }
 
-
-
+    public function receberDoCambista($apostas)
+    {
+        $valor_aposta =0;
+        foreach ($apostas as $key => $aposta) {
+            $valor_aposta += $aposta->valor_aposta;            
+        }
+        return $valor_aposta;
+    }
     public function apostaCambista(Request $request){
         $id = $request->get('cambista');    
         $users = \App\User::find($id);        
@@ -587,8 +597,8 @@ class ApostaController extends Controller
         $premiosPago = $this->calcRetorno($apostasPagas);
         $totalPago += array_sum($premiosPago);
         $total += array_sum($premios);
+        $receber = $this->receberDoCambista($apostas);
 
-        return view('aposta.apostaCambista', compact('users','apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
-
+        return view('aposta.apostaCambista', compact('users','apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
     }
 }
