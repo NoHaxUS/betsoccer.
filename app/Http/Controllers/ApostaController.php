@@ -293,21 +293,20 @@ class ApostaController extends Controller
         endforeach;
         //Obtém o valor total da comissão somando as comissões de aposta simples, mediana e máxima
         $ganho_total = $ganho_simples + $ganho_mediano + $ganho_maximo;
-        /*Retorna o id e nome do cambista, quantidade de apostas, quantidade de jogos, comissão de apostas simples,
-        mediana e máxima, comissão total do cambista*/
-        $liquido = $apostas->sum('valor_aposta') - $premiacao - $ganho_total;
-        //dd($liquido);
+        $total_apostado = $apostas->sum('valor_aposta');            //Soma total apostado
+        $liquido = $total_apostado - $premiacao - $ganho_total;     //Obtém o valor liquido
         return response()->json([
-            'codigo' => $user->codigo,
-            'cambista' => $user->name,
-            'qtd_apostas' => $apostas->count(),
-            'qtd_jogos' => $qtd_jogos,
-            'comissao_simples' => $ganho_simples,
-            'comissao_mediana' => $ganho_mediano,
-            'comissao_maxima' => $ganho_maximo,
-            'comissao_total' => $ganho_total,
-            'total_premiação' => $premiacao,
-            'liquido' => $liquido,
+            'codigo' => $user->codigo,                              //Código do cambista
+            'cambista' => $user->name,                              //Nome do cambista
+            'qtd_apostas' => $apostas->count(),                     //Quantidade de apostas
+            'qtd_jogos' => $qtd_jogos,                              //Quantidade de jogos
+            'comissao_simples' => $ganho_simples,                   //Comissão de apostas simples
+            'comissao_mediana' => $ganho_mediano,                   //Comissão de apostas medianas
+            'comissao_maxima' => $ganho_maximo,                     //Comissão de apostas máximas
+            'comissao_total' => $ganho_total,                       //Total de comissão
+            'total_apostado' => $total_apostado,                    //Total apostado
+            'total_premiacao' => $premiacao,                        //Total de premiação
+            'liquido' => $liquido,                                  //Valor líquido
         ]);
     }
 
@@ -325,7 +324,7 @@ class ApostaController extends Controller
         endif;
         $apostas = Aposta::recentes($user);                         //Busca as apostas recentes feitas pelo usuário
         $premiacao_total = 0;
-        $ganho_total = 0;                                             //Cria variável para acumular quantidade de jogos
+        $ganho_total = 0;                                           //Cria variável para acumular quantidade de jogos
         $premiacao_paga = 0;
         $premiacao_nao_paga = 0;
         $lista_apostas = Array();
@@ -363,13 +362,12 @@ class ApostaController extends Controller
             endif;
             $ganho_total += $ganho_aposta;                                  //Soma o ganho de cada aposta para formar o montante
         endforeach;
-        //Retorna json com codigo e nome do cambista, relação de apostas vencedoras, premiação total e lista de apostas
         return response()->json([
-            'codigo' => $user->codigo,
-            'cambista' => $user->name,
-            'apostas_vencedoras' => $apostas_vencedoras,
-            'total_premiacao' => $premiacao_total,
-            'apostas' => $lista_apostas,
+            'codigo' => $user->codigo,                                      //Código do cambista
+            'cambista' => $user->name,                                      //Nome do cambista
+            'apostas_vencedoras' => $apostas_vencedoras,                    //Relação de apostas vencedoras
+            'total_premiacao' => $premiacao_total,                          //Total de premiação
+            'apostas' => $lista_apostas,                                    //Lista de apostas
         ]);
     }
 
@@ -508,7 +506,8 @@ class ApostaController extends Controller
             'cambista' => $user->name,                                  //Nome do cambista
             'aposta' => $dados_aposta,                                  //Dados da aposta
             'palpites' => $this->dadosPalpites($aposta->jogo),          //Dados dos palpites
-            'possivel_premio' => number_format($this->calcularPremio($aposta), 2, ',', '.')]);      //Valor do possível prêmio
+            //Valor do possível do prêmio
+            'possivel_premio' => number_format($this->calcularPremio($aposta), 2, ',', '.')]);
     }
 
     /** Método que formata dados de palpites de jogos em array
