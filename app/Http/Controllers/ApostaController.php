@@ -155,6 +155,7 @@ class ApostaController extends Controller
      */
     public function apostar(Request $request)
     {
+        //Busca o usuário pelo código de segurança
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
         $resposta = $this->verificarUsuario($user);                      //Verifica restrição usuário
         if (!is_null($resposta)):                                        //Se retornou restrição
@@ -343,27 +344,24 @@ class ApostaController extends Controller
             $porcentagem = config('constantes.porcentagem_maxima') / 100;
             break;
             endswitch;
-            $ganho_aposta = $aposta->valor_aposta * $porcentagem;   //Calcula o ganho por cada aposta
-            //Cria array para armazenar id e ganho da aposta
-            $lista_apostas [] = [
-            'aposta' => $aposta->codigo,
-            'ganho' => $ganho_aposta,
-            'jogos' => $this->dadosJogos($aposta->jogo)];
-
-            if ($this->apostasWins($aposta)):                       //Se aposta for vencedora
-                $premiacao_aposta = $this->calcularPremio($aposta); //Calcula prêmio
-                //Gera array de dados da aposta
-                $apostas_vencedoras[] = $this->dadosAposta($aposta, $premiacao_aposta);
-                if ($aposta->pago):                                 //Verifica se aposta foi paga (o prêmio)
-                    $premiacao_paga += $premiacao_aposta;           //Soma valor a de premiações pagas
-                    else:
-                    $premiacao_nao_paga += $premiacao_aposta;       //Soma valor a premiações não pagas
+            $ganho_aposta = $aposta->valor_aposta * $porcentagem;           //Calcula o ganho por cada aposta
+                        $premiacao_aposta =$this->calcularPremio($aposta);  //Calcula o possível prêmio
+            $dados_aposta=$this->dadosAposta($aposta, $ganho_aposta);       //Gera dados de aposta
+            $lista_apostas [] = $dados_aposta
+                                +['retorno_possivel'=>$premiacao_aposta];   //Passa para array dados da aposta mais retorno possível
+            if ($this->apostasWins($aposta)):                               //Se aposta for vencedora
+                $apostas_vencedoras[] = $dados_aposta
+                                      +['premio'=> $premiacao_aposta,
+                                        'paga'=>$aposta->pago];             //Passa dados de aposta mais premiação e informação se já pago
+                if ($aposta->pago):                                         //Verifica se aposta foi paga (o prêmio)
+                    $premiacao_paga += $premiacao_aposta;                   //Soma valor a de premiações pagas
+                    else:                                                   //Se não foi paga
+                    $premiacao_nao_paga += $premiacao_aposta;               //Soma valor a premiações não pagas
                 endif;
-                $premiacao_total += $premiacao_aposta;              //Acrescenta a premiação da aposta a premiação total
+                $premiacao_total += $premiacao_aposta;                      //Acrescenta a premiação da aposta a premiação total
                 endif;
-            $ganho_total += $ganho_aposta;                          //Soma o ganho de cada aposta para formar o montante
+            $ganho_total += $ganho_aposta;                                  //Soma o ganho de cada aposta para formar o montante
             endforeach;
-
         //dd($premiacao_total);
             return response()->json([
                 'codigo' => $user->codigo,
@@ -376,19 +374,18 @@ class ApostaController extends Controller
 
     /** Método que formata dados de aposta em array
      * @param $aposta Aposta aposta cujos dados serão passados para array
-     * @param int $premiacao_aposta valor da premiação da aposta
+     * @param float $ganho valor do ganho do cambista
      * @return array array com dados da aposta
      */
-    private function dadosAposta($aposta, $premiacao_aposta = 0)
+    private function dadosAposta($aposta, $ganho=0)
     {
         return [
-        'codigo' => $aposta->codigo,
-        'data' => $aposta->created_at,
-        'apostador' => $aposta->nome_apostador,
-        'valor_apostado' => $aposta->valor_aposta,
-        'premio' => $premiacao_aposta,
-        'paga' => $aposta->pago,
-        'jogos' => $this->dadosJogos($aposta->jogo)
+            'codigo' => $aposta->codigo,
+            'data' => $aposta->created_at,
+            'apostador' => $aposta->nome_apostador,
+            'valor_apostado' => $aposta->valor_aposta,
+            'ganho' => $ganho,
+            'jogos' => $this->dadosJogos($aposta->jogo)
         ];
     }
 
@@ -398,12 +395,14 @@ class ApostaController extends Controller
      */
     private function dadosJogos($jogos)
     {
-        $lista = Array();
-        foreach ($jogos as $jogo):
-            $lista[] = ['id' => $jogo->id,
-        'times' => $jogo->time->toArray(),
-        'resultado' => ['r_casa' => $jogo->r_casa, 'r_fora' => $jogo->r_fora],
-        'data' => $jogo->data];
+        $lista = Array();                                   //Cria array para armazenar dados de jogos
+        foreach ($jogos as $jogo):                          //Precorre lista de jogos
+            $lista[] = ['id' => $jogo->id,                  //Passa id
+                        'times' => $jogo->time->toArray(),  //Passa times
+                        'resultado' => [                    //Passa resultado
+                            'r_casa' => $jogo->r_casa,      //Resultado de casa
+                            'r_fora' => $jogo->r_fora],     //Resultado de fora
+                        'data' => $jogo->data];             //Passa data
         endforeach;
         return $lista;
     }
@@ -498,8 +497,12 @@ class ApostaController extends Controller
             return response()->json(['aposta'=>'inexistente'], 403);    //Retorna json informando
             endif;
         $dados_aposta = $this->dadosAposta($aposta);                    //Busca dados de aposta
+        $apostas_vencedoras[] = $dados_aposta
+            +['premio'=> $this->calcularPremio($aposta),
+                'paga'=>$aposta->pago];             //Passa dados de aposta mais premiação e informação se já pago
         //Remove dados desnecessário de jogos
         $dados_aposta['jogos'] = $this->removerDadosDeJogos($dados_aposta['jogos']);
+        unset($dados_aposta['ganho']);                                  //Remove o indice ganho
         //Retorna json com dados da última aposta feita pelo usuário
         return response()->json([
             'cambista' => $user->name,                                  //Nome do cambista
