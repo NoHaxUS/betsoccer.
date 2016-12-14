@@ -49,7 +49,7 @@ class Jogo extends Model
 		$resultado = $query->join('campeonatos', 'jogos.campeonatos_id', '=', 'campeonatos.id')
 			->where('jogos.ativo', true)
 			->whereBetween('jogos.data', [Carbon::now()->addMinute(5), Carbon::now()->addDay(1)->setTime(23, 59, 59)])
-			->orderBy('campeonatos.descricao_campeonato')
+			->groupBy('campeonatos.descricao_campeonato')
 			->lists('jogos.id');
 		$jogos = collect();
 		foreach ($resultado as $jogo):
