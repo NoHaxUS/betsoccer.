@@ -43,4 +43,18 @@ class Jogo extends Model
 			->lists('jogo');											//Pega ids dos jogos
 		return $query->whereIn('id', $resultado)->get();				//Retorna jogos com ids passados
 	}
+
+	public function scopeDisponiveis($query)
+	{
+		$resultado = $query->join('campeonatos', 'jogos.campeonatos_id', '=', 'campeonatos.id')
+			->where('jogos.ativo', true)
+			->whereBetween('jogos.data', [Carbon::now()->addMinute(5), Carbon::now()->addDay(1)->setTime(23, 59, 59)])
+			->orderBy('campeonatos.descricao_campeonato')
+			->lists('jogos.id');
+		$jogos = collect();
+		foreach ($resultado as $jogo):
+			$jogos->push(Jogo::with(['time', 'campeonato'])->find($jogo));
+		endforeach;
+		return $jogos;
+	}
 }

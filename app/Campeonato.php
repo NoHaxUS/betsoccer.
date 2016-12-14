@@ -14,7 +14,7 @@ class Campeonato extends Model
    	}
 	**/
    	public function jogo(){
-   		return $this->hasMany('App\Jogo');
+   		return $this->hasMany('App\Jogo','campeonatos_id');
 
    	}
 }
