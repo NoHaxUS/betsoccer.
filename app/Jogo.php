@@ -42,8 +42,8 @@ class Jogo extends Model
 			->take(config('constantes.jogos_mais_apostados'))			//Pega os primeiros de acordo com quantidade definida
 			->lists('jogo');											//Pega ids dos jogos
 		$jogos = collect();												//Criar coleção para armazenar jogos
-		foreach ($resultado as $jogo):									//Percorre relação de resultado
-			$jogos->push(Jogo::find($jogo));							//Busca jogo e acrescenta a coleção
+		foreach ($resultado as $jogo):										//Percorre relação de resultado
+			$jogos->push($this->find($jogo));							//Busca jogo e acrescenta a coleção
 		endforeach;
 		return $jogos;													//Retorna jogos
 	}
@@ -57,7 +57,7 @@ class Jogo extends Model
 			->lists('jogos.id');
 		$jogos = collect();
 		foreach ($resultado as $jogo):
-			$jogos->push(Jogo::with(['time', 'campeonato'])->find($jogo));
+			$jogos->push($this->with(['time', 'campeonato'])->find($jogo));
 		endforeach;
 		return $jogos;
 	}
