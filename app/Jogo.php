@@ -32,7 +32,7 @@ class Jogo extends Model
 	 * @param $query
 	 * @return mixed jogos com mais apostas
 	 */
-	public function scopeMaisApostados($query){
+	public function scopeMaisApostados(){
 		$resultado = \DB::table('aposta_jogo')							//Realiza consulta na tabela aposta_jogo
 			->select(\DB::raw('count(*) as qtd, jogos_id as jogo'))		//Seleciona a quantidade e jogos_id
 			->join('jogos', 'aposta_jogo.jogos_id','=', 'jogos.id')		//Realiza junção com tabela jogos
@@ -41,7 +41,11 @@ class Jogo extends Model
 			->orderBy('qtd', 'desc')									//Ordena de forma decrescente pela quantidade
 			->take(config('constantes.jogos_mais_apostados'))			//Pega os primeiros de acordo com quantidade definida
 			->lists('jogo');											//Pega ids dos jogos
-		return $query->whereIn('id', $resultado)->get();				//Retorna jogos com ids passados
+		$jogos = collect();												//Criar coleção para armazenar jogos
+		foreach ($resultado as $jogo):									//Percorre relação de resultado
+			$jogos->push(Jogo::find($jogo));							//Busca jogo e acrescenta a coleção
+		endforeach;
+		return $jogos;													//Retorna jogos
 	}
 
 	public function scopeDisponiveis($query)
