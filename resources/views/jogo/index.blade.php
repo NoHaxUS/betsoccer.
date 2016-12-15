@@ -23,12 +23,12 @@
                         <th>R</th>
                         <th>Fora</th>
                         <th>Casa</th>
-                        <th>Emp</th>
+                        <th>Emp</th>                        
                         <th>Fora</th>
-                        <th>Gol</th>
-                        <th>Dupla</th>
                         <th>+2.5</th>
                         <th>-2.5</th>
+                        <th>Dupla</th>
+                        <th>Gol</th>                       
                         <th>Ambas</th>
                         <th>Ação</th>
                     </tr>
@@ -60,26 +60,26 @@
                         @else
                         <td>{{$jo->valor_fora}}</td>
                         @endif
-                        @if($jo->valor_1_2==null)
+                        @if($jo->min_gol_3==null)
                         <td>{{ "--" }}</td>
                         @else
-                        <td>{{$jo->valor_1_2}}</td>
+                        <td>{{$jo->min_gol_3}}</td>
+                        @endif
+                        @if($jo->max_gol_2==null)
+                        <td>{{ "--" }}</td>
+                        @else
+                        <td>{{$jo->max_gol_2}}</td>
                         @endif
                         @if($jo->valor_dupla==null)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->valor_dupla}}</td>
                         @endif
-                        @if($jo->max_gol_2==null)
+                        @if($jo->valor_1_2==null)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->valor_1_2}}</td>
-                        @endif
-                        @if($jo->min_gol_3==null)
-                        <td>{{ "--" }}</td>
-                        @else
-                        <td>{{$jo->min_gol_3}}</td>
-                        @endif
+                        @endif                                                
                         @if($jo->ambas_gol==null)
                         <td>{{ "--" }}</td>
                         @else
@@ -98,7 +98,7 @@
                     </tr>
                     <div class="md-modal md-effect-11" id="modal-{{$jo->id}}">
                         <div class="md-content">
-                            <h3>Detalhes da jo</h3>
+                            <h3>Adcione um placar ao Jogo</h3>
                             <div>
                              <form action="{{ route('jogo.addPlacar') }}" method="post">
                                {{ csrf_field() }}
