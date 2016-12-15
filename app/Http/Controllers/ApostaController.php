@@ -547,7 +547,7 @@ class ApostaController extends Controller
             return response()->json($resposta, $resposta['erro']);                            //Retorna json com restrição encontrada
         }
         if ($adm->role != "admin") {                                                           //Se retornou restrição
-            return response()->json(['status' => 'Credenciais Insuficientes'], 400);          //Retorna json com restrição encontrada
+            return response()->json(['status' => 'Credenciais Insuficientes','erro'=>501], 501);          //Retorna json com restrição encontrada
         }
         $ultimo_p = $cambista->ultimo_pagamento;
         \App\Aposta::where('users_id', $cambista->id)
