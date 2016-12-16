@@ -228,7 +228,9 @@ class ApostaController extends Controller
     private function registrarAposta(Request $request, $user)
     {
         $aposta = \App\Aposta::create($request->all());             //Cria uma aposta com dados vindos do request
-        if(!is_null($user)):                                        //Verifica se usuário não é nulo
+        if(is_null($user)):                                         //Verifica se usuário é nulo
+           $aposta->ativo = false;                                  //Passa false para atributo ativo
+        else:                                                       //Se usuário não for nulo
             $aposta->users_id = $user->id;                          //Passa id do usuário
         endif;
         $hashids = new Hashids('betsoccer2', 5);
@@ -406,11 +408,11 @@ class ApostaController extends Controller
      */
     private function calcularPremio($aposta)
     {
-        $premio = $aposta->valor_aposta;
-        foreach ($aposta->jogo as $jogo):
-            $premio *= $jogo->pivot->palpite;
+        $premio = $aposta->valor_aposta;        //Passa valor da aposta para variável prêmio
+        foreach ($aposta->jogo as $jogo):       //Percorre relação de jogos da aposta
+            $premio *= $jogo->pivot->palpite;   //Multiplica o valor do prêmio pelo do palpite
         endforeach;
-        return $premio;
+        return $premio;                         //Retorna valor do prêmio
     }
 
     /**
