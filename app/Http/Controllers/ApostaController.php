@@ -138,12 +138,14 @@ class ApostaController extends Controller
      * @return \Illuminate\Http\JsonResponse resultado da operação
      */
     public function apostar(Request $request)
-    {
-        //Busca o usuário pelo código de segurança
-        $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        $resposta = $this->verificarUsuario($user);                      //Verifica restrição usuário
-        if (!is_null($resposta)):                                        //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);       //Retorna json com restrição encontrada
+    {   $user = null;                                                       //Cria variável para guardar usuário
+        if($request->codigo_seguranca):                                     //Verifica se foi passado codigo de segurança
+            //Busca o usuário pelo código de segurança
+            $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
+            $resposta = $this->verificarUsuario($user);                      //Verifica restrição usuário
+            if (!is_null($resposta)):                                        //Se retornou restrição
+                return response()->json($resposta, $resposta['erro']);       //Retorna json com restrição encontrada
+            endif;
         endif;
         $jogos_invalidos = $this->verificarJogos($request->jogo);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
@@ -157,8 +159,11 @@ class ApostaController extends Controller
                 ['palpites_invalidos' => $palpites_invalidos]);         //retorna json com array com todos os palpites inválidos
                 endif;*/
         $aposta = $this->registrarAposta($request, $user);              //Registra aposta
-        return response()->json(['aposta' => $aposta,
-                            'cambista' => $user->name]);                //Retorna json com a aposta feita e nome do cambista
+        $retorno = ['aposta' => $aposta];                               //Passa dados de aposta para retorno
+        if(!is_null($user)):                                            //Verifica se usuário não é nulo
+                $retorno+=['cambista' => $user->name];                  //Acrescenta nome do usuário (cambista) no resultado
+        endif;
+        return response()->json($retorno);                              //Retorna json com resultado
     }
 
     /** Método que verifica se usuário possui alguma restrição
@@ -168,12 +173,12 @@ class ApostaController extends Controller
     private function verificarUsuario($user)
     {
         if (is_null($user)):                                    //Verificar se usuário existe
-            return ['status' => 'Inexistente', 'erro' => 400];    //Retorna status de usuário inexistente
+            return ['status' => 'Inexistente', 'erro' => 400];  //Retorna status de usuário inexistente
         endif;
         if (!$user->ativo):                                     //Verificar se usuário não está ativo
-            return ['status' => 'Inativo', 'erro' => 401];         //Retorna status de usuário inativo
+            return ['status' => 'Inativo', 'erro' => 401];      //Retorna status de usuário inativo
         endif;
-        return null;                                            //Retorn null
+        return null;                                            //Retorna null
     }
 
     /** Método que verifica se jogos estão válidos para realização de aposta
@@ -183,15 +188,16 @@ class ApostaController extends Controller
     private function verificarJogos($jogos)
     {
         if (count($jogos) < 2):                     //Verifica se quantidade de jogos é menor que 2
-            return ['status' => "Minimo 2 jogos", 'erro' => 402];                //Retorna mensagem
+            return ['status' => "Minimo 2 jogos",
+                    'erro' => 402];                 //Retorna mensagem e erro
         endif;
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
             $jogo = Jogo::find($valor);             //Busca jogo pelo id (valor)
             //Verificar  jogo é nulo ou se data e hora do jogo é menor horário que a data atual menos 5 minutos
             if ($jogo == null || $jogo->data < Carbon::now()->addMinute(5)):
-                $jogos_invalidos[] = $jogo;         //Se passou do horário para apostar coloca o joga no array
-                $jogos_invalidos['erro'] = 403;
+                $jogos_invalidos[] = $jogo;         //Passou jogo para array
+                $jogos_invalidos['erro'] = 403;     //Passa código de erro para array
             endif;
         endforeach;
         return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
@@ -219,19 +225,20 @@ class ApostaController extends Controller
      * @param \Illuminate\Support\Collection $palpites array de palpites
      * @return Aposta aposta feita
      */
-    private function registrarAposta(Request $request, \App\User $user)
+    private function registrarAposta(Request $request, $user)
     {
-        //Instancia uma aposta com dados vindos do request e passando id do usuário
-        /*$aposta = \App\Aposta::create($request->all());
-        $aposta->users_id = $user->id;
+        $aposta = \App\Aposta::create($request->all());             //Cria uma aposta com dados vindos do request
+        if(!is_null($user)):                                        //Verifica se usuário não é nulo
+            $aposta->users_id = $user->id;                          //Passa id do usuário
+        endif;
         $hashids = new Hashids('betsoccer2', 5);
         $aposta->codigo = $hashids->encode($aposta->id);
-        $aposta->save();*/                                            //Salva aposta
-        $aposta =  new \App\Aposta($request->all());
+        $aposta->save();                                            //Salva aposta
+        /*$aposta =  new \App\Aposta($request->all());
         $aposta->users_id = $user->id;
         $hashids = new Hashids('betsoccer2', 5);
         $aposta->codigo = $hashids->encode(DB::table('apostas')->max('id')+1);
-        $aposta->save();
+        $aposta->save();*/
 
         for ($i = 0; $i < count($request->jogo); $i++):             //Criar iteração com base no número de jogos
             $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
