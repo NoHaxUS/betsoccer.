@@ -45,42 +45,42 @@
                         <td>X</td>
                         <td>{{ $jo->r_fora or "?" }}</td>
                         <td>{{ $jo->time->get(1)['descricao_time'] }}</td>
-                        @if($jo->valor_casa== null)
+                        @if($jo->valor_casa == null || $jo->valor_casa == 0)
                         <td>{{ "--"}}</td>
                         @else
                         <td>{{ $jo->valor_casa}}</td>
                         @endif
-                        @if($jo->valor_empate == null)
+                        @if($jo->valor_empate  == null || $jo->valor_empate  == 0 )
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{  $jo->valor_empate }}</td>
                         @endif
-                        @if($jo->valor_fora==null)
+                        @if($jo->valor_fora == null || $jo->valor_fora == 0 )
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->valor_fora}}</td>
                         @endif
-                        @if($jo->min_gol_3==null)
+                        @if($jo->min_gol_3 == null || $jo->min_gol_3 ==0) 
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->min_gol_3}}</td>
                         @endif
-                        @if($jo->max_gol_2==null)
+                        @if($jo->max_gol_2 == null || $jo->max_gol_2 ==0)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->max_gol_2}}</td>
                         @endif
-                        @if($jo->valor_dupla==null)
+                        @if($jo->valor_dupla == null || $jo->valor_dupla ==0)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->valor_dupla}}</td>
                         @endif
-                        @if($jo->valor_1_2==null)
+                        @if($jo->valor_1_2 == null || $jo->valor_1_2 == 0)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->valor_1_2}}</td>
                         @endif                                                
-                        @if($jo->ambas_gol==null)
+                        @if($jo->ambas_gol == null || $jo->ambas_gol == 0)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->ambas_gol}}</td>
