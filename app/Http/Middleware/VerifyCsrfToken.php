@@ -15,7 +15,8 @@ class VerifyCsrfToken extends BaseVerifier
         //
         '/aposta',
         '/aposta/apostar',
-        '/aposta/listar'
+        '/aposta/listar',
+        '/aposta/apostarSemCodigo',
 
     ];
 }

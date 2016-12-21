@@ -20,8 +20,8 @@ Route::get('/aposta/premiosApostas/{codigo_seguranca}', ['uses'=>'ApostaControll
 Route::get('/aposta/ultima/{codigo_seguranca}', ['uses'=>'ApostaController@ultima', 'as'=>'aposta.ultima']);
 Route::get('/cambista/acerto/{codigo_c}/{codigo_a}', ['uses'=>'ApostaController@acerto', 'as'=>'aposta.acerto']);
 Route::post('/aposta/cambista', ['uses'=>'ApostaController@apostaCambista', 'as'=>'aposta.cambista']);
-
-
+Route::post('/aposta/apostarSemCodigo', ['uses'=>'ApostaController@apostarSemCodigo', 'as'=>'aposta.apostarSemCodigo']);
+Route::get('/aposta/consultar/{codigo}', ['uses'=>'ApostaController@consultar', 'as'=>'aposta.consultar']);
 
 
 //rotas não auteticadas (TEMPORARIAMENTE)

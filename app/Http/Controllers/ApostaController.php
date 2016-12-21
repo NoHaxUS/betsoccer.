@@ -133,11 +133,25 @@ class ApostaController extends Controller
         return redirect()->route('aposta.index');
     }
 
+    public function apostar(Request $request)
+    {
+       if(is_null($request->codigo_seguranca)):                     //Se código de segurança é nulo
+            return response()->json(
+                ['status'=>'codigo_seguranca_nao_informado'], 409);//retorna json informando erro
+       endif;
+       return $this->realizarAposta($request);                      //Tentar realizar aposta
+    }
+
+    public function apostarSemCodigo(Request $request)
+    {
+       return $this->realizarAposta($request);                      //Tenta realizar aposta
+    }
     /**Método para realização de aposta via Web Service
      * @param Request $request dados da aposta
-     * @return \Illuminate\Http\JsonResponse resultado da operação
+     * @
+     return \Illuminate\Http\JsonResponse resultado da operação
      */
-    public function apostar(Request $request)
+    private function realizarAposta(Request $request)
     {   $user = null;                                                       //Cria variável para guardar usuário
         if($request->codigo_seguranca):                                     //Verifica se foi passado codigo de segurança
             //Busca o usuário pelo código de segurança
@@ -150,7 +164,7 @@ class ApostaController extends Controller
         $jogos_invalidos = $this->verificarJogos($request->jogo);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
-                ['jogos_invalidos' => $jogos_invalidos],
+                    ['jogos_invalidos' => $jogos_invalidos],
                 $jogos_invalidos['erro']);                              //retorna json com array com todos os jogos inválidos
         endif;
         /*$palpites_invalidos = $this->verificarPalpites($palpites);    //Verifica se há palpites inválidos
@@ -379,6 +393,7 @@ class ApostaController extends Controller
             'data' => $aposta->created_at,                                          //Data
             'apostador' => $aposta->nome_apostador,                                 //Nome do apostador
             'valor_apostado' => number_format($aposta->valor_aposta, 2, ',', '.'),  //Valor apostado
+            'ativa'=>(boolean)$aposta->ativo,                                                //Se ativa
             'ganho' => number_format($ganho, 2, ',', '.'),                          //Ganho do cambista
             'jogos' => $this->dadosJogos($aposta->jogo)                             //Relação de jogos
         ];
@@ -492,9 +507,6 @@ class ApostaController extends Controller
             return response()->json(['aposta' => 'inexistente'], 403);  //Retorna json informando
         endif;
         $dados_aposta = $this->dadosAposta($aposta);                    //Busca dados de aposta
-        $apostas_vencedoras[] = $dados_aposta
-            + ['premio' => $this->calcularPremio($aposta),
-                'paga' => $aposta->pago];                               //Passa dados de aposta mais premiação e informação se já pago
         $this->removerDadosDeJogos($dados_aposta['jogos']);             //Remove dados desnecessário de jogos
         unset($dados_aposta['ganho']);                                  //Remove o indice ganho
         //Retorna json com dados da última aposta feita pelo usuário
@@ -595,5 +607,23 @@ class ApostaController extends Controller
         $receber = $this->receberDoCambista($apostas);
 
         return view('aposta.apostaCambista', compact('users', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
+    }
+
+    public function consultar($codigo)
+    {
+        $aposta = Aposta::buscarPorAtributo('codigo', $codigo)->first();
+        if(count($aposta)==0):
+            return response()->json(['status'=>'codigo_nao_encontrado'], 403);
+        endif;
+        $dados_aposta = $this->dadosAposta($aposta);
+        $this->removerDadosDeJogos($dados_aposta['jogos']);
+        unset($dados_aposta['ganho']);
+        $cambista = is_null($aposta->user)?null:$aposta->user->name;
+        return response()->json([
+            'cambista' => $cambista,                                  
+            'aposta' => $dados_aposta,                                  
+            'palpites' => $this->dadosPalpites($aposta->jogo),          
+            'possivel_premio' => number_format($this->calcularPremio($aposta), 2, ',', '.'),
+            'vencedora'=>$this->apostasWins($aposta)]);
     }
 }

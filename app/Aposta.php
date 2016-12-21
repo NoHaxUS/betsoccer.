@@ -32,4 +32,8 @@ class Aposta extends Model
         return $query->where('users_id', $user->id)
             ->where('created_at', '>', $user->ultimo_pagamento)->get();
     }
+    public function scopeBuscarPorAtributo($query, $atributo, $valor)
+    {
+        return $query->with('jogo')->where($atributo, $valor);
+    }
 }
