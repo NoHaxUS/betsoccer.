@@ -633,6 +633,7 @@ class ApostaController extends Controller
             'possivel_premio' => number_format($this->calcularPremio($aposta), 2, ',', '.'),    //Prêmio possível
             'vencedora'=>$this->apostasWins($aposta)]);                         //Informação se aposta vencedora
     }
+    
     public function validar(Request $request)
     {
         $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
@@ -650,7 +651,6 @@ class ApostaController extends Controller
         $aposta->ativo = true;
         $aposta->users_id = $user->id;
         $aposta->save();
-        //return response()->json(['status'=>'aposta_ativada_com_sucesso']);
         $dados_aposta = $this->dadosAposta($aposta);
         $this->removerDadosDeJogos($dados_aposta['jogos']);
         unset($dados_aposta['ganho']);
