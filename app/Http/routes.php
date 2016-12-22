@@ -22,7 +22,7 @@ Route::get('/cambista/acerto/{codigo_c}/{codigo_a}', ['uses'=>'ApostaController@
 Route::post('/aposta/cambista', ['uses'=>'ApostaController@apostaCambista', 'as'=>'aposta.cambista']);
 Route::post('/aposta/apostarSemCodigo', ['uses'=>'ApostaController@apostarSemCodigo', 'as'=>'aposta.apostarSemCodigo']);
 Route::get('/aposta/consultar/{codigo}', ['uses'=>'ApostaController@consultar', 'as'=>'aposta.consultar']);
-
+Route::put('/aposta/validar', ['uses'=>'ApostaController@validar', 'as'=>'aposta.validar']);
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
