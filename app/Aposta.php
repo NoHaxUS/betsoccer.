@@ -8,7 +8,7 @@ use softDeletes;
 class Aposta extends Model
 {
     //
-    protected $fillable = ['valor_aposta', 'nome_apostador', 'pago', 'users_id'];
+    protected $fillable = ['codigo','valor_aposta', 'nome_apostador', 'pago', 'users_id'];
 
     //metodo que retorna jogos
     public function jogo()

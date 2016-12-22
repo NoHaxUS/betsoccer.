@@ -37,7 +37,10 @@ class ApostaController extends Controller
         $apostaWins = [];
         $total = [];
         $apostas = \App\Aposta::with('user')
-            ->where('pago', '<>', true)->get();
+            ->where('pago', false)
+            ->where('ativo', true)
+            ->where('users_id','<>',0)
+            ->get();
 
         $temp = $this->calcRetorno($apostas);
 
@@ -473,11 +476,15 @@ class ApostaController extends Controller
 
     public function resumoAposta()
     {
-        $apostas = Aposta::with(['jogo'])
-            ->where('pago', '<>', true)
+        $apostas = Aposta::with(['jogo','user'])
+            ->where('pago', false)
+            ->where('ativo', true)
+            ->where('users_id','<>',0)
             ->get();
-        $apostasPagas = Aposta::with(['jogo'])
-            ->where('pago', '=', true)
+        $apostasPagas = Aposta::with(['jogo','user'])
+            ->where('pago', true)
+            ->where('ativo', true)
+            ->where('users_id','<>',0)
             ->get();
         $users = DB::table('users')->select('id', 'name')->get();
         $total = 0;
