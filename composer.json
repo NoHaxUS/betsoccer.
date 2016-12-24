@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "laravelcollective/html": "^5.2.0",
         "doctrine/dbal": "^2.5",
-        "hashids/hashids": "^2.0"
+        "hashids/hashids": "^2.0",
+        "jenssegers/optimus": "^0.2.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

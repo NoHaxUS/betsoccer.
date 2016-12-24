@@ -32,8 +32,15 @@ class Aposta extends Model
         return $query->where('users_id', $user->id)
             ->where('created_at', '>', $user->ultimo_pagamento)->get();
     }
+
+    /**Méotdo que busca aposta pelo atributo
+     * @param $query consulta
+     * @param $atributo string com atributo a ser consultado
+     * @param $valor valor do atributo a ser consultado
+     * @return mixed lista de apostas baseado nos dados passados
+     */
     public function scopeBuscarPorAtributo($query, $atributo, $valor)
     {
-        return $query->with('jogo')->where($atributo, $valor);
+        return $query->with('jogo')->where($atributo, $valor)->get();
     }
 }
