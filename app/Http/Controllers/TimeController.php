@@ -18,7 +18,9 @@ class TimeController extends Controller
     public function index(){
     	
     	//buscando todas as informacoes dos times
-    	$times = \App\Time::paginate(10);
+    	$times = \App\Time::orderBy('descricao_time')
+        ->paginate(100);
+        
         
     	return view('time.index',compact('times'));
     }

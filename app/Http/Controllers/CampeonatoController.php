@@ -16,7 +16,8 @@ class CampeonatoController extends Controller
     public function index(){
     	
     	//buscando todas as informacoes dos times
-    	$campeonatos = \App\Campeonato::paginate(10);
+    	$campeonatos = \App\Campeonato::orderBy('descricao_campeonato')
+        ->paginate(100);
 
 
     	return view('campeonato.index',compact('campeonatos'));
