@@ -39,7 +39,7 @@ class ApostaController extends Controller
         $apostas = \App\Aposta::with('user')
             ->where('pago', false)
             ->where('ativo', true)
-            ->where('users_id','<>',0)
+            ->where('users_id', '<>', 0)
             ->get();
 
         $temp = $this->calcRetorno($apostas);
@@ -142,11 +142,11 @@ class ApostaController extends Controller
      */
     public function apostar(Request $request)
     {
-       if(is_null($request->codigo_seguranca)):                     //Se código de segurança é nulo
+        if (is_null($request->codigo_seguranca)):                     //Se código de segurança é nulo
             return response()->json(
-                ['status'=>'codigo_seguranca_nao_informado'], 409);//retorna json informando erro
-       endif;
-       return $this->realizarAposta($request);                      //Tentar realizar aposta
+                ['status' => 'codigo_seguranca_nao_informado'], 409);//retorna json informando erro
+        endif;
+        return $this->realizarAposta($request);                      //Tentar realizar aposta
     }
 
     /**Método para realização de apostas sem código de segurança
@@ -155,8 +155,9 @@ class ApostaController extends Controller
      */
     public function apostarSemCodigo(Request $request)
     {
-       return $this->realizarAposta($request);                      //Tenta realizar aposta
+        return $this->realizarAposta($request);                      //Tenta realizar aposta
     }
+
     /**Método para realização de aposta
      * @param Request $request dados da aposta
      * @return \Illuminate\Http\JsonResponse resultado da operação
@@ -164,7 +165,7 @@ class ApostaController extends Controller
     private function realizarAposta(Request $request)
     {
         $user = null;                                                       //Cria variável para guardar usuário
-        if($request->codigo_seguranca):                                     //Verifica se foi passado codigo de segurança
+        if ($request->codigo_seguranca):                                     //Verifica se foi passado codigo de segurança
             //Busca o usuário pelo código de segurança
             $user = \App\User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
             $resposta = $this->verificarUsuario($user);                      //Verifica restrição usuário
@@ -175,7 +176,7 @@ class ApostaController extends Controller
         $jogos_invalidos = $this->verificarJogos($request->jogo);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
-                    ['jogos_invalidos' => $jogos_invalidos],
+                ['jogos_invalidos' => $jogos_invalidos],
                 $jogos_invalidos['erro']);                              //retorna json com array com todos os jogos inválidos
         endif;
         /*$palpites_invalidos = $this->verificarPalpites($palpites);    //Verifica se há palpites inválidos
@@ -185,8 +186,8 @@ class ApostaController extends Controller
                 endif;*/
         $aposta = $this->registrarAposta($request, $user);              //Registra aposta
         $retorno = ['aposta' => $aposta];                               //Passa dados de aposta para retorno
-        if(!is_null($user)):                                            //Verifica se usuário não é nulo
-                $retorno+=['cambista' => $user->name];                  //Acrescenta nome do usuário (cambista) no resultado
+        if (!is_null($user)):                                            //Verifica se usuário não é nulo
+            $retorno += ['cambista' => $user->name];                  //Acrescenta nome do usuário (cambista) no resultado
         endif;
         return response()->json($retorno);                              //Retorna json com resultado
     }
@@ -214,7 +215,7 @@ class ApostaController extends Controller
     {
         if (count($jogos) < 2):                     //Verifica se quantidade de jogos é menor que 2
             return ['status' => "Minimo 2 jogos",
-                    'erro' => 402];                 //Retorna mensagem e erro
+                'erro' => 402];                 //Retorna mensagem e erro
         endif;
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
@@ -253,11 +254,11 @@ class ApostaController extends Controller
     private function registrarAposta(Request $request, $user)
     {
         $aposta = \App\Aposta::create($request->all());             //Cria uma aposta com dados vindos do request
-        if(is_null($user)):                                         //Verifica se usuário é nulo
-           $aposta->ativo = false;                                  //Passa false para atributo ativo
+        if (is_null($user)):                                         //Verifica se usuário é nulo
+            $aposta->ativo = false;                                  //Passa false para atributo ativo
             $optimus = new Optimus(config('constantes.optimus.prime'),
-                                config('constantes.optimus.inverse'),
-                                config('constantes.optimus.xor'));
+                config('constantes.optimus.inverse'),
+                config('constantes.optimus.xor'));
             $optimus->setMode('native');
             $aposta->codigo = $optimus->encode($aposta->id);        //Cria código com base no id
         else:                                                       //Se usuário não for nulo
@@ -410,7 +411,7 @@ class ApostaController extends Controller
             'data' => $aposta->created_at,                                          //Data
             'apostador' => $aposta->nome_apostador,                                 //Nome do apostador
             'valor_apostado' => number_format($aposta->valor_aposta, 2, ',', '.'),  //Valor apostado
-            'ativa'=>(boolean)$aposta->ativo,                                                //Se ativa
+            'ativa' => (boolean)$aposta->ativo,                                                //Se ativa
             'ganho' => number_format($ganho, 2, ',', '.'),                          //Ganho do cambista
             'jogos' => $this->dadosJogos($aposta->jogo)                             //Relação de jogos
         ];
@@ -489,15 +490,15 @@ class ApostaController extends Controller
 
     public function resumoAposta()
     {
-        $apostas = Aposta::with(['jogo','user'])
+        $apostas = Aposta::with(['jogo', 'user'])
             ->where('pago', false)
             ->where('ativo', true)
-            ->where('users_id','<>',0)
+            ->where('users_id', '<>', 0)
             ->get();
-        $apostasPagas = Aposta::with(['jogo','user'])
+        $apostasPagas = Aposta::with(['jogo', 'user'])
             ->where('pago', true)
             ->where('ativo', true)
-            ->where('users_id','<>',0)
+            ->where('users_id', '<>', 0)
             ->get();
         $users = DB::table('users')->select('id', 'name')->get();
         $total = 0;
@@ -522,7 +523,7 @@ class ApostaController extends Controller
         if (!is_null($resposta)):                                       //Se retornou restrição
             return response()->json($resposta, $resposta['erro']);      //Retorna json com restrição encontrada
         endif;
-        $aposta = $user->apostas->last();                               //Busca última aposta feita pelo usuário
+        $aposta = $user->apostas->first();                               //Busca última aposta feita pelo usuário
         if (is_null($aposta)):                                          //Se aposta for nula
             return response()->json(['aposta' => 'inexistente'], 403);  //Retorna json informando
         endif;
@@ -587,7 +588,7 @@ class ApostaController extends Controller
             return response()->json($resposta, $resposta['erro']);                            //Retorna json com restrição encontrada
         }
         if ($adm->role != "admin") {                                                           //Se retornou restrição
-            return response()->json(['status' => 'Credenciais Insuficientes','erro'=>501], 501);          //Retorna json com restrição encontrada
+            return response()->json(['status' => 'Credenciais Insuficientes', 'erro' => 501], 501);          //Retorna json com restrição encontrada
         }
         $ultimo_p = $cambista->ultimo_pagamento;
         \App\Aposta::where('users_id', $cambista->id)
@@ -635,19 +636,19 @@ class ApostaController extends Controller
     public function consultar($codigo)
     {
         $aposta = Aposta::buscarPorAtributo('codigo', $codigo)->first();        //Busca aposta pelo código
-        if(count($aposta)==0):                                                  //Se não tiver retornado nenhuma aposta
-            return response()->json(['status'=>'codigo_nao_encontrado'], 403);  //Retorna json com informação de que não foi encontrado
+        if (count($aposta) == 0):                                                  //Se não tiver retornado nenhuma aposta
+            return response()->json(['status' => 'codigo_nao_encontrado'], 403);  //Retorna json com informação de que não foi encontrado
         endif;
         $dados_aposta = $this->dadosAposta($aposta);                            //Cria array com dados da aposta
         $this->removerDadosDeJogos($dados_aposta['jogos']);                     //Remove dados não utilizados de jogos
         unset($dados_aposta['ganho']);                                          //Apaga indece do array
-        $cambista = is_null($aposta->user)?null:$aposta->user->name;            //Pega nome do cambista se não for nulo
+        $cambista = is_null($aposta->user) ? null : $aposta->user->name;            //Pega nome do cambista se não for nulo
         return response()->json([                                               //Retorna json
             'cambista' => $cambista,                                            //Cambista
             'aposta' => $dados_aposta,                                          //Dados da aposta
             'palpites' => $this->dadosPalpites($aposta->jogo),                  //Dados dos palpites
             'possivel_premio' => number_format($this->calcularPremio($aposta), 2, ',', '.'),    //Prêmio possível
-            'vencedora'=>$this->apostasWins($aposta)]);                         //Informação se aposta vencedora
+            'vencedora' => $this->apostasWins($aposta)]);                         //Informação se aposta vencedora
     }
 
     /**Método que realiza validação de aposta
@@ -664,11 +665,11 @@ class ApostaController extends Controller
         endif;
         //Busca aposta pelo código
         $aposta = Aposta::buscarPorAtributo('codigo', $request->codigo_aposta)->first();
-        if(is_null($aposta)):
-            return response()->json(['status'=>'codigo_nao_encontrado'], 403); 
+        if (is_null($aposta)):
+            return response()->json(['status' => 'codigo_nao_encontrado'], 403);
         endif;
-        if($aposta->ativo):
-            return response()->json(['status'=>'aposta_ja_ativa'], 406); 
+        if ($aposta->ativo):
+            return response()->json(['status' => 'aposta_ja_ativa'], 406);
         endif;
         $aposta->ativo = true;
         $aposta->users_id = $user->id;
