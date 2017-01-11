@@ -450,8 +450,9 @@ class ApostaController extends Controller
         $totalPago += array_sum($premiosPago);
         $total += array_sum($premios);
         $receber = $this->receberDoCambista($apostas);
+        $recebido = $this->receberDoCambista($apostasPagas);
         //Lista de apostas é passada para a view
-        return view('aposta.allapostas', compact('users', 'apostas', 'premios', 'total','receber', 'apostasPagas', 'premiosPago', 'totalPago'));
+        return view('aposta.allapostas', compact('users', 'apostas', 'premios', 'total','receber','recebido', 'apostasPagas', 'premiosPago', 'totalPago'));
     }
 
     /** Método que busca e retorna última aposta do cambista
