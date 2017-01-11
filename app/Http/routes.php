@@ -11,18 +11,29 @@
 |
 */
 
-
+Route::group(['namespace'=>'Services'], function(){
+	Route::get('/aposta', ['uses'=>'ApostaService@getJsonJogos', 'as'=>'aposta.getJsonJogos']);
+	Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaService@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
+	Route::get('/aposta/premiosApostas/{codigo_seguranca}', ['uses'=>'ApostaService@premiosApostas', 'as'=>'aposta.premiosApostas']);
+	Route::get('/aposta/ultima/{codigo_seguranca}', ['uses'=>'ApostaService@ultima', 'as'=>'aposta.ultima']);
+	Route::get('/aposta/consultar/{codigo}', ['uses'=>'ApostaService@consultar', 'as'=>'aposta.consultar']);
+	//Route::get('/cambista/acerto/{codigo_c}/{codigo_a}', ['uses'=>'ApostaService@acerto', 'as'=>'aposta.acerto']);
+	//Route::post('/aposta/cambista', ['uses'=>'ApostaService@apostaCambista', 'as'=>'aposta.cambista']);
+	Route::post('/aposta/apostar', ['uses'=>'ApostaService@apostar', 'as'=>'aposta.apostar']);
+	Route::post('/aposta/apostarSemCodigo', ['uses'=>'ApostaService@apostarSemCodigo', 'as'=>'aposta.apostarSemCodigo']);
+	Route::put('/aposta/validar', ['uses'=>'ApostaService@validar', 'as'=>'aposta.validar']);
+});
 //rotas não auteticadas (TEMPORARIAMENTE)
-Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.getJsonJogos']);
-Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
-Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
-Route::get('/aposta/premiosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@premiosApostas', 'as'=>'aposta.premiosApostas']);
-Route::get('/aposta/ultima/{codigo_seguranca}', ['uses'=>'ApostaController@ultima', 'as'=>'aposta.ultima']);
+//Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.getJsonJogos']);
+//Route::post('/aposta/apostar', ['uses'=>'ApostaController@apostar', 'as'=>'aposta.apostar']);
+//Route::get('/aposta/ganhosApostas/{codigo_seguranca}', ['uses'=>'Services\ApostaService@ganhosApostas', 'as'=>'aposta.ganhosApostas']);
+//Route::get('/aposta/premiosApostas/{codigo_seguranca}', ['uses'=>'ApostaController@premiosApostas', 'as'=>'aposta.premiosApostas']);
+//Route::get('/aposta/ultima/{codigo_seguranca}', ['uses'=>'ApostaController@ultima', 'as'=>'aposta.ultima']);
 Route::get('/cambista/acerto/{codigo_c}/{codigo_a}', ['uses'=>'ApostaController@acerto', 'as'=>'aposta.acerto']);
 Route::post('/aposta/cambista', ['uses'=>'ApostaController@apostaCambista', 'as'=>'aposta.cambista']);
-Route::post('/aposta/apostarSemCodigo', ['uses'=>'ApostaController@apostarSemCodigo', 'as'=>'aposta.apostarSemCodigo']);
-Route::get('/aposta/consultar/{codigo}', ['uses'=>'ApostaController@consultar', 'as'=>'aposta.consultar']);
-Route::put('/aposta/validar', ['uses'=>'ApostaController@validar', 'as'=>'aposta.validar']);
+//Route::post('/aposta/apostarSemCodigo', ['uses'=>'ApostaController@apostarSemCodigo', 'as'=>'aposta.apostarSemCodigo']);
+//Route::get('/aposta/consultar/{codigo}', ['uses'=>'ApostaController@consultar', 'as'=>'aposta.consultar']);
+//Route::put('/aposta/validar', ['uses'=>'ApostaController@validar', 'as'=>'aposta.validar']);
 
 //rotas não auteticadas (TEMPORARIAMENTE)
 
