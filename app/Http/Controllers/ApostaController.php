@@ -449,8 +449,9 @@ class ApostaController extends Controller
         $premiosPago = $this->calcRetorno($apostasPagas);
         $totalPago += array_sum($premiosPago);
         $total += array_sum($premios);
+        $receber = $this->receberDoCambista($apostas);
         //Lista de apostas é passada para a view
-        return view('aposta.allapostas', compact('users', 'apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
+        return view('aposta.allapostas', compact('users', 'apostas', 'premios', 'total','receber', 'apostasPagas', 'premiosPago', 'totalPago'));
     }
 
     /** Método que busca e retorna última aposta do cambista
@@ -532,10 +533,12 @@ class ApostaController extends Controller
         if ($adm->role != "admin") {                                                           //Se retornou restrição
             return response()->json(['status' => 'Credenciais Insuficientes', 'erro' => 501], 501);          //Retorna json com restrição encontrada
         }
-        $ultimo_p = $cambista->ultimo_pagamento;
-        \App\Aposta::where('users_id', $cambista->id)
-            ->where('created_at', '>', $ultimo_p)
-            ->update(['pago' => true]);
+        $apostas = Aposta::recentes($cambista);
+        $apostas = $this->removerAbertas($apostas);
+        foreach ($apostas as $aposta) {
+                $aposta->pago = true;
+                $aposta->save();
+            }    
         $cambista->ultimo_pagamento = Carbon::now();
         $cambista->save();
     }
@@ -555,10 +558,12 @@ class ApostaController extends Controller
         $users = \App\User::find($id);
         $apostas = Aposta::with(['jogo'])
             ->where('users_id', '=', $id)
-            ->where('created_at', '>', $users->ultimo_pagamento)
+            ->where('pago', false)
+            ->orderBy('created_at','desc')
             ->get();
         $apostasPagas = Aposta::with(['jogo'])
             ->where('pago', '=', true)
+            ->orderBy('created_at','desc')
             ->get();
         $total = 0;
         $totalPago = 0;
@@ -567,8 +572,9 @@ class ApostaController extends Controller
         $totalPago += array_sum($premiosPago);
         $total += array_sum($premios);
         $receber = $this->receberDoCambista($apostas);
+        $recebido = $this->receberDoCambista($apostasPagas);
 
-        return view('aposta.apostaCambista', compact('users', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
+        return view('aposta.apostaCambista', compact('users', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'recebido'));
     }
 
     /**Método que realiza consulta de aposta
