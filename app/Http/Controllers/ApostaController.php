@@ -194,8 +194,9 @@ class ApostaController extends Controller
         $totalPago += array_sum($premiosPago);
         $total += array_sum($premios);
         $receber = $this->receberDoCambista($apostas);
+        $recebido = $this->receberDoCambista($apostasPagas);
         //Lista de apostas é passada para a view
-        return view('aposta.allapostas', compact('users', 'apostas', 'premios', 'total','receber', 'apostasPagas', 'premiosPago', 'totalPago'));
+        return view('aposta.allapostas', compact('users', 'apostas', 'premios', 'total','receber','recebido', 'apostasPagas', 'premiosPago', 'totalPago'));
     }
 
 
@@ -240,7 +241,7 @@ class ApostaController extends Controller
     public function apostaCambista(Request $request)
     {
         $id = $request->get('cambista');
-        $users = \App\User::find($id);
+        $cambista = \App\User::find($id);
         $apostas = Aposta::with(['jogo'])
             ->where('users_id', '=', $id)
             ->where('pago', false)
@@ -250,6 +251,7 @@ class ApostaController extends Controller
             ->where('pago', '=', true)
             ->orderBy('created_at','desc')
             ->get();
+        $users = DB::table('users')->select('id', 'name')->get();
         $total = 0;
         $totalPago = 0;
         $premios = $this->calcRetorno($apostas);
@@ -259,7 +261,7 @@ class ApostaController extends Controller
         $receber = $this->receberDoCambista($apostas);
         $recebido = $this->receberDoCambista($apostasPagas);
 
-        return view('aposta.apostaCambista', compact('users', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'recebido'));
+        return view('aposta.apostaCambista', compact('users','cambista', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'recebido'));
     }
     /** Método que verifica se usuário possui alguma restrição
      * @param $user \App\User usuário a ser verificado

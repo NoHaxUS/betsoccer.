@@ -10,16 +10,12 @@
     <!-- Fonts -->
     {!! Html::style('css/bootstrap.min.css') !!}
     {!! Html::style('css/bootstrap-datetimepicker.min.css') !!}
-    {!! Html::style('css/default.css') !!}
     {!! Html::style('css/component.css') !!}
     {!! Html::style('css/css/component.css') !!}
     {!! Html::style('css/flexselect.css') !!}
-    {!! Html::style('css/cs-select.css') !!}
-    {!! Html::style('css/cs-skin-underline.css') !!}
     {!! Html::script('/js/jquery.min.js') !!}
     {!! Html::script('/js/liquidmetal.js') !!}
     {!! Html::script('/js/jquery.flexselect.js') !!}
-    {!! Html::script('/js/selectFx.js') !!}
 
 
 
@@ -84,7 +80,6 @@
 {!! Html::script('/js/form.js') !!}
 {!! Html::script('/js/modernizr.custom.js') !!}
 {!! Html::script('/js/classie.js') !!}
-{!! Html::script('/js/modalEffects.js') !!}
 
 <script>
     // this is important for IEs
@@ -97,11 +92,8 @@
     })();
    
 </script>
-{!! Html::script('/js/cssParser.js') !!}
-{!! Html::script('/js/css-filters-polyfill.js') !!}
 {!! Html::script('http://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js') !!}
 {!! Html::script('js/js/jquery.stickyheader.js') !!}
-
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
