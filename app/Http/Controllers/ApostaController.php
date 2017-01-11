@@ -555,7 +555,7 @@ class ApostaController extends Controller
     public function apostaCambista(Request $request)
     {
         $id = $request->get('cambista');
-        $users = \App\User::find($id);
+        $cambista = \App\User::find($id);
         $apostas = Aposta::with(['jogo'])
             ->where('users_id', '=', $id)
             ->where('pago', false)
@@ -565,6 +565,7 @@ class ApostaController extends Controller
             ->where('pago', '=', true)
             ->orderBy('created_at','desc')
             ->get();
+        $users = DB::table('users')->select('id', 'name')->get();
         $total = 0;
         $totalPago = 0;
         $premios = $this->calcRetorno($apostas);
@@ -574,7 +575,7 @@ class ApostaController extends Controller
         $receber = $this->receberDoCambista($apostas);
         $recebido = $this->receberDoCambista($apostasPagas);
 
-        return view('aposta.apostaCambista', compact('users', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'recebido'));
+        return view('aposta.apostaCambista', compact('users','cambista', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'recebido'));
     }
 
     /**Método que realiza consulta de aposta
