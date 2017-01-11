@@ -296,9 +296,11 @@ class ApostaController extends Controller
             return response()->json($resposta, $resposta['erro']);                  //Retorna json com restrição encontrada
         endif;
         $apostas = Aposta::recentes($user);                                         //Busca apostas recentes do usuário
-        $resposta[] = $this->dadosGanhos($user,$apostas);                           //Formata dados de todas as apostas
-        $resposta[] = $this->dadosGanhos($user, $this->removerAbertas($apostas));   //Formata dados de apostas sem as abertas
-        return response()->json($resposta);                                         //Retorna json com dados
+        $dados['com_abertas'] = $this->dadosGanhos($user,$apostas);                 //Formata dados de todas as apostas
+        //Formata dados de apostas sem as abertas
+        $dados['sem_abertas'] = $this->dadosGanhos($user, $this->removerAbertas($apostas));
+        return response()->json($dados);                                         //Retorna json com dados
+
     }
     /** Método que verifica a relação de premiações das apostas
      * @param $codigo_seguranca string codigo de segurança do cambista
@@ -356,7 +358,7 @@ class ApostaController extends Controller
 
     /**Método que formata os dados dos ganhos com as apostas
      * @param $user \App\User cambista
-     * @param $apostas collection lista de apostas
+     * @param $apostas \Illuminate\Support\Collection lista de apostas
      * @return array lista de dados para serem retornados
      */
     private function dadosGanhos($user, $apostas){
@@ -367,7 +369,7 @@ class ApostaController extends Controller
 
     /** Método que formata os dados dos prêmios
      * @param $user \App\User cambista
-     * @param $apostas collection lista de apostas
+     * @param $apostas \Illuminate\Support\Collection lista de apostas
      * @return array lista de dados para serem retornados
      */
     private function dadosPremios($user, $apostas){
@@ -576,13 +578,13 @@ class ApostaController extends Controller
     public function consultar($codigo)
     {
         $aposta = Aposta::buscarPorAtributo('codigo', $codigo)->first();        //Busca aposta pelo código
-        if (count($aposta) == 0):                                                  //Se não tiver retornado nenhuma aposta
-            return response()->json(['status' => 'codigo_nao_encontrado'], 403);  //Retorna json com informação de que não foi encontrado
+        if (count($aposta) == 0):                                               //Se não tiver retornado nenhuma aposta
+            return response()->json(['status' => 'codigo_nao_encontrado'], 403);//Retorna json com informação de que não foi encontrado
         endif;
         $dados_aposta = $this->dadosAposta($aposta);                            //Cria array com dados da aposta
         $this->removerDadosDeJogos($dados_aposta['jogos']);                     //Remove dados não utilizados de jogos
         unset($dados_aposta['ganho']);                                          //Apaga indece do array
-        $cambista = is_null($aposta->user) ? null : $aposta->user->name;            //Pega nome do cambista se não for nulo
+        $cambista = is_null($aposta->user) ? null : $aposta->user->name;        //Pega nome do cambista se não for nulo
         return response()->json([                                               //Retorna json
             'cambista' => $cambista,                                            //Cambista
             'aposta' => $dados_aposta,                                          //Dados da aposta
@@ -605,37 +607,46 @@ class ApostaController extends Controller
         endif;
         //Busca aposta pelo código
         $aposta = Aposta::buscarPorAtributo('codigo', $request->codigo_aposta)->first();
-        if (is_null($aposta)):
+        if (is_null($aposta)):                                      //Se aposta for nula (não existe)
+            //Retorna json informando erro
             return response()->json(['status' => 'codigo_nao_encontrado'], 403);
         endif;
-        if ($aposta->ativo):
+        if ($aposta->ativo):                                        //Se aposta já estiver ativa
+            //Retorna json informando erro
             return response()->json(['status' => 'aposta_ja_ativa'], 406);
         endif;
-        $aposta->ativo = true;
-        $aposta->users_id = $user->id;
-        $aposta->save();
-        $dados_aposta = $this->dadosAposta($aposta);
-        $this->removerDadosDeJogos($dados_aposta['jogos']);
-        unset($dados_aposta['ganho']);
+        $aposta->ativo = true;                                      //Altera atributo ativo para verdadeiro
+        $aposta->users_id = $user->id;                              //Passa id do cambista
+        $aposta->save();                                            //Salva alteração
+        $dados_aposta = $this->dadosAposta($aposta);                //Formata dados da aposta
+        $this->removerDadosDeJogos($dados_aposta['jogos']);         //Remove dados dos jogos
+        unset($dados_aposta['ganho']);                              //Remove dados referentes a ganhos
         return response()->json([
             'cambista' => $user->name,
             'aposta' => $dados_aposta,
             'palpites' => $this->dadosPalpites($aposta->jogo),
             'possivel_premio' => number_format($this->calcularPremio($aposta), 2, ',', '.')]);
     }
+
+    /** Método que remove apostas em aberto da lista de apostas passada
+     * @param $apostas \Illuminate\Support\Collection com relação de apostas
+     * @return mixed relação de apostas sem as em aberto
+     */
     private function removerAbertas($apostas){
+        //Chama método para remoção de apostas, passando função para realizar essa tarefa
         $apostas = $apostas->reject(function($aposta){
-            foreach($aposta->jogo as $jogo):
+            foreach($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
+                //Se resultado de casa ou de fora for nulo
                 if(is_null($jogo->r_casa)  || is_null($jogo->r_fora)):
-                    return true;
+                    return true;                        //Retorna verdadeiro
                 endif;
             endforeach;
         });
-        return $apostas;
+        return $apostas;                                //Retorna coleção de apostas sem as abertas
     }
 
     /** Método que calcula ganhos com apostas
-     * @param $apostas lista de apostas para cálculo
+     * @param $apostas \Illuminate\Support\Collection lista de apostas para cálculo
      * @return array dados detalhados de ganhos de apostas
      */
     private function calcularGanho($apostas){
@@ -679,7 +690,7 @@ class ApostaController extends Controller
     }
 
     /** Método que realiza detalhamento de apostas
-     * @param $apostas collection relação de apostas a serem detalhadas
+     * @param $apostas \Illuminate\Support\Collection relação de apostas a serem detalhadas
      * @return array lista com dados detalhados das apostas
      */
     private function detalharApostas($apostas){
