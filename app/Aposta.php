@@ -30,7 +30,7 @@ class Aposta extends Model
     public function scopeRecentes($query, $user)
     {
         return $query->where('users_id', $user->id)
-            ->where('created_at', '>', $user->ultimo_pagamento)->get();
+            ->where('pago', false)->with('jogo')->get();
     }
 
     /**Méotdo que busca aposta pelo atributo
