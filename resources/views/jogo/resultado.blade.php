@@ -4,12 +4,13 @@
 <div class="container">
 
     <div class="row">
-        <div class="table-responsive col-md-offset-3 col-md-5">
+        <div class="table-responsive col-md-offset-3 col-md-6">
             <form action="{{ route('jogo.addPlacar') }}" method="post">
-                <table class="table table-sm table-inverse ">
+                <table class="table table-sm table-inverse">
                     <thead>
                         <tr>
                             <th>Cod</th>
+                            <th>hora</th>
                             <th>Casa</th>
                             <th></th>
                             <th></th>
@@ -22,16 +23,17 @@
                         {{ csrf_field() }}
                         @foreach($jogos as $jo)
                         <tr>
-                            <td scope="row">
+                            <td class="success">
                                 <label>
                                  <input type="checkbox" name="jogo[]" value="{{ $jo->id }}" checked class="hide">
-                                 {{ $jo->id }}
-                             </label>
+                             {{$jo->codigo}}
+                             </label>                             
                          </td>
-                         <td class="success">{{ $jo->time->get(0)['descricao_time'] }}</td>
-                         <td><input class="form-group" name="r_casa{{$jo->id}}" maxlength="2" size="2" required></td>
+                         <td class="success"> {{toHora($jo->data)}}</td>
+                         <td class="warning">{{ $jo->time->get(0)['descricao_time'] }}</td>
+                         <td><input class="form-group" name="r_casa{{$jo->id}}" maxlength="2" size="2"></td>
                          <td>X</td>
-                         <td><input  class="form-group" name="r_fora{{$jo->id}}" maxlength="2" size="2" required></td>
+                         <td><input  class="form-group" name="r_fora{{$jo->id}}" maxlength="2" size="2"></td>
                          <td class="warning">{{ $jo->time->get(1)['descricao_time'] }}</td>
                      </tr>
                      @endforeach
