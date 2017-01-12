@@ -87,44 +87,55 @@
                         @endif
                         <td>
                             <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Edit</a>
-                            <button class="md-trigger btn-danger" data-modal="modal-{{$jo->id}}">Plac</button>
-                            @if($jo->ativo == false)
-                            <a class="btn btn-success" href="javascript:(confirm('Ativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Ati</a>
-                            @else
-                            <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Des.</a>
-                            @endif
-                            <a class="btn btn-default" href="{{ route('jogo.totalPalpites',$jo->id) }}">Palpites</a>
-                        </td>
-                    </tr>
-                    <div class="md-modal md-effect-11" id="modal-{{$jo->id}}">
-                        <div class="md-content">
-                            <h3>Adcione um placar ao Jogo</h3>
-                            <div>
-                             <form action="{{ route('jogo.addPlacar') }}" method="post">
-                               {{ csrf_field() }}
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-{{$jo->id}}">
+                            plac
+                          </button>
+                          @if($jo->ativo == false)
+                          <a class="btn btn-success" href="javascript:(confirm('Ativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Ati</a>
+                          @else
+                          <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Des.</a>
+                          @endif
+                          <a class="btn btn-default" href="{{ route('jogo.totalPalpites',$jo->id) }}">Palpites</a>
+                      </td>
+                  </tr>
+                  <!-- Modal -->
+                  <div class="modal fade" id="modal-{{$jo->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Jogos</h4>
+                        </div>
+                        <div class="modal-body">
+                         <h3>Adcione um placar ao Jogo</h3>
+                         <form action="{{ route('jogo.addPlacar') }}" method="post">
+                             {{ csrf_field() }}
 
-                               <p>
-                                  <label>
-                                   <input type="checkbox" name="jogo[]" value="{{ $jo->id }}" checked class="hide">
-                                   {{ $jo->codigo }}
-                               </label>
-                               {{ $jo->time->get(0)['descricao_time'] }}
-                               <input class="form-group" name="r_casa{{$jo->id}}" value="{{$jo->r_casa or '?'}}" maxlength="2" size="2" required>
-                               X
-                               <input  class="form-group" name="r_fora{{$jo->id}}" value="{{$jo->r_fora or '?'}}" maxlength="2" size="2" required>
-                               {{ $jo->time->get(1)['descricao_time'] }}
-                               <button class="btn btn-info">Cadastrar Placar</button>
-                           </p>
+                             <p>
+                              <label>
+                                 <input type="checkbox" name="jogo[]" value="{{ $jo->id }}" checked class="hide">
+                                 {{ $jo->codigo }}
+                             </label>
+                             {{ $jo->time->get(0)['descricao_time'] }}
+                             <input class="form-group" name="r_casa{{$jo->id}}" value="{{$jo->r_casa or '?'}}" maxlength="2" size="2" required>
+                             X
+                             <input  class="form-group" name="r_fora{{$jo->id}}" value="{{$jo->r_fora or '?'}}" maxlength="2" size="2" required>
+                             {{ $jo->time->get(1)['descricao_time'] }}
+                             <button class="btn btn-info">Cadastrar Placar</button>
+                         </p>
 
-                       </form>
-                       <button class="md-close">FECHAR!</button>
-                   </div>
-               </div>
-           </div>
-           @endif
-           @endforeach
-       </tbody>
-   </table>
+                     </form>
+                 </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    @endforeach
+</tbody>
+</table>
 </div>
 @endforeach
 @endforeach

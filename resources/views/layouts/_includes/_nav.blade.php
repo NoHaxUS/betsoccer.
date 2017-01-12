@@ -55,7 +55,7 @@
 
         <li><a href="{{ route('aposta.listaAposta') }}">ApostasVencedoras</a></li>
 
-        <li><a href="{{ route('apostaJogo.index') }}">Relatorios</a></li>
+        <li><a href="{{ route('apostaJogo.resumoAposta') }}">Relatorios</a></li>
         @endcan
 
         <li><a href="{{ route('aposta.index') }}">Apostar</a></li>
