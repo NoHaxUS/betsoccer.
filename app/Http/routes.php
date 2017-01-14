@@ -22,7 +22,7 @@ Route::group(['namespace'=>'Services'], function(){
 	Route::post('/aposta/cambista', ['uses'=>'ApostaService@apostaCambista', 'as'=>'aposta.cambista']);
 	Route::post('/aposta/apostar', ['uses'=>'ApostaService@apostar', 'as'=>'aposta.apostar']);
 	Route::post('/aposta/apostarSemCodigo', ['uses'=>'ApostaService@apostarSemCodigo', 'as'=>'aposta.apostarSemCodigo']);
-	Route::put('/aposta/validar', ['uses'=>'ApostaService@validar', 'as'=>'aposta.validar']);
+	Route::post('/aposta/validar', ['uses'=>'ApostaService@validar', 'as'=>'aposta.validar']);
 });
 //rotas não auteticadas (TEMPORARIAMENTE)
 //Route::get('/aposta', ['uses'=>'ApostaController@getJsonJogos', 'as'=>'aposta.getJsonJogos']);
