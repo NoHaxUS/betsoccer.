@@ -136,7 +136,7 @@ class ApostaService extends Controller
         endif;
         /*Busca as apostas recentes do usuário feitas pelo usuário, remove as que estão em aberto
         (jogos não concluídos e formata os dados de prêmios*/
-        $resposta = ApostaHelper::dadosPremios($user,ApostaHelper::removerAbertas(Aposta::recentes($user)));
+        $resposta = ApostaHelper::dadosPremios($user,Aposta::recentes($user));
         return response()->json($resposta);                             //Retorn json com respostas
     }
 
