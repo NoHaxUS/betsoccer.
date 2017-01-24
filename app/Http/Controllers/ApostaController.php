@@ -89,18 +89,16 @@ class ApostaController extends Controller
         ->where('users_id', '<>', 0)
         ->get();
         $users = DB::table('users')->select('id', 'name')->get();
-        $total = 0;
-        $totalPago = 0;
+        $premiacao_possivel = 0;
         $premios = ApostaHelper::calcRetorno($apostas);
         $premiosPago = ApostaHelper::calcRetorno($apostasPagas);
-        $totalPago += array_sum($premiosPago);
-        $total += array_sum($premios);
-        $ganhos = $this->ganhosApostasTodosCambistas($apostas);
-        $ganhosRecebidos = $this->ganhosApostasTodosCambistas($apostasPagas);
+        $premiacao_possivel += array_sum(ApostaHelper::calcRetorno(ApostaHelper::removerFechadas($apostas)));
+        $receber_cambistas = $this->ganhosApostasTodosCambistas($apostas);
+        $ganhosRecebidos = $this->ganhosApostasTodosCambistas($apostasPagas); 
 
        
         //Lista de apostas é passada para a view
-        return view('aposta.allapostas', compact('users', 'ganhos','ganhosRecebidos','apostas', 'premios', 'total', 'apostasPagas', 'premiosPago', 'totalPago'));
+        return view('aposta.allapostas', compact('users', 'receber_cambistas','ganhosRecebidos','apostas', 'premios', 'premiacao_possivel', 'apostasPagas', 'premiosPago'));
     }
    
     public function apostaCambista(Request $request)
@@ -114,19 +112,17 @@ class ApostaController extends Controller
         ->get();
         $apostasPagas = Aposta::with(['jogo'])
         ->where('pago', '=', true)
+        ->where('users_id', '=', $id)
         ->orderBy('created_at','desc')
         ->get();
         $users = DB::table('users')->select('id', 'name')->get();
-        $total = 0;
-        $totalPago = 0;
+        $premiacao_possivel = 0;
         $premios = ApostaHelper::calcRetorno($apostas);
         $premiosPago = ApostaHelper::calcRetorno($apostasPagas);
-        $totalPago += array_sum($premiosPago);
-        $total += array_sum($premios);
-        $receber = ApostaHelper::receberDoCambista($apostas);
-        $ganhos = $this->ganhosApostasPorCambista($cambista,$apostas);
+        $premiacao_possivel += array_sum(ApostaHelper::calcRetorno(ApostaHelper::removerFechadas($apostas)));
+        $receber_cambista = $this->ganhosApostasPorCambista($cambista,$apostas);
         $ganhosRecebidos = $this->ganhosApostasPorCambista($cambista,$apostasPagas);
-        return view('aposta.apostaCambista', compact('users','cambista', 'apostas', 'receber','ganhos','ganhosRecebidos', 'premios', 'total', 'apostasPagas', 'premiosPago'));
+        return view('aposta.apostaCambista', compact('users','cambista', 'apostas', 'receber_cambista','ganhosRecebidos', 'premios', 'premiacao_possivel', 'apostasPagas', 'premiosPago'));
     }
      /** Método que retorna o valor a ser recebido pelas apostas feitas,
      * exceto as em aberto (com jogos não concluídos)
