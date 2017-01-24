@@ -151,7 +151,7 @@ class ApostaService extends Controller
         if (!is_null($resposta)):                                           //Se retornou restrição
             return response()->json($resposta, $resposta['erro']);          //Retorna json com restrição encontrada
         endif;
-        $aposta = Aposta::recentes($user)->first();                         //Busca última aposta feita pelo usuário
+        $aposta = Aposta::recentes($user)->last();                         //Busca última aposta feita pelo usuário
         if (is_null($aposta)):                                              //Se aposta for nula
             return response()->json(['aposta' => 'inexistente'], 403);      //Retorna json informando
         endif;
