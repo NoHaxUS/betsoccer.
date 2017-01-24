@@ -217,6 +217,22 @@ class ApostaHelper
         });
         return $apostas;                                //Retorna coleção de apostas sem as abertas
     }
+    /** Método que remove apostas finalizadas da lista de apostas passada
+     * @param $apostas \Illuminate\Support\Collection com relação de apostas
+     * @return mixed relação de apostas sem as em aberto
+     */
+    public static function removerFechadas($apostas){
+        //Chama método para remoção de apostas, passando função para realizar essa tarefa
+        $apostas = $apostas->reject(function($aposta){
+            foreach($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
+                //Se resultado de casa ou de fora for nulo
+                if(!is_null($jogo->r_casa)  || !is_null($jogo->r_fora)):
+                    return true;                        //Retorna verdadeiro
+                endif;
+            endforeach;
+        });
+        return $apostas;                                //Retorna coleção de apostas sem as abertas
+    }
 
     /** Método que realiza detalhamento de apostas
      * @param $apostas \Illuminate\Support\Collection relação de apostas a serem detalhadas

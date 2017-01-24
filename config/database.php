@@ -21,7 +21,7 @@ return [
     | you may use many connections at once using the Database library.
     |'default' => env('DB_CONNECTION', 'mysql'),
     */
-    'default' => 'mysql1',
+    'default' => 'mysql',
     /*
     |--------------------------------------------------------------------------
     | Database Connections

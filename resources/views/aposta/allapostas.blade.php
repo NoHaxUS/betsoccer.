@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<style>    
+    .ganhos {
+        font-size: 18px;
+    }
+</style>
 <div class="container">
     <div class="row">
         <ol class="breadcrumb panel-heading">
@@ -37,9 +42,9 @@
 <!-- Tab panes -->
 <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="ativas">        
-        <div class="table-responsive col-md-offset-1 col-md-8">
-            <h3>Total a receber de todos os agentes : R$ {{$ganhos["com_abertas"]["liquido"]}}</h3>
-            <h3>Prêmiação total possível a ser Pago : R$ {{number_format($total, 2, ',', '.')}}</h3>
+        <div class="table-responsive col-md-offset-1 col-md-10">
+            <h3>Total a receber de todos os agentes : R$ {{$receber_cambistas["com_abertas"]["liquido"]}}</h3>
+            <h3>Prêmiação total possível a ser Pago : R$ {{number_format($premiacao_possivel, 2, ',', '.')}}</h3>
             <table>
                 <thead>
                     <tr>
@@ -56,12 +61,12 @@
                     {{ csrf_field() }}
                     @foreach ($apostas as $key => $aposta)
                     <tr>
-                        <td>{{ $aposta->codigo }}</td>
-                        <td>{{date('d/m/Y - H:i', strtotime($aposta->created_at)) }}</td>
-                        <td>{{ number_format($aposta->valor_aposta, 2, ',', '.')}}</td>
-                        <td>{{ $aposta->nome_apostador}}</td>
-                        <td>{{ $aposta->user->name}}</td>
-                        <td>{{ number_format($premios[$key], 2, ',', '.')}}</td>
+                        <td class="ganhos">{{ $aposta->codigo }}</td>
+                        <td class="ganhos">{{date('d/m/Y - H:i', strtotime($aposta->created_at)) }}</td>
+                        <td class="ganhos">{{ number_format($aposta->valor_aposta, 2, ',', '.')}}</td>
+                        <td class="ganhos">{{ $aposta->nome_apostador}}</td>
+                        <td class="ganhos">{{ $aposta->user->name}}</td>
+                        <td class="ganhos">{{ number_format($premios[$key], 2, ',', '.')}}</td>
                         <td>
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-{{$aposta->id}}">
                               Detalhe
@@ -79,23 +84,23 @@
                         <div class="modal-body">
                             @foreach ($aposta->jogo as $key => $jogo)
 
-                            <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
-                            <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
-                            </h5>
+                            <h5>{{date('d/m/Y - H:i', strtotime($jogo->data))}} -- {{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
+                                <h5>    Palpite..: {{$jogo->pivot->tpalpite}}......Valor..: {{$jogo->pivot->palpite}}
+                                </h5>
 
-                            @endforeach 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                                @endforeach 
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            @endforeach
-        </tbody>
-    </table>
-</div>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 <div role="tabpanel" class="tab-pane" id="pagas">
     <div class="table-responsive col-md-offset-1 col-md-10">
@@ -139,7 +144,7 @@
                 <th>Valor Apostado</th>
                 <th>Apostador</th>
                 <th>Agente</th>
-                <th>Total pago</th>
+                <th>Premiação Possível</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -169,10 +174,10 @@
                     <h4 class="modal-title" id="myModalLabel">Jogos</h4>
                 </div>
                 <div class="modal-body">
-                    @foreach ($aposta->jogo as $key => $jogo)
+                   @foreach ($aposta->jogo as $key => $jogo)
 
-                    <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
-                    <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
+                   <h5>{{date('d/m/Y - H:i', strtotime($jogo->data))}} -- {{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
+                    <h5>    Palpite..: {{$jogo->pivot->tpalpite}}......Valor..: {{$jogo->pivot->palpite}}
                     </h5>
 
                     @endforeach 
@@ -188,51 +193,46 @@
 </table>
 </div>
 </div>
-<style>    
-    .ganhos {
-        font-size: 18px;
-    }
-</style>
 <div role="tabpanel" class="tab-pane" id="ganhos">
     <div class="col-md-offset-1 col-md-3">
         <table class="table">
             <tbody>
                 <tr> 
                     <th >Qtd. Apostas</th>
-                    <td class="ganhos">{{$ganhos["com_abertas"]["qtd_apostas"]}}</td>
+                    <td class="ganhos">{{$receber_cambistas["com_abertas"]["qtd_apostas"]}}</td>
                 </tr>
                 <tr>
                     <th data-field="price">Qtd. Jogos</th>
-                    <td class="ganhos">{{$ganhos["com_abertas"]["qtd_jogos"]}}</td>
+                    <td class="ganhos">{{$receber_cambistas["com_abertas"]["qtd_jogos"]}}</td>
 
                 </tr>
                 <tr>
                     <th data-field="price">Comissão (2 jogos)</th>
-                    <td class="ganhos">R$ {{$ganhos["com_abertas"]["comissao_simples"]}}</td>
+                    <td class="ganhos">R$ {{$receber_cambistas["com_abertas"]["comissao_simples"]}}</td>
                 </tr>
                 <tr>
                     <th data-field="price">Comissão (3 +)</th>
-                    <td class="ganhos">R$ {{$ganhos["com_abertas"]["comissao_mediana"]}}</td>
+                    <td class="ganhos">R$ {{$receber_cambistas["com_abertas"]["comissao_mediana"]}}</td>
                 </tr>
                 <tr>
                     <th data-field="price">Comissão (5 +)</th>
-                    <td class="ganhos">R$ {{$ganhos["com_abertas"]["comissao_maxima"]}}</td>
+                    <td class="ganhos">R$ {{$receber_cambistas["com_abertas"]["comissao_maxima"]}}</td>
                 </tr>
                 <tr>
                     <th data-field="price">Comissão Total</th>
-                    <td class="ganhos">R$ {{$ganhos["com_abertas"]["comissao_total"]}}</td>
+                    <td class="ganhos">R$ {{$receber_cambistas["com_abertas"]["comissao_total"]}}</td>
                 </tr>
                 <tr>
                     <th data-field="price">Valor Total Apostado</th>
-                    <td class="ganhos">R$ {{$ganhos["com_abertas"]["total_apostado"]}}</td>
+                    <td class="ganhos">R$ {{$receber_cambistas["com_abertas"]["total_apostado"]}}</td>
                 </tr>
                 <tr>
                     <th data-field="price">Total Premiação</th>
-                    <td class="ganhos">R$ {{$ganhos["com_abertas"]["total_premiacao"]}}</td>
+                    <td class="ganhos">R$ {{$receber_cambistas["com_abertas"]["total_premiacao"]}}</td>
                 </tr>
                 <tr>
                     <th data-field="price">Líquido</th>
-                    <td class="ganhos">R$ {{$ganhos["com_abertas"]["liquido"]}}</td>
+                    <td class="ganhos">R$ {{$receber_cambistas["com_abertas"]["liquido"]}}</td>
                 </tr>                    
             </tbody>
         </table>    
