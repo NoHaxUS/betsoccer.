@@ -5,8 +5,7 @@
         <div class="row">
             <div class="table-responsive col-md-offset-2 col-md-8">
                 <h1 style="text-align: center;">Lista de Telefones Cadastrados</h1>
-                <a href="{{ route('telefone.cadastrar')}}" class="btn btn-primary light-blue darken-3">Cadastrar</a>
-                <table>
+                 <table>
                     <thead>
                     <tr>
                         <th>DDD</th>

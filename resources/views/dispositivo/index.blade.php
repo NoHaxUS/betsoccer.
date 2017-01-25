@@ -5,8 +5,7 @@
         <div class="row">
             <div class="table-responsive col-md-offset-2 col-md-8">
                 <h1 style="text-align: center;">Lista de Dispositivos Cadastrados</h1>
-                <a href="{{ route('dispositivo.cadastrar')}}" class="btn btn-primary light-blue darken-3">Cadastrar</a>
-                <table>
+                 <table>
                     <thead>
                     <tr>
                         <th>MAC</th>

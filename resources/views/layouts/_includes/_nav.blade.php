@@ -48,10 +48,27 @@
                 <li><a href="{{ route('jogo.cadastrar') }}">Cadastrar</a></li>
                 <li><a href="{{ route('jogo.index') }}">Listar</a></li>
             </ul>
-        </li>                    
+        </li>
 
-
-        <li><a href="{{ route('jogo.allJogosPlacar') }}">Placar</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            Telefones <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('telefone.cadastrar') }}">Cadastrar</a></li>
+                            <li><a href="{{ route('telefone.index') }}">Listar</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            Dispositivos <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('dispositivo.cadastrar') }}">Cadastrar</a></li>
+                            <li><a href="{{ route('dispositivo.index') }}">Listar</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{ route('jogo.allJogosPlacar') }}">Placar</a></li>
 
         <li><a href="{{ route('aposta.listaAposta') }}">ApostasVencedoras</a></li>
 
