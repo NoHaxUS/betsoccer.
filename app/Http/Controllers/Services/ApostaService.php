@@ -46,17 +46,16 @@ class ApostaService extends Controller
      */
     private function realizarAposta(Request $request)
     {
-        $dados=json_decode($request->dados, true);
         $user = null;                                                       //Cria variável para guardar usuário
-        if (array_key_exists('codigo_seguranca', $dados)):                                     //Verifica se foi passado codigo de segurança
+        if ($request->codigo_seguranca):                                     //Verifica se foi passado codigo de segurança
             //Busca o usuário pelo código de segurança
-            $user = User::buscarPorCodigoSeguranca($dados['codigo_seguranca'])->first();
+            $user = User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
             $resposta = ApostaHelper::verificarUsuario($user);                      //Verifica restrição usuário
             if (!is_null($resposta)):                                        //Se retornou restrição
                 return response()->json($resposta, $resposta['erro']);       //Retorna json com restrição encontrada
             endif;
         endif;
-        $jogos_invalidos = ApostaHelper::verificarJogos($dados['jogo']);       //Valida jogos
+        $jogos_invalidos = ApostaHelper::verificarJogos($request->jogo);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
                 ['jogos_invalidos' => $jogos_invalidos],
@@ -67,7 +66,7 @@ class ApostaService extends Controller
             return response()->json(
                 ['palpites_invalidos' => $palpites_invalidos]);         //retorna json com array com todos os palpites inválidos
                 endif;*/
-        $aposta = $this->registrarAposta($dados, $user);              //Registra aposta
+        $aposta = $this->registrarAposta($request->all(), $user);              //Registra aposta
         $retorno = ['aposta' => $aposta];                               //Passa dados de aposta para retorno
         if (!is_null($user)):                                            //Verifica se usuário não é nulo
             $retorno += ['cambista' => $user->name];                  //Acrescenta nome do usuário (cambista) no resultado

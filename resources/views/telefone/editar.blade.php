@@ -27,10 +27,10 @@
                         {!! Form::label ('ddd', 'DDD: ') !!}
                         {!! Form::text ('ddd', $telefone->ddd,['maxlength'=>"2"]) !!}
 
-                        {!! Form::label ('numero', 'Número: ') !!}
+                        {!! Form::label ('numero', 'Numero: ') !!}
                         {!! Form::text ('numero', $telefone->numero,['maxlength'=>"9"]) !!}
 
-                        {!! Form::label ('user_id', 'Usuário: ') !!}
+                        {!! Form::label ('user_id', 'Usuario: ') !!}
                         {!! Form::select('user_id',$users, $telefone->user_id) !!}
 
                         <button class="btn btn-info">Cadastrar</button>

@@ -24,7 +24,7 @@ class TelefoneRequest extends Request
     public function rules()
     {
         return [
-            'ddd' =>'required|digits:2|integer',
+            'ddd' =>'required|digits:2|numeric',
             'numero' =>'required|digits_between:8,9|numeric',
             'user_id' =>'required'
         ];
