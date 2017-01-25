@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('codigo_seguranca')->unique();
             $table->boolean('ativo')->default(true);
             $table->timestamp('ultimo_pagamento')->nullable();
-            $table->integer('users_id')->unsigned();            
+            $table->integer('users_id')->unsigned();
             $table->rememberToken();
             $table->timestamps();
         });

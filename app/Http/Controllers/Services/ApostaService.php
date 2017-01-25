@@ -46,16 +46,17 @@ class ApostaService extends Controller
      */
     private function realizarAposta(Request $request)
     {
+        $dados=json_decode($request->dados, true);
         $user = null;                                                       //Cria variável para guardar usuário
-        if ($request->codigo_seguranca):                                     //Verifica se foi passado codigo de segurança
+        if (array_key_exists('codigo_seguranca', $dados)):                                     //Verifica se foi passado codigo de segurança
             //Busca o usuário pelo código de segurança
-            $user = User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
+            $user = User::buscarPorCodigoSeguranca($dados['codigo_seguranca'])->first();
             $resposta = ApostaHelper::verificarUsuario($user);                      //Verifica restrição usuário
             if (!is_null($resposta)):                                        //Se retornou restrição
                 return response()->json($resposta, $resposta['erro']);       //Retorna json com restrição encontrada
             endif;
         endif;
-        $jogos_invalidos = ApostaHelper::verificarJogos($request->jogo);       //Valida jogos
+        $jogos_invalidos = ApostaHelper::verificarJogos($dados['jogo']);       //Valida jogos
         if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
                 ['jogos_invalidos' => $jogos_invalidos],
@@ -66,7 +67,7 @@ class ApostaService extends Controller
             return response()->json(
                 ['palpites_invalidos' => $palpites_invalidos]);         //retorna json com array com todos os palpites inválidos
                 endif;*/
-        $aposta = $this->registrarAposta($request, $user);              //Registra aposta
+        $aposta = $this->registrarAposta($dados, $user);              //Registra aposta
         $retorno = ['aposta' => $aposta];                               //Passa dados de aposta para retorno
         if (!is_null($user)):                                            //Verifica se usuário não é nulo
             $retorno += ['cambista' => $user->name];                  //Acrescenta nome do usuário (cambista) no resultado
@@ -75,14 +76,14 @@ class ApostaService extends Controller
     }
 
     /** Método que registra aposta no sistema
-     * @param Request $request dados para registro
+     * @param array $dados dados para registro
      * @param User $user usuário que responsável pela aposta
      * @param \Illuminate\Support\Collection $palpites array de palpites
      * @return Aposta aposta feita
      */
-    private function registrarAposta(Request $request, $user)
+    private function registrarAposta($dados, $user)
     {
-        $aposta = Aposta::create($request->all());                   //Cria uma aposta com dados vindos do request
+        $aposta = Aposta::create($dados);                   //Cria uma aposta com dados vindos do request
         if (is_null($user)):                                         //Verifica se usuário é nulo
             $aposta->ativo = false;                                  //Passa false para atributo ativo
             $optimus = new Optimus(config('constantes.optimus.prime'),
@@ -96,10 +97,10 @@ class ApostaService extends Controller
             $aposta->codigo = $hashids->encode($aposta->id);
         endif;
         $aposta->save();                                            //Salva aposta
-        for ($i = 0; $i < count($request->jogo); $i++):             //Criar iteração com base no número de jogos
-            $palpite ['palpite'] = $request->valorPalpite[$i];      //Passa valor do palpite para array
-            $palpite['tpalpite'] = $request->tpalpite[$i];          //Passa texto do palpite para array
-            $aposta->jogo()->attach($request->jogo[$i], $palpite);  //Relaciona aposta com jogo incluindo os dados de palpite
+        for ($i = 0; $i < count($dados['jogo']); $i++):             //Criar iteração com base no número de jogos
+            $palpite ['palpite'] = $dados['valorPalpite'][$i];      //Passa valor do palpite para array
+            $palpite['tpalpite'] = $dados['tpalpite'][$i];          //Passa texto do palpite para array
+            $aposta->jogo()->attach($dados['jogo'][$i], $palpite);  //Relaciona aposta com jogo incluindo os dados de palpite
         endfor;
         return $aposta;                                             //Retorna a aposta
     }

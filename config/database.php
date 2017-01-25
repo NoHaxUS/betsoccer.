@@ -21,7 +21,7 @@ return [
     | you may use many connections at once using the Database library.
     |'default' => env('DB_CONNECTION', 'mysql'),
     */
-    'default' => 'mysql',
+    'default' => 'mysql1',
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -63,6 +63,19 @@ return [
             'database' => env('DB_DATABASE', 'betsocf5_betsoccer00'),
             'username' => env('DB_USERNAME', 'betsocf5_admin'),
             'password' => env('DB_PASSWORD', 'betsocker123'),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+        'mysql3' => [
+            'driver' => 'mysql',
+            'host' => '209.99.16.14',
+            'port' => '3306',
+            'database' => 'betsocf5_betsoccer00',
+            'username' => 'betsocf5',
+            'password' => '%8#3B8!d*gCn',
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
