@@ -94,7 +94,6 @@
                 <li><a href="{{ route('reg.get') }}">Registrar</a></li>
                 <li><a href="{{ route('user.edit') }}">Editar Cambista</a></li>
                 @endcan
-                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         Usuarios <span class="caret"></span>
@@ -122,10 +121,11 @@
                         <li><a href="{{ route('permission.index') }}">Listar</a></li>
                     </ul>
                 </li>
+                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
             </ul>
-
         </li>
         @endif
     </ul>
-</div></div>
+</div>
+</div>
 </nav>
