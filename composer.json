@@ -10,7 +10,8 @@
         "laravelcollective/html": "^5.2.0",
         "doctrine/dbal": "^2.5",
         "hashids/hashids": "^2.0",
-        "jenssegers/optimus": "^0.2.2"
+        "jenssegers/optimus": "^0.2.2",
+        "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

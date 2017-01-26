@@ -156,6 +156,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        //Entrust
+        Zizaco\Entrust\EntrustServiceProvider::class,
 
     ],
 
@@ -206,13 +208,10 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 
 
-
-
         'Jogo' => App\Jogo::class,
         'Aposta' => App\Aposta::class,
-
-        
-
+        //Entrust
+        'Entrust' => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

@@ -20,8 +20,8 @@
 
                 @if (!Auth::guest())
                 @can('show', Auth::user())
-                <ul class="nav navbar-nav ">                    
-                    <li class="dropdown">                   
+                <ul class="nav navbar-nav ">
+                    <li class="dropdown">
                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" aria-expanded="false">
                         Time <span class="caret"></span>
                     </a>
@@ -29,8 +29,8 @@
                         <li><a href="{{ route('time.cadastrar') }}">Cadastrar</a></li>
                         <li><a href="{{ route('time.index') }}">Listar</a></li>
                     </ul>
-                </li>  
-                <li class="dropdown">                   
+                </li>
+                <li class="dropdown">
                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     Campeonato <span class="caret"></span>
                 </a>
@@ -38,9 +38,9 @@
                     <li><a href="{{ route('campeonato.cadastrar') }}">Cadastrar</a></li>
                     <li><a href="{{ route('campeonato.index') }}">Listar</a></li>
                 </ul>
-            </li>        
+            </li>
 
-            <li class="dropdown">                   
+            <li class="dropdown">
                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 Jogos <span class="caret"></span>
             </a>
@@ -68,6 +68,7 @@
                             <li><a href="{{ route('dispositivo.index') }}">Listar</a></li>
                         </ul>
                     </li>
+
                     <li><a href="{{ route('jogo.allJogosPlacar') }}">Placar</a></li>
 
         <li><a href="{{ route('aposta.listaAposta') }}">ApostasVencedoras</a></li>
@@ -77,7 +78,7 @@
 
         <li><a href="{{ route('aposta.index') }}">Apostar</a></li>
         @endif
-    </ul> 
+    </ul>
     <!-- Right Side Of Navbar -->
     <ul class="nav navbar-nav navbar-right">
         <!-- Authentication Links -->
@@ -91,12 +92,40 @@
             <ul class="dropdown-menu">
                 @can('show', Auth::user())
                 <li><a href="{{ route('reg.get') }}">Registrar</a></li>
-                <li><a href="{{ route('user.editar') }}">Editar Cambista</a></li>
+                <li><a href="{{ route('user.edit') }}">Editar Cambista</a></li>
                 @endcan
                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        Usuarios <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown">
+                        <li><a href="{{ route('user.cadastrar') }}">Cadastrar</a></li>
+                        <li><a href="{{ route('user.index') }}">Listar</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        Roles <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown">
+                        <li><a href="{{ route('role.cadastrar') }}">Cadastrar</a></li>
+                        <li><a href="{{ route('role.index') }}">Listar</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        Permissions <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown">
+                        <li><a href="{{ route('permission.cadastrar') }}">Cadastrar</a></li>
+                        <li><a href="{{ route('permission.index') }}">Listar</a></li>
+                    </ul>
+                </li>
             </ul>
+
         </li>
         @endif
     </ul>
-</div>
+</div></div>
 </nav>
