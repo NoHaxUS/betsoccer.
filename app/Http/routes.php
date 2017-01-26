@@ -95,6 +95,24 @@ Route::group(['prefix' => 'admin','middleware' => 'check.user.role:admin',], fun
 	Route::get('/jogo/deletar/{id}', ['uses'=>'JogoController@deletar', 'as'=>'jogo.deletar']);
 	Route::get('/jogo/total-palpites/{id}', ['uses'=>'JogoController@totalPalpites', 'as'=>'jogo.totalPalpites']);
 	Route::get('/jogo/mais-apostados', ['uses'=>'JogoController@maisApostados', 'as'=>'jogo.maisApostados']);
+
+	Route::group(['prefix' => 'telefone'], function() {
+		Route::get('', ['uses'=>'TelefoneController@index', 'as'=>'telefone.index']);
+		Route::get('/cadastrar', ['uses'=>'TelefoneController@cadastrar', 'as'=>'telefone.cadastrar']);
+		Route::post('/salvar', ['uses'=>'TelefoneController@salvar', 'as'=>'telefone.salvar']);
+		Route::get('/editar/{id}', ['uses'=>'TelefoneController@editar', 'as'=>'telefone.editar']);
+		Route::put('/atualizar/{id}', ['uses'=>'TelefoneController@atualizar', 'as'=>'telefone.atualizar']);
+		Route::get('/deletar/{id}', ['uses'=>'TelefoneController@deletar', 'as'=>'telefone.deletar']);
+	});
+//Rotas de dispositivo
+	Route::group(['prefix' => 'dispositivo'], function() {
+		Route::get('', ['uses'=>'DispositivoController@index', 'as'=>'dispositivo.index']);
+		Route::get('/cadastrar', ['uses'=>'DispositivoController@cadastrar', 'as'=>'dispositivo.cadastrar']);
+		Route::post('/salvar', ['uses'=>'DispositivoController@salvar', 'as'=>'dispositivo.salvar']);
+		Route::get('/editar/{id}', ['uses'=>'DispositivoController@editar', 'as'=>'dispositivo.editar']);
+		Route::put('/atualizar/{id}', ['uses'=>'DispositivoController@atualizar', 'as'=>'dispositivo.atualizar']);
+		Route::get('/deletar/{id}', ['uses'=>'DispositivoController@deletar', 'as'=>'dispositivo.deletar']);
+	});
 });
 
 	//rotas para a tabela de aposta
@@ -113,20 +131,4 @@ Route::group(['middleware' => 'auth'], function() {
 Route::get('/aposta/listar', ['uses'=>'ApostaController@listaAposta', 'as'=>'aposta.listaAposta']);
 //Route::get('/aposta/listar/all', ['uses'=>'ApostaController@listaAposta', 'as'=>'aposta.listar']);
 //Rotas de telefone
-Route::group(['prefix' => 'telefone'], function() {
-	Route::get('', ['uses'=>'TelefoneController@index', 'as'=>'telefone.index']);
-	Route::get('/cadastrar', ['uses'=>'TelefoneController@cadastrar', 'as'=>'telefone.cadastrar']);
-	Route::post('/salvar', ['uses'=>'TelefoneController@salvar', 'as'=>'telefone.salvar']);
-	Route::get('/editar/{id}', ['uses'=>'TelefoneController@editar', 'as'=>'telefone.editar']);
-	Route::put('/atualizar/{id}', ['uses'=>'TelefoneController@atualizar', 'as'=>'telefone.atualizar']);
-	Route::get('/deletar/{id}', ['uses'=>'TelefoneController@deletar', 'as'=>'telefone.deletar']);
-});
-//Rotas de dispositivo
-Route::group(['prefix' => 'dispositivo'], function() {
-	Route::get('', ['uses'=>'DispositivoController@index', 'as'=>'dispositivo.index']);
-	Route::get('/cadastrar', ['uses'=>'DispositivoController@cadastrar', 'as'=>'dispositivo.cadastrar']);
-	Route::post('/salvar', ['uses'=>'DispositivoController@salvar', 'as'=>'dispositivo.salvar']);
-	Route::get('/editar/{id}', ['uses'=>'DispositivoController@editar', 'as'=>'dispositivo.editar']);
-	Route::put('/atualizar/{id}', ['uses'=>'DispositivoController@atualizar', 'as'=>'dispositivo.atualizar']);
-	Route::get('/deletar/{id}', ['uses'=>'DispositivoController@deletar', 'as'=>'dispositivo.deletar']);
-});
+
