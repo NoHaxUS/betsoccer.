@@ -7,7 +7,6 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use DB;
 
 class AuthController extends Controller
 {
@@ -93,7 +92,7 @@ class AuthController extends Controller
         $user = User::find($id);
         $user->ativo = true;
         $user->save();
-        return redirect()->route('user.editar');
+        return redirect()->route('user.edit');
     }
 
     public function desativar($id)
@@ -101,7 +100,7 @@ class AuthController extends Controller
         $user = User::find($id);
         $user->ativo = false;
         $user->save();
-        return redirect()->route('user.editar');
+        return redirect()->route('user.edit');
     }
 
     public function getAll()

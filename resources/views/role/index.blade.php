@@ -21,9 +21,13 @@
                             <td>{{ $role->display_name }}</td>
                             <td>{{ $role->description }}</td>
                             <td>
+                                @permission(['editar-role', 'relacionar-permission'])
                                 <a class="btn btn-default" href="{{ route('role.editar',$role->id) }}">Editar</a>
+                                @endpermission
+                                @permission('excluir-role')
                                 <a class="btn btn-danger"
                                    href="javascript:(confirm('Tem certeza que deseja excluir essa role?')? window.location.href='{{ route('role.deletar',$role->id) }}' : false)">Excluir</a>
+                                @endpermission
                             </td>
                         </tr>
                     @endforeach

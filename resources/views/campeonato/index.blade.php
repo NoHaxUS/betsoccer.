@@ -20,8 +20,12 @@
                                 <td scope="row">{{ $campeonato->id }}</td>
                                 <td>{{ $campeonato->descricao_campeonato }}</td>
                                 <td>
+                                    @permission('editar-campeonato')
                                     <a class="btn btn-default" href="{{ route('campeonato.editar',$campeonato->id) }}">Editar</a>
+                                    @endpermission
+                                    @permission('excluir-campeonato')
                                     <a class="btn btn-danger" href="javascript:(confirm('Excluir esse registro')? window.location.href='{{ route('campeonato.deletar',$campeonato->id) }}' : false)">Excluir</a>
+                                    @endpermission
                                 </td>
                             </tr>
                             

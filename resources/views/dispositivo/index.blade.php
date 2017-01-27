@@ -19,8 +19,12 @@
                             <td scope="row">{{ $dispositivo->mac }}</td>
                             <td>{{ $dispositivo->user->name }}</td>
                             <td>
+                                @permission('editar-dispositivo')
                                 <a class="btn btn-default" href="{{ route('dispositivo.editar',$dispositivo->id) }}">Editar</a>
+                                @endpermission
+                                @permission('excluir-dispositivo')
                                 <a class="btn btn-danger" href="javascript:(confirm('Tem certeza que deseja excluir esse dispositivo?')? window.location.href='{{ route('dispositivo.deletar',$dispositivo->id) }}' : false)">Excluir</a>
+                                @endpermission
                             </td>
                         </tr>
                     @endforeach

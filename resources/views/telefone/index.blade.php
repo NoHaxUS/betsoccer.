@@ -21,8 +21,12 @@
                             <td>{{ $telefone->numero }}</td>
                             <td>{{ $telefone->user->name }}</td>
                             <td>
+                                @permission('editar-telefone')
                                 <a class="btn btn-default" href="{{ route('telefone.editar',$telefone->id) }}">Editar</a>
+                                @endpermission
+                                @permission('excluir-telefone')
                                 <a class="btn btn-danger" href="javascript:(confirm('Tem certeza que deseja excluir esse telefone?')? window.location.href='{{ route('telefone.deletar',$telefone->id) }}' : false)">Excluir</a>
+                                @endpermission
                             </td>
                         </tr>
                     @endforeach

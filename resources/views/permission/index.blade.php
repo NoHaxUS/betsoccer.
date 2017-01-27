@@ -21,9 +21,13 @@
                             <td>{{ $permission->display_name }}</td>
                             <td>{{ $permission->description }}</td>
                             <td>
+                                @permission('editar-permission')
                                 <a class="btn btn-default" href="{{ route('permission.editar',$permission->id) }}">Editar</a>
+                                @endpermission
+                                @permission('excluir-permission')
                                 <a class="btn btn-danger"
                                    href="javascript:(confirm('Tem certeza que deseja excluir essa permission?')? window.location.href='{{ route('permission.deletar',$permission->id) }}' : false)">Excluir</a>
+                                @endpermission
                             </td>
                         </tr>
                     @endforeach

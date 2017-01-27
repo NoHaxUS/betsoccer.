@@ -83,6 +83,16 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Permissao para excluir users'
         ]);
         Permission::create([
+            'name' => 'ativar-user',
+            'display_name' => 'Ativar User',
+            'description' => 'Permissao para ativar users'
+        ]);
+        Permission::create([
+            'name' => 'desativar-user',
+            'display_name' => 'Desativar User',
+            'description' => 'Permissao para desativar users'
+        ]);
+        Permission::create([
             'name' => 'criar-campeonato',
             'display_name' => 'Criar Campeonato',
             'description' => 'Permissao para cadastrar dados de novos campeonatos'
@@ -141,6 +151,26 @@ class PermissionTableSeeder extends Seeder
             'name' => 'excluir-jogo',
             'display_name' => 'Excluir Jogo',
             'description' => 'Permissao para excluir jogos'
+        ]);
+        Permission::create([
+            'name' => 'ativar-jogo',
+            'display_name' => 'Ativar Jogo',
+            'description' => 'Permissao para ativar jogos'
+        ]);
+        Permission::create([
+            'name' => 'desativar-jogo',
+            'display_name' => 'Desativar Jogo',
+            'description' => 'Permissao para desativar jogos'
+        ]);
+        Permission::create([
+            'name' => 'editar-placar',
+            'display_name' => 'Editar Placar',
+            'description' => 'Permissao para editar placar de jogos'
+        ]);
+        Permission::create([
+            'name' => 'consultar-palpite',
+            'display_name' => 'Consultar Palpite',
+            'description' => 'Permissao para consultar palpite de jogos'
         ]);
         Permission::create([
             'name' => 'criar-aposta',

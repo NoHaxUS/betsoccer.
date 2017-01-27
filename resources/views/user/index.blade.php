@@ -21,9 +21,13 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->ativo?'Ativo':'Inativo' }}</td>
                             <td>
+                                @permission(['editar-user','relacionar-role'])
                                 <a class="btn btn-default" href="{{ route('user.editar',$user->id) }}">Editar</a>
+                                @endpermission
+                                @permission('excluir-user')
                                 <a class="btn btn-danger"
-                                   href="javascript:(confirm('Tem certeza que deseja excluir esse usuário?')? window.location.href='{{ route('user.deletar',$user->id) }}' : false)">Excluir</a>
+                                   href="javascript:(confirm('Tem certeza que deseja excluir esse usuario?')? window.location.href='{{ route('user.deletar',$user->id) }}' : false)">Excluir</a>
+                                @endpermission
                             </td>
                         </tr>
                     @endforeach

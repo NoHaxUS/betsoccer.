@@ -27,8 +27,12 @@
                                 <!-- <th scope="row">{{ $time->campeonatos->id }}</th>
                                 <td>{{ $time->campeonatos->descricao_campeonato }}</td> -->
                                 <td>
+                                    @permission('editar-time')
                                     <a class="btn btn-default" href="{{ route('time.editar',$time) }}">Editar</a>
+                                    @endpermission
+                                    @permission('excluir-time')
                                     <a class="btn btn-danger" href="javascript:(confirm('Deletar esse registro?') ? window.location.href='{{ route('time.deletar',$time) }}' : false)">Deletar</a>
+                                    @endpermission
                                 </td>
                             </tr>
                         </tbody>

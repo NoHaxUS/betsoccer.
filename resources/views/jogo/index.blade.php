@@ -23,12 +23,12 @@
                         <th>R</th>
                         <th>Fora</th>
                         <th>Casa</th>
-                        <th>Emp</th>                        
+                        <th>Emp</th>
                         <th>Fora</th>
                         <th>+2.5</th>
                         <th>-2.5</th>
                         <th>Dupla</th>
-                        <th>Gol</th>                       
+                        <th>Gol</th>
                         <th>Ambas</th>
                         <th>Ação</th>
                     </tr>
@@ -60,7 +60,7 @@
                         @else
                         <td>{{$jo->valor_fora}}</td>
                         @endif
-                        @if($jo->min_gol_3 == null || $jo->min_gol_3 ==0) 
+                        @if($jo->min_gol_3 == null || $jo->min_gol_3 ==0)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->min_gol_3}}</td>
@@ -79,23 +79,34 @@
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->valor_1_2}}</td>
-                        @endif                                                
+                        @endif
                         @if($jo->ambas_gol == null || $jo->ambas_gol == 0)
                         <td>{{ "--" }}</td>
                         @else
                         <td>{{$jo->ambas_gol}}</td>
                         @endif
                         <td>
+                            @permission('editar-jogo')
                             <a class="btn btn-default" href="{{ route('jogo.editar',$jo->id) }}">Edit</a>
+                            @endpermission
+                            @permission('editar-placar')
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-{{$jo->id}}">
                             plac
+                            @endpermission
+
                           </button>
                           @if($jo->ativo == false)
+                              @permission('ativar-jogo')
                           <a class="btn btn-success" href="javascript:(confirm('Ativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Ati</a>
+                              @endpermission
                           @else
+                                @permission('desativar-jogo')
                           <a class="btn btn-danger" href="javascript:(confirm('Desativar esse Jogo')? window.location.href='{{ route('jogo.atides',$jo->id) }}' : false)">Des.</a>
+                              @endpermission
                           @endif
+                            @permission('consultar-palpite')
                           <a class="btn btn-default" href="{{ route('jogo.totalPalpites',$jo->id) }}">Palpites</a>
+                            @endpermission
                       </td>
                   </tr>
                   <!-- Modal -->

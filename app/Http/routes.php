@@ -49,30 +49,30 @@ Route::get('/home', 'HomeController@index');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'check.user.role:admin',], function () {
 
-    Route::get('/editarUser', ['uses' => 'Auth\AuthController@getAll', 'as' => 'user.edit']);
-    Route::get('/editarUser/{id}/ativ', ['uses' => 'Auth\AuthController@ativar', 'as' => 'user.ativ']);
-    Route::get('/editarUser/{id}/desat', ['uses' => 'Auth\AuthController@desativar', 'as' => 'user.desat']);
+    Route::get('/editarUser', ['middleware' =>'permission:ativar-user|desativar-user','uses' => 'Auth\AuthController@getAll', 'as' => 'user.edit']);
+    Route::get('/editarUser/{id}/ativ', ['middleware' =>'permission:ativar-user','uses' => 'Auth\AuthController@ativar', 'as' => 'user.ativ']);
+    Route::get('/editarUser/{id}/desat', ['middleware' =>'permission:desativar-user','uses' => 'Auth\AuthController@desativar', 'as' => 'user.desat']);
     Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'reg.get']);
     Route::post('/register', ['uses' => 'Auth\AuthController@postRegister', 'as' => 'reg.post']);
     // Registration routes...
 
 //rotas para tabelas times
-    Route::get('/time', ['uses' => 'TimeController@index', 'as' => 'time.index']);
-    Route::get('/time/cadastrar', ['uses' => 'TimeController@cadastrar', 'as' => 'time.cadastrar']);
-    Route::post('/time/salvar', ['uses' => 'TimeController@salvar', 'as' => 'time.salvar']);
-    Route::get('/time/editar/{id}', ['uses' => 'TimeController@editar', 'as' => 'time.editar']);
-    Route::put('/time/atualizar/{id}', ['uses' => 'TimeController@atualizar', 'as' => 'time.atualizar']);
-    Route::get('/time/deletar/{id}', ['uses' => 'TimeController@deletar', 'as' => 'time.deletar']);
+    Route::get('/time', ['middleware' =>'permission:consultar-time','uses' => 'TimeController@index', 'as' => 'time.index']);
+    Route::get('/time/cadastrar', ['middleware' =>'permission:criar-time','uses' => 'TimeController@cadastrar', 'as' => 'time.cadastrar']);
+    Route::post('/time/salvar', ['middleware' =>'permission:criar-time','uses' => 'TimeController@salvar', 'as' => 'time.salvar']);
+    Route::get('/time/editar/{id}', ['middleware' =>'permission:editar-time','uses' => 'TimeController@editar', 'as' => 'time.editar']);
+    Route::put('/time/atualizar/{id}', ['middleware' =>'permission:editar-time','uses' => 'TimeController@atualizar', 'as' => 'time.atualizar']);
+    Route::get('/time/deletar/{id}', ['middleware' =>'permission:excluir-time','uses' => 'TimeController@deletar', 'as' => 'time.deletar']);
     Route::get('/time/detalhe/{id}', ['uses' => 'TimeController@detalhe', 'as' => 'time.detalhe']);
 
     //rotas para tabela campeonatos
 
-    Route::get('/campeonato', ['uses' => 'CampeonatoController@index', 'as' => 'campeonato.index']);
-    Route::get('/campeonato/cadastrar', ['uses' => 'CampeonatoController@cadastrar', 'as' => 'campeonato.cadastrar']);
-    Route::post('/campeonato/salvar', ['uses' => 'CampeonatoController@salvar', 'as' => 'campeonato.salvar']);
-    Route::get('/campeonato/editar/{id}', ['uses' => 'CampeonatoController@editar', 'as' => 'campeonato.editar']);
-    Route::put('/campeonato/atualizar/{id}', ['uses' => 'CampeonatoController@atualizar', 'as' => 'campeonato.atualizar']);
-    Route::get('/campeonato/deletar/{id}', ['uses' => 'CampeonatoController@deletar', 'as' => 'campeonato.deletar']);
+    Route::get('/campeonato', ['middleware' =>'permission:consultar-campeonato','uses' => 'CampeonatoController@index', 'as' => 'campeonato.index']);
+    Route::get('/campeonato/cadastrar', ['middleware' =>'permission:criar-campeonato','uses' => 'CampeonatoController@cadastrar', 'as' => 'campeonato.cadastrar']);
+    Route::post('/campeonato/salvar', ['middleware' =>'permission:criar-campeonato','uses' => 'CampeonatoController@salvar', 'as' => 'campeonato.salvar']);
+    Route::get('/campeonato/editar/{id}', ['middleware' =>'permission:editar-campeonato','uses' => 'CampeonatoController@editar', 'as' => 'campeonato.editar']);
+    Route::put('/campeonato/atualizar/{id}', ['middleware' =>'permission:editar-campeonato','uses' => 'CampeonatoController@atualizar', 'as' => 'campeonato.atualizar']);
+    Route::get('/campeonato/deletar/{id}', ['middleware' =>'permission:excluir-campeonato','uses' => 'CampeonatoController@deletar', 'as' => 'campeonato.deletar']);
 
     //rotas para tabela horario
     Route::get('/horario', ['uses' => 'HorarioController@index', 'as' => 'horario.index']);
@@ -84,78 +84,76 @@ Route::group(['prefix' => 'admin', 'middleware' => 'check.user.role:admin',], fu
 
     //rotas para tabela de jogos
 
-    Route::get('/jogo', ['uses' => 'JogoController@index', 'as' => 'jogo.index']);
-    Route::get('/jogo/cadastrar', ['uses' => 'JogoController@cadastrar', 'as' => 'jogo.cadastrar']);
-    Route::post('/jogo/salvar', ['uses' => 'JogoController@salvar', 'as' => 'jogo.salvar']);
-    Route::get('/jogo/editar/{id}', ['uses' => 'JogoController@editar', 'as' => 'jogo.editar']);
-    Route::post('/jogo/atualizar/{id}', ['uses' => 'JogoController@atualizar', 'as' => 'jogo.atualizar']);
-    Route::get('/jogo/ativar-desativar/{id}', ['uses' => 'JogoController@atiDes', 'as' => 'jogo.atides']);
-    Route::get('/jogo/cadastrar-placar', ['uses' => 'JogoController@allJogosPlacar', 'as' => 'jogo.allJogosPlacar']);
-    Route::post('/jogo/cadastrar-placar/post', ['uses' => 'JogoController@addPlacar', 'as' => 'jogo.addPlacar']);
-    Route::get('/jogo/deletar/{id}', ['uses' => 'JogoController@deletar', 'as' => 'jogo.deletar']);
-    Route::get('/jogo/total-palpites/{id}', ['uses' => 'JogoController@totalPalpites', 'as' => 'jogo.totalPalpites']);
-    Route::get('/jogo/mais-apostados', ['uses' => 'JogoController@maisApostados', 'as' => 'jogo.maisApostados']);
+    Route::get('/jogo', ['middleware' =>'permission:consultar-jogo','uses' => 'JogoController@index', 'as' => 'jogo.index']);
+    Route::get('/jogo/cadastrar', ['middleware' =>'permission:criar-jogo','uses' => 'JogoController@cadastrar', 'as' => 'jogo.cadastrar']);
+    Route::post('/jogo/salvar', ['middleware' =>'permission:criar-jogo','uses' => 'JogoController@salvar', 'as' => 'jogo.salvar']);
+    Route::get('/jogo/editar/{id}', ['middleware' =>'permission:editar-jogo','uses' => 'JogoController@editar', 'as' => 'jogo.editar']);
+    Route::post('/jogo/atualizar/{id}', ['middleware' =>'permission:editar-jogo','uses' => 'JogoController@atualizar', 'as' => 'jogo.atualizar']);
+    Route::get('/jogo/ativar-desativar/{id}', ['middleware' =>'permission:ativar-jogo|desativar-jogo','uses' => 'JogoController@atiDes', 'as' => 'jogo.atides']);
+    Route::get('/jogo/cadastrar-placar', ['middleware' =>'permission:editar-placar','uses' => 'JogoController@allJogosPlacar', 'as' => 'jogo.allJogosPlacar']);
+    Route::post('/jogo/cadastrar-placar/post', ['middleware' =>'permission:editar-placar','uses' => 'JogoController@addPlacar', 'as' => 'jogo.addPlacar']);
+    Route::get('/jogo/deletar/{id}', ['middleware' =>'permission:excluir-jogo','uses' => 'JogoController@deletar', 'as' => 'jogo.deletar']);
+    Route::get('/jogo/total-palpites/{id}', ['middleware' =>'permission:consultar-palpite','uses' => 'JogoController@totalPalpites', 'as' => 'jogo.totalPalpites']);
+    Route::get('/jogo/mais-apostados', ['middleware' =>'permission:consultar-jogo','uses' => 'JogoController@maisApostados', 'as' => 'jogo.maisApostados']);
 
     Route::group(['prefix' => 'telefone'], function () {
-        Route::get('', ['uses' => 'TelefoneController@index', 'as' => 'telefone.index']);
-        Route::get('/cadastrar', ['uses' => 'TelefoneController@cadastrar', 'as' => 'telefone.cadastrar']);
-        Route::post('/salvar', ['uses' => 'TelefoneController@salvar', 'as' => 'telefone.salvar']);
-        Route::get('/editar/{id}', ['uses' => 'TelefoneController@editar', 'as' => 'telefone.editar']);
-        Route::put('/atualizar/{id}', ['uses' => 'TelefoneController@atualizar', 'as' => 'telefone.atualizar']);
-        Route::get('/deletar/{id}', ['uses' => 'TelefoneController@deletar', 'as' => 'telefone.deletar']);
+        Route::get('', ['middleware' =>'permission:consultar-telefone','uses' => 'TelefoneController@index', 'as' => 'telefone.index']);
+        Route::get('/cadastrar', ['middleware' =>'permission:criar-telefone','uses' => 'TelefoneController@cadastrar', 'as' => 'telefone.cadastrar']);
+        Route::post('/salvar', ['middleware' =>'permission:criar-telefone','uses' => 'TelefoneController@salvar', 'as' => 'telefone.salvar']);
+        Route::get('/editar/{id}', ['middleware' =>'permission:editar-telefone','uses' => 'TelefoneController@editar', 'as' => 'telefone.editar']);
+        Route::put('/atualizar/{id}', ['middleware' =>'permission:editar-telefone','uses' => 'TelefoneController@atualizar', 'as' => 'telefone.atualizar']);
+        Route::get('/deletar/{id}', ['middleware' =>'permission:excluir-telefone','uses' => 'TelefoneController@deletar', 'as' => 'telefone.deletar']);
     });
 //Rotas de dispositivo
     Route::group(['prefix' => 'dispositivo'], function () {
-        Route::get('', ['uses' => 'DispositivoController@index', 'as' => 'dispositivo.index']);
-        Route::get('/cadastrar', ['uses' => 'DispositivoController@cadastrar', 'as' => 'dispositivo.cadastrar']);
-        Route::post('/salvar', ['uses' => 'DispositivoController@salvar', 'as' => 'dispositivo.salvar']);
-        Route::get('/editar/{id}', ['uses' => 'DispositivoController@editar', 'as' => 'dispositivo.editar']);
-        Route::put('/atualizar/{id}', ['uses' => 'DispositivoController@atualizar', 'as' => 'dispositivo.atualizar']);
-        Route::get('/deletar/{id}', ['uses' => 'DispositivoController@deletar', 'as' => 'dispositivo.deletar']);
+        Route::get('', ['middleware' =>'permission:consultar-dispositivo','uses' => 'DispositivoController@index', 'as' => 'dispositivo.index']);
+        Route::get('/cadastrar', ['middleware' =>'permission:criar-dispositivo','uses' => 'DispositivoController@cadastrar', 'as' => 'dispositivo.cadastrar']);
+        Route::post('/salvar', ['middleware' =>'permission:criar-dispositivo','uses' => 'DispositivoController@salvar', 'as' => 'dispositivo.salvar']);
+        Route::get('/editar/{id}', ['middleware' =>'permission:editar-dispositivo','uses' => 'DispositivoController@editar', 'as' => 'dispositivo.editar']);
+        Route::put('/atualizar/{id}', ['middleware' =>'permission:editar-dispositivo','uses' => 'DispositivoController@atualizar', 'as' => 'dispositivo.atualizar']);
+        Route::get('/deletar/{id}', ['middleware' =>'permission:excluir-dispositivo','uses' => 'DispositivoController@deletar', 'as' => 'dispositivo.deletar']);
     });
 });
 
 //rotas para a tabela de aposta
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/apostaJogo', ['uses' => 'ApostaController@resumoAposta', 'as' => 'apostaJogo.resumoAposta']);
-    Route::get('/aposta/serv', ['middleware' => 'auth', 'uses' => 'ApostaController@index', 'as' => 'aposta.index']);
-    Route::get('/aposta/cadastrar', ['uses' => 'ApostaController@cadastrar', 'as' => 'aposta.cadastrar']);
-    Route::post('/aposta/salvar', ['uses' => 'ApostaController@salvar', 'as' => 'aposta.salvar']);
-    Route::post('/aposta/cambista', ['uses' => 'ApostaController@apostaCambista', 'as' => 'aposta.cambista']);
-    Route::get('/aposta/editar/{id}', ['uses' => 'ApostaController@editar', 'as' => 'aposta.editar']);
-    Route::put('/aposta/atualizar/{id}', ['uses' => 'ApostaController@atualizar', 'as' => 'aposta.atualizar']);
-    Route::get('/aposta/deletar/{id}', ['uses' => 'ApostaController@deletar', 'as' => 'aposta.deletar']);
-
+    Route::get('/apostaJogo', ['middleware' =>'permission:consultar-aposta','uses' => 'ApostaController@resumoAposta', 'as' => 'apostaJogo.resumoAposta']);
+    Route::get('/aposta/serv', ['middleware' =>'permission:consultar-aposta', 'uses' => 'ApostaController@index', 'as' => 'aposta.index']);
+    Route::get('/aposta/cadastrar', ['middleware' =>'permission:criar-aposta','uses' => 'ApostaController@cadastrar', 'as' => 'aposta.cadastrar']);
+    Route::post('/aposta/salvar', ['middleware' =>'permission:criar-aposta','uses' => 'ApostaController@salvar', 'as' => 'aposta.salvar']);
+    Route::post('/aposta/cambista', ['middleware' =>'permission:consultar-aposta','uses' => 'ApostaController@apostaCambista', 'as' => 'aposta.cambista']);
+    Route::get('/aposta/editar/{id}', ['middleware' =>'permission:editar-aposta','uses' => 'ApostaController@editar', 'as' => 'aposta.editar']);
+    Route::put('/aposta/atualizar/{id}', ['middleware' =>'permission:editar-aposta','uses' => 'ApostaController@atualizar', 'as' => 'aposta.atualizar']);
+    Route::get('/aposta/deletar/{id}', ['middleware' =>'permission:excluir-aposta','uses' => 'ApostaController@deletar', 'as' => 'aposta.deletar']);
+    Route::get('/aposta/listar', ['middleware' =>'permission:consultar-aposta','uses' => 'ApostaController@listaAposta', 'as' => 'aposta.listaAposta']);
 
 });
-Route::get('/aposta/listar', ['uses' => 'ApostaController@listaAposta', 'as' => 'aposta.listaAposta']);
-//Route::get('/aposta/listar/all', ['uses'=>'ApostaController@listaAposta', 'as'=>'aposta.listar']);
 
 //Rotas de permissões
 Route::group(['prefix' => 'permission'], function () {
-    Route::get('', ['uses' => 'PermissionController@index', 'as' => 'permission.index']);
-    Route::get('/cadastrar', ['uses' => 'PermissionController@cadastrar', 'as' => 'permission.cadastrar']);
-    Route::post('/salvar', ['uses' => 'PermissionController@salvar', 'as' => 'permission.salvar']);
-    Route::get('/editar/{id}', ['uses' => 'PermissionController@editar', 'as' => 'permission.editar']);
-    Route::put('/atualizar/{id}', ['uses' => 'PermissionController@atualizar', 'as' => 'permission.atualizar']);
-    Route::get('/deletar/{id}', ['uses' => 'PermissionController@deletar', 'as' => 'permission.deletar']);
+    Route::get('', ['middleware' =>'permission:consultar-permission','uses' => 'PermissionController@index', 'as' => 'permission.index']);
+    Route::get('/cadastrar', ['middleware' =>'permission:criar-permission','uses' => 'PermissionController@cadastrar', 'as' => 'permission.cadastrar']);
+    Route::post('/salvar', ['middleware' =>'permission:criar-permission','uses' => 'PermissionController@salvar', 'as' => 'permission.salvar']);
+    Route::get('/editar/{id}', ['middleware' =>'permission:editar-permission','uses' => 'PermissionController@editar', 'as' => 'permission.editar']);
+    Route::put('/atualizar/{id}', ['middleware' =>'permission:editar-permission','uses' => 'PermissionController@atualizar', 'as' => 'permission.atualizar']);
+    Route::get('/deletar/{id}', ['middleware' =>'permission:excluir-permission','uses' => 'PermissionController@deletar', 'as' => 'permission.deletar']);
 });
 //Rotas de Roles
 Route::group(['prefix' => 'role'], function () {
-    Route::get('', ['uses' => 'RoleController@index', 'as' => 'role.index']);
-    Route::get('/cadastrar', ['uses' => 'RoleController@cadastrar', 'as' => 'role.cadastrar']);
-    Route::post('/salvar', ['uses' => 'RoleController@salvar', 'as' => 'role.salvar']);
-    Route::get('/editar/{id}', ['uses' => 'RoleController@editar', 'as' => 'role.editar']);
-    Route::put('/atualizar/{id}', ['uses' => 'RoleController@atualizar', 'as' => 'role.atualizar']);
-    Route::get('/deletar/{id}', ['uses' => 'RoleController@deletar', 'as' => 'role.deletar']);
+    Route::get('', ['middleware' =>'permission:consultar-role','uses' => 'RoleController@index', 'as' => 'role.index']);
+    Route::get('/cadastrar', ['middleware' =>'permission:criar-role','uses' => 'RoleController@cadastrar', 'as' => 'role.cadastrar']);
+    Route::post('/salvar', ['middleware' =>'permission:criar-role','uses' => 'RoleController@salvar', 'as' => 'role.salvar']);
+    Route::get('/editar/{id}', ['middleware' =>'permission:editar-role|relacionar-permission','uses' => 'RoleController@editar', 'as' => 'role.editar']);
+    Route::put('/atualizar/{id}', ['middleware' =>'permission:editar-role|relacionar-permission','uses' => 'RoleController@atualizar', 'as' => 'role.atualizar']);
+    Route::get('/deletar/{id}', ['middleware' =>'permission:excluir-role','uses' => 'RoleController@deletar', 'as' => 'role.deletar']);
 });
 //Rotas de usuários
 Route::group(['prefix' => 'user'], function () {
-Route::get('', ['uses'=>'UserController@index', 'as'=>'user.index']);
-Route::get('/cadastrar', ['uses'=>'UserController@cadastrar', 'as'=>'user.cadastrar']);
-Route::post('/salvar', ['uses'=>'UserController@salvar', 'as'=>'user.salvar']);
-Route::get('/editar/{id}', ['uses'=>'UserController@editar', 'as'=>'user.editar']);
-Route::put('/atualizar/{id}', ['uses'=>'UserController@atualizar', 'as'=>'user.atualizar']);
-Route::get('/deletar/{id}', ['uses'=>'UserController@deletar', 'as'=>'user.deletar']);
+Route::get('', ['middleware' =>'permission:consultar-user','uses'=>'UserController@index', 'as'=>'user.index']);
+Route::get('/cadastrar', ['middleware' =>'permission:criar-user','uses'=>'UserController@cadastrar', 'as'=>'user.cadastrar']);
+Route::post('/salvar', ['middleware' =>'permission:criar-user','uses'=>'UserController@salvar', 'as'=>'user.salvar']);
+Route::get('/editar/{id}', ['middleware' =>'permission:editar-user|relacionar-role','uses'=>'UserController@editar', 'as'=>'user.editar']);
+Route::put('/atualizar/{id}', ['middleware' =>'permission:editar-user|relacionar-role','uses'=>'UserController@atualizar', 'as'=>'user.atualizar']);
+Route::get('/deletar/{id}', ['middleware' =>'permission:excluir-user','uses'=>'UserController@deletar', 'as'=>'user.deletar']);
 });
