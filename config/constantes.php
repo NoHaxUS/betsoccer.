@@ -10,5 +10,6 @@ return [
     'porcentagem_mediana' => 10,
     'porcentagem_maxima' => 12,
     'jogos_mais_apostados' => 10,
-    'optimus' => ['prime' => 2, 'inverse' => 15485863, 'xor' => 999999]
+    'optimus' => ['prime' => 2, 'inverse' => 15485863, 'xor' => 999999],
+    'paginacao'=>10,
 ];

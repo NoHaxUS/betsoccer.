@@ -33,7 +33,7 @@
                     @endforeach
 
                     </tbody>
-
+                    {!! $permissions->render() !!}
                 </table>
                 <div align="center">
 

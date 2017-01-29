@@ -16,7 +16,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(config('constantes.paginacao'));
         return view('user.index', ['users' => $users]);
     }
 
@@ -30,8 +30,12 @@ class UserController extends Controller
     {
         $this->validate($request,
             ['email' => 'unique:users,email',
-                'codigo_seguranca' => 'unique:users,codigo_seguranca'],
-            ['unique'=>'O valor indicado para o campo :attribute ja se encontra utilizado.']);
+                'codigo_seguranca' => 'unique:users,codigo_seguranca',
+            'password'=>'required|confirmed'],
+            ['unique'=>'O valor indicado para o campo :attribute ja se encontra utilizado.',
+            'required'=>'Precisa informar :attribute.',
+                'confirmed' => 'A confirmacao para o campo :attribute nao coincide.'],
+            ['password'=>'senha']);
         $roles = Role::whereIn('id', $request->roles)->get();
         $user = User::create(
             ['name' => $request->name,

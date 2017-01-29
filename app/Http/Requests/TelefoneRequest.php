@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class TelefoneRequest extends Request
 {
     /**
@@ -32,7 +30,7 @@ class TelefoneRequest extends Request
     public function messages()
     {
         return [
-            'required' => "Precisa informar :attribute.",
+            'required' => 'Precisa informar :attribute.',
             'digits_between' => 'O campo :attribute deve conter entre :min e :max algarismos.',
             'numeric' => 'O campo :attribute precisa conter apenas algarismos.',
             'digits' => 'O campo :attribute precisa conter :digits algarismos.',
