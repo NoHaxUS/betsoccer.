@@ -21,6 +21,7 @@ class ApostaHelper
         endif;
         return null;                                            //Retorna null
     }
+
     /** Método que verifica se jogos estão válidos para realização de aposta
      * @param $jogos mixed de jogas para validar
      * @return array|string lista de jogos inválidos ou informação de número mínimo de jogos
@@ -42,6 +43,7 @@ class ApostaHelper
         endforeach;
         return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
     }
+
     /** Método que verifica validade de palpites
      * @param $palpites \Illuminate\Support\Collection com palpites a serem verificados
      * @return array palpites inválidos
@@ -57,6 +59,7 @@ class ApostaHelper
         endforeach;
         return $palpites_invalidos;                     //Retorna array com palpites inválidos
     }
+
     /** Método que formata dados de palpites de jogos em array
      * @param $jogos \Illuminate\Support\Collection jogos com respectivos palpites
      * @return array relação de palpites de cada jogo
@@ -110,33 +113,37 @@ class ApostaHelper
         endforeach;
         return $lista;                              //Retorna lista com dados dos jogos
     }
+
     /**Método que formata os dados dos ganhos com as apostas
      * @param $user \App\User cambista
      * @param $apostas \Illuminate\Support\Collection lista de apostas
      * @return array lista de dados para serem retornados
      */
-    public static function dadosGanhos($user, $apostas){
-        return ['codigo'=> $user->codigo,              //Passa código do cambista
+    public static function dadosGanhos($user, $apostas)
+    {
+        return ['codigo' => $user->codigo,              //Passa código do cambista
             'cambista' => $user->name]             //Passa nome do cambista
-        +self::calcularGanho($apostas);       //Cálcula ganhos da aposta
+        + self::calcularGanho($apostas);       //Cálcula ganhos da aposta
     }
+
     /** Método que formata os dados dos prêmios
      * @param $user \App\User cambista
      * @param $apostas \Illuminate\Support\Collection lista de apostas
      * @return array lista de dados para serem retornados
      */
-    public static function dadosPremios($user, $apostas){
+    public static function dadosPremios($user, $apostas)
+    {
         return ['codigo' => $user->codigo,             //Código do cambista
             'cambista' => $user->name]             //Nome do cambista
-        +self::detalharApostas($apostas);     //Dados detalhados das apostas
+        + self::detalharApostas($apostas);     //Dados detalhados das apostas
     }
-
 
     /** Método que calcula ganhos com apostas
      * @param $apostas \Illuminate\Support\Collection lista de apostas para cálculo
      * @return array dados detalhados de ganhos de apostas
      */
-    public static function calcularGanho($apostas){
+    public static function calcularGanho($apostas)
+    {
         $ganho_simples = 0;                                                     //Cria variável para acumular comissão com apostas simples (2 jogos)
         $ganho_mediano = 0;                                                     //Cria variável para acumular comissão com apostas medianas (3 jogos)
         $ganho_maximo = 0;                                                      //Cria variável para acumular comissão com apostas máximas (mais de 2 jogos)
@@ -162,7 +169,7 @@ class ApostaHelper
             endif;
             $qtd_jogos += $aposta->jogo()->count();                             //Acrescenta quantidade de jogos a variável
         endforeach;
-        $ganho_total = $ganho_simples+$ganho_mediano + $ganho_maximo;           //Obtém o valor total da comissão somando as comissões de aposta simples, mediana e máxima
+        $ganho_total = $ganho_simples + $ganho_mediano + $ganho_maximo;           //Obtém o valor total da comissão somando as comissões de aposta simples, mediana e máxima
         $total_apostado = $apostas->sum('valor_aposta');                        //Soma total apostado
         $liquido = $total_apostado - $premiacao - $ganho_total;                 //Obtém o valor liquido
         return ['qtd_apostas' => $apostas->count(),                             //Quantidade de apostas
@@ -175,17 +182,20 @@ class ApostaHelper
             'total_premiacao' => number_format($premiacao, 2, ',', '.'),        //Total de premiação
             'liquido' => number_format($liquido, 2, ',', '.')];                 //Valor líquido
     }
+
     /** Método que calcula valor do prêmio de uma aposta vencedora
      * @param $aposta Aposta vencedora
      * @return mixed valor do prêmio
      */
     public static function calcularPremio($aposta)
     {
-        $premio = $aposta->valor_aposta;        //Passa valor da aposta para variável prêmio
-        foreach ($aposta->jogo as $jogo):       //Percorre relação de jogos da aposta
-            $premio *= $jogo->pivot->palpite;   //Multiplica o valor do prêmio pelo do palpite
+        $premio = $aposta->valor_aposta;            //Passa valor da aposta para variável prêmio
+        foreach ($aposta->jogo as $jogo):           //Percorre relação de jogos da aposta
+            if ($jogo->ativo):
+                $premio *= $jogo->pivot->palpite;   //Multiplica o valor do prêmio pelo do palpite
+            endif;
         endforeach;
-        return $premio;                         //Retorna valor do prêmio
+        return $premio;                             //Retorna valor do prêmio
     }
 
     /**Método que remove dados desnecessários de jogos
@@ -201,32 +211,36 @@ class ApostaHelper
             endforeach;
         endforeach;
     }
+
     /** Método que remove apostas em aberto da lista de apostas passada
      * @param $apostas \Illuminate\Support\Collection com relação de apostas
      * @return mixed relação de apostas sem as em aberto
      */
-    public static function removerAbertas($apostas){
+    public static function removerAbertas($apostas)
+    {
         //Chama método para remoção de apostas, passando função para realizar essa tarefa
-        $apostas = $apostas->reject(function($aposta){
-            foreach($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
-                //Se resultado de casa ou de fora for nulo
-                if(is_null($jogo->r_casa)  || is_null($jogo->r_fora)):
+        $apostas = $apostas->reject(function ($aposta) {
+            foreach ($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
+                //Verifica se jogo está ativo e caso, positivo, ee resultado de casa ou de fora está nulo
+                if ($jogo->ativo && (is_null($jogo->r_casa) || is_null($jogo->r_fora))):
                     return true;                        //Retorna verdadeiro
                 endif;
             endforeach;
         });
         return $apostas;                                //Retorna coleção de apostas sem as abertas
     }
+
     /** Método que remove apostas finalizadas da lista de apostas passada
      * @param $apostas \Illuminate\Support\Collection com relação de apostas
      * @return mixed relação de apostas sem as em aberto
      */
-    public static function removerFechadas($apostas){
+    public static function removerFechadas($apostas)
+    {
         //Chama método para remoção de apostas, passando função para realizar essa tarefa
-        $apostas = $apostas->reject(function($aposta){
-            foreach($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
-                //Se resultado de casa ou de fora for nulo
-                if(!is_null($jogo->r_casa)  || !is_null($jogo->r_fora)):
+        $apostas = $apostas->reject(function ($aposta) {
+            foreach ($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
+                //Verifica se jogo está ativo e, caso esteja, se resultado de casa ou de fora está nulo
+                if ($jogo->ativo && (!is_null($jogo->r_casa) || !is_null($jogo->r_fora))):
                     return true;                        //Retorna verdadeiro
                 endif;
             endforeach;
@@ -238,7 +252,8 @@ class ApostaHelper
      * @param $apostas \Illuminate\Support\Collection relação de apostas a serem detalhadas
      * @return array lista com dados detalhados das apostas
      */
-    public static function detalharApostas($apostas){
+    public static function detalharApostas($apostas)
+    {
         $premiacao_total = 0;                                           //Cria variável para acumular premiação total
         $ganho_total = 0;                                               //Cria variável para acumular quantidade de jogos
         $premiacao_paga = 0;                                            //Cria variável para acumular premiação paga
@@ -332,6 +347,7 @@ class ApostaHelper
         }
         return $i == count($aposta->jogo);
     }
+
     /**
      * Método que cálcula o valor a ser pago com premios por cada aposta
      * Passada por paramentro e reotnar um array com a lista dos premios
@@ -360,5 +376,4 @@ class ApostaHelper
         }
         return $valor_aposta;
     }
-
 }
