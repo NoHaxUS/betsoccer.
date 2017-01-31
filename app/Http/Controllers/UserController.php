@@ -16,14 +16,14 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::paginate(config('constantes.paginacao'));
+        $users = User::orderBy('name')->paginate(config('constantes.paginacao'));
         return view('user.index', ['users' => $users]);
     }
 
     public function cadastrar()
     {
         $roles = Role::all();
-        $users = User::all()->pluck('name', 'id');
+        $users = User::orderBy('name')->pluck('name', 'id');
         $users->prepend('Nenhum',0);
         return view('user.cadastrar', compact('roles', 'users'));
     }
@@ -55,7 +55,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = Role::all();
-        $users = User::all()->pluck('name', 'id');
+        $users = User::orderBy('name')->pluck('name', 'id');
         $users->prepend('Nenhum',0);
         return view('user.editar', compact('user', 'roles','users'));
     }

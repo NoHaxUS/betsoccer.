@@ -23,7 +23,7 @@
                             <td>{{ $user->ativo?'Ativo':'Inativo' }}</td>
                              <td>{{ $user->user?$user->user->name:'' }}</td>
                             <td>
-                                @permission(['editar-user','relacionar-user','relacionar-role'])
+                                @permission(['editar-user','relacionar-users','relacionar-role'])
                                 <a class="btn btn-default" href="{{ route('user.editar',$user->id) }}">Editar</a>
                                 @endpermission
                                 @permission('excluir-user')

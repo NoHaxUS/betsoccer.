@@ -154,6 +154,6 @@ Route::get('', ['middleware' =>'permission:consultar-user','uses'=>'UserControll
 Route::get('/cadastrar', ['middleware' =>'permission:criar-user','uses'=>'UserController@cadastrar', 'as'=>'user.cadastrar']);
 Route::post('/salvar', ['middleware' =>'permission:criar-user','uses'=>'UserController@salvar', 'as'=>'user.salvar']);
 Route::get('/editar/{id}', ['middleware' =>'permission:editar-user|relacionar-user|relacionar-role','uses'=>'UserController@editar', 'as'=>'user.editar']);
-Route::put('/atualizar/{id}', ['middleware' =>'permission:editar-user|relacionar-user|relacionar-role','uses'=>'UserController@atualizar', 'as'=>'user.atualizar']);
+Route::put('/atualizar/{id}', ['middleware' =>'permission:editar-user|relacionar-users|relacionar-role','uses'=>'UserController@atualizar', 'as'=>'user.atualizar']);
 Route::get('/deletar/{id}', ['middleware' =>'permission:excluir-user','uses'=>'UserController@deletar', 'as'=>'user.deletar']);
 });
