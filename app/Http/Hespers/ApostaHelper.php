@@ -310,42 +310,47 @@ class ApostaHelper
     public static function apostasWins($aposta)
     {
         $i = 0;
+        $r = 0;
         foreach ($aposta->jogo as $key => $jogo) {
-            if ((is_null($jogo->r_casa)) && (is_null($jogo->r_fora))) {
-                return false;
-            }
-            if (($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "valor_fora") && ($jogo->r_casa < $jogo->r_fora)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "valor_empate") && ($jogo->r_casa == $jogo->r_fora)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "ambas_gol") && ($jogo->r_casa > 0 && $jogo->r_fora > 0)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "min_gol_3") && ($jogo->r_casa + $jogo->r_fora >= 3)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "max_gol_2") && ($jogo->r_casa + $jogo->r_fora < 3)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "valor_1_2") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa - $jogo->r_fora >= 2)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "valor_1_2") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_fora - $jogo->r_casa >= 2)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_casa >= $jogo->r_fora)) {
-                $i++;
-            }
-            if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
-                $i++;
+            if ($jogo->ativo){
+                if ((is_null($jogo->r_casa)) && (is_null($jogo->r_fora))) {
+                    return false;
+                }
+                if (($jogo->pivot->tpalpite == "valor_casa") && ($jogo->r_casa > $jogo->r_fora)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "valor_fora") && ($jogo->r_casa < $jogo->r_fora)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "valor_empate") && ($jogo->r_casa == $jogo->r_fora)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "ambas_gol") && ($jogo->r_casa > 0 && $jogo->r_fora > 0)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "min_gol_3") && ($jogo->r_casa + $jogo->r_fora >= 3)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "max_gol_2") && ($jogo->r_casa + $jogo->r_fora < 3)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "valor_1_2") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa - $jogo->r_fora >= 2)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "valor_1_2") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_fora - $jogo->r_casa >= 2)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa > $jogo->valor_fora && $jogo->r_casa >= $jogo->r_fora)) {
+                    $i++;
+                }
+                if (($jogo->pivot->tpalpite == "valor_dupla") && ($jogo->valor_casa < $jogo->valor_fora && $jogo->r_casa <= $jogo->r_fora)) {
+                    $i++;
+                }
+            }else{
+                $r+=1;
             }
         }
-        return $i == count($aposta->jogo);
+        return $i == count($aposta->jogo) - $r;
     }
 
     /**
@@ -360,7 +365,7 @@ class ApostaHelper
         foreach ($apostas as $key => $aposta) {
             $premios[$key] = $aposta->valor_aposta;
             foreach ($aposta->jogo as $jogo) {
-                if ($jogo->pivot->palpite != 0) {
+                if ($jogo->ativo) {
                     $premios[$key] *= $jogo->pivot->palpite;
                 }
             }
