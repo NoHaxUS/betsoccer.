@@ -11,6 +11,7 @@
                         <th>name</th>
                         <th>E-mail</th>
                         <th>Situacao</th>
+                        <th>Supervisor</th>
                         <th>Acao</th>
                     </tr>
                     </thead>
@@ -20,8 +21,9 @@
                             <td scope="row">{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->ativo?'Ativo':'Inativo' }}</td>
+                             <td>{{ $user->user?$user->user->name:'' }}</td>
                             <td>
-                                @permission(['editar-user','relacionar-role'])
+                                @permission(['editar-user','relacionar-user','relacionar-role'])
                                 <a class="btn btn-default" href="{{ route('user.editar',$user->id) }}">Editar</a>
                                 @endpermission
                                 @permission('excluir-user')

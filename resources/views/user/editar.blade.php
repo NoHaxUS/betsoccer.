@@ -62,32 +62,42 @@
                                 {!! Form::text('codigo_seguranca',$user->codigo_seguranca, ['class'=>'form-control','readonly']) !!}
                             </div>
                             @endpermission
-
+                            @permission('relacionar-users')
                             <div class="form-group">
-                                <fieldset>
-                                    <ul id="roles">
-                                        <legend>Roles</legend>
-                                        @if($roles!=null || !$roles->isEmpty)
-                                            @permission('relacionar-role')
-                                            @foreach($roles as $role)
-                                                {!! Form::checkbox('roles[]', $role->id, $user->roles->contains($role),['id'=>$role->id, 'class'=>'filled-in']) !!}
-                                                {!! Form::label($role->id, $role->name) !!}
-                                                <br/>
-                                            @endforeach
-                                        @else
-                                            @foreach($user->roles as $role)
-                                                {!! Form::hidden ('roles[]', $role->id) !!}
-                                                {!! Form::label($role->id, $role->name) !!}
-                                                <br/>
-                                            @endforeach
-                                            @endpermission
-                                        @endif
-                                    </ul>
-                                </fieldset>
+                                {!! Form::label ('users_id', 'Usuario: ') !!}
+                                {!! Form::select ('users_id', $users, $user->users_id, ['class'=>'form-control']) !!}
                             </div>
+                            @else
+                                <div class="form-group">
+                                    {!! Form::label ('users_id', 'Usuario: ') !!}
+                                    {!! Form::text('user_id',$user->user?$user->user->name:'Nenhum', ['class'=>'form-control','readonly']) !!}
+                                </div>
+                                @endpermission
+                                <div class="form-group">
+                                    <fieldset>
+                                        <ul id="roles">
+                                            <legend>Roles</legend>
+                                            @if($roles!=null || !$roles->isEmpty)
+                                                @permission('relacionar-role')
+                                                @foreach($roles as $role)
+                                                    {!! Form::checkbox('roles[]', $role->id, $user->roles->contains($role),['id'=>$role->id, 'class'=>'filled-in']) !!}
+                                                    {!! Form::label($role->id, $role->name) !!}
+                                                    <br/>
+                                                @endforeach
+                                            @else
+                                                @foreach($user->roles as $role)
+                                                    {!! Form::hidden ('roles[]', $role->id) !!}
+                                                    {!! Form::label($role->id, $role->name) !!}
+                                                    <br/>
+                                                @endforeach
+                                                @endpermission
+                                            @endif
+                                        </ul>
+                                    </fieldset>
+                                </div>
 
-                            <button class="btn btn-info">Cadastrar</button>
-                            {!! Form::close() !!}
+                                <button class="btn btn-info">Cadastrar</button>
+                                {!! Form::close() !!}
                     </div>
                 </div>
             </div>

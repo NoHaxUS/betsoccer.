@@ -73,6 +73,11 @@ class PermissionTableSeeder extends Seeder
             'description' => 'Permissao para editar users'
         ]);
         Permission::create([
+            'name' => 'relacionar-users',
+            'display_name' => 'Relacionar Users',
+            'description' => 'Permissao para criar relacao entre users'
+        ]);
+        Permission::create([
             'name' => 'consultar-user',
             'display_name' => 'Consultar User',
             'description' => 'Permissao para consultar users'

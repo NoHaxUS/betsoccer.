@@ -35,7 +35,7 @@
                                 {!! Form::label ('codigo_seguranca', 'Codigo de seguranca: ') !!}
                                 {!! Form::text ('codigo_seguranca',null, ['class'=>'form-control']) !!}
                             </div>
-                            <div class="form-group">
+                             <div class="form-group">
                                 {!! Form::label ('password', 'Senha: ') !!}
                                 {!! Form::password ('password', ['class'=>'form-control']) !!}
                             </div>
@@ -43,6 +43,12 @@
                                 {!! Form::label ('password_confirmation', 'Confirmar a senha: ') !!}
                                 {!! Form::password ('password_confirmation', ['class'=>'form-control']) !!}
                             </div>
+                            @permission('relacionar-users')
+                            <div class="form-group">
+                                {!! Form::label ('users_id', 'Usuario: ') !!}
+                                {!! Form::select ('users_id', $users, null, ['class'=>'form-control']) !!}
+                            </div>
+                            @endpermission
                             @permission('relacionar-role')
                             <div class="form-group">
                                 <fieldset>

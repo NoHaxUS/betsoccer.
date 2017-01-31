@@ -23,7 +23,9 @@ class UserController extends Controller
     public function cadastrar()
     {
         $roles = Role::all();
-        return view('user.cadastrar', compact('roles'));
+        $users = User::all()->pluck('name', 'id');
+        $users->prepend('Nenhum',0);
+        return view('user.cadastrar', compact('roles', 'users'));
     }
 
     public function salvar(UserRequest $request)
@@ -42,6 +44,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'codigo_seguranca' => $request->codigo_seguranca,
+                'users_id'=>$request->users_id,
                 'ultimo_pagamento' => \Carbon\Carbon::now()]
         );
         $user->attachRoles($roles);
@@ -52,8 +55,9 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = Role::all();
-        return view('user.editar', compact('user', 'roles'));
-
+        $users = User::all()->pluck('name', 'id');
+        $users->prepend('Nenhum',0);
+        return view('user.editar', compact('user', 'roles','users'));
     }
 
     public function atualizar(UserRequest $request, $id)
@@ -69,6 +73,9 @@ class UserController extends Controller
         $user->codigo_seguranca = $request->codigo_seguranca;
         if (!empty($request->password)):
             $user->password = bcrypt($request->password);
+        endif;
+        if (!empty($request->users_id)):
+            $user->users_id = $request->users_id;
         endif;
         $user->save();
         $user->roles()->sync($roles);
