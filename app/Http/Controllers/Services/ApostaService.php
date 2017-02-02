@@ -24,9 +24,9 @@ class ApostaService extends Controller
      */
     public function apostar(Request $request)
     {
-        if (is_null($request->codigo_seguranca)):                     //Se código de segurança é nulo
+        if (is_null($request->codigo_seguranca)):                       //Se código de segurança é nulo
             return response()->json(
-                ['status' => 'codigo_seguranca_nao_informado'], 409);//retorna json informando erro
+                ['status' => 'codigo_seguranca_nao_informado'], 409);   //retorna json informando erro
         endif;
         //Busca usuário pelo código de segurança
         $user = User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
