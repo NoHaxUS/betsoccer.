@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Services;
+
 use App\Http\Controllers\Controller;
 use App\Http\Hespers\ApostaHelper;
 use App\Aposta;
@@ -8,13 +9,13 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Hashids\Hashids;
 use Jenssegers\Optimus\Optimus;
+
 /**
  * Created by PhpStorm.
  * User: Wilder
  * Date: 11/01/2017
  * Time: 11:38
  */
-
 class ApostaService extends Controller
 {
 
@@ -82,7 +83,7 @@ class ApostaService extends Controller
      * @param \Illuminate\Support\Collection $palpites array de palpites
      * @return Aposta aposta feita
      */
-    private function registrarAposta($dados, $user=null)
+    private function registrarAposta($dados, $user = null)
     {
         $aposta = Aposta::create($dados);                            //Cria uma aposta com dados vindos do request
         if (is_null($user)):                                         //Verifica se usuário é nulo
@@ -107,6 +108,7 @@ class ApostaService extends Controller
         endfor;
         return $aposta;                                             //Retorna a aposta
     }
+
     /** Método que retorna o valor a ser recebido pelas apostas feitas,
      * exceto as em aberto (com jogos não concluídos)
      * @param $codigo_seguranca string código que identifica o usuário
@@ -120,12 +122,12 @@ class ApostaService extends Controller
             return response()->json($resposta, $resposta['erro']);            //Retorna json com restrição encontrada
         endif;
         $apostas = Aposta::recentes($user);                                   //Busca apostas recentes do usuário
-        $dados['com_abertas'] = ApostaHelper::dadosGanhos($user,$apostas);    //Formata dados de todas as apostas
+        $dados['com_abertas'] = ApostaHelper::dadosGanhos($user, $apostas);    //Formata dados de todas as apostas
         //Formata dados de apostas sem as abertas
         $dados['sem_abertas'] = ApostaHelper::dadosGanhos($user, ApostaHelper::removerAbertas($apostas));
         return response()->json($dados);                                       //Retorna json com dados
-
     }
+
     /** Método que verifica a relação de premiações das apostas
      * @param $codigo_seguranca string codigo de segurança do cambista
      * @return \Illuminate\Http\JsonResponse informações relacionadas a apostas e premiação
@@ -140,7 +142,7 @@ class ApostaService extends Controller
         endif;
         /*Busca as apostas recentes do usuário feitas pelo usuário, remove as que estão em aberto
         (jogos não concluídos e formata os dados de prêmios*/
-        $resposta = ApostaHelper::dadosPremios($user,Aposta::recentes($user));
+        $resposta = ApostaHelper::dadosPremios($user, Aposta::recentes($user));
         return response()->json($resposta);                             //Retorn json com respostas
     }
 
@@ -255,33 +257,33 @@ class ApostaService extends Controller
             $aposta->pago = true;
             $aposta->save();
         }
+        //
+        if (!$apostas->isEmpty()):                          //Se relação de apostas não estiver vazio
+            $acerto = new \App\Acerto();                    //Instancia acerto
+            $dados=ApostaHelper::calcularGanho($apostas);   //Busca dados de ganhos de apostas
+            $acerto->cambista_id = $cambista->id;           //Passa id do cambista
+            $acerto->gerente_id = $adm->id;                 //Passa id do gerente
+            $acerto->qtd_apostas=$dados['qtd_apostas'];     //Passa quantidade de apostas
+            $acerto->qtd_jogos=$dados['qtd_jogos'];         //Passa quantidade de jogos
+            //Passa valor da comissão simples
+            $acerto->comissao_simples = str_replace(',','.',str_replace('.','',$dados['comissao_simples']));
+            //Passa valor da comissão mediana
+            $acerto->comissao_mediana = str_replace(',','.',str_replace('.','',$dados['comissao_mediana']));
+            //Passa valor da comissão máxima
+            $acerto->comissao_maxima = str_replace(',','.',str_replace('.','',$dados['comissao_maxima']));
+            //Passa valor total apostado
+            $acerto->total_apostado = str_replace(',','.',str_replace('.','',$dados['total_apostado']));
+            //Passa valor total de premiação
+            $acerto->total_premiacao = str_replace(',','.',str_replace('.','',$dados['total_premiacao']));
+            //Passa valor liquido
+            $acerto->liquido = str_replace(',','.',str_replace('.','',$dados['liquido']));
+            $acerto->save();                                //Salva acerto
+        endif;
+        //
         $cambista->ultimo_pagamento = Carbon::now();
         $cambista->save();
     }
 
-    public function apostaCambista(Request $request)
-    {
-        $id = $request->get('cambista');
-        $users = \App\User::find($id);
-        $apostas = Aposta::with(['jogo'])
-            ->where('users_id', '=', $id)
-            ->where('pago', false)
-            ->orderBy('created_at','desc')
-            ->get();
-        $apostasPagas = Aposta::with(['jogo'])
-            ->where('pago', '=', true)
-            ->orderBy('created_at','desc')
-            ->get();
-        $total = 0;
-        $totalPago = 0;
-        $premios = ApostaHelper::calcRetorno($apostas);
-        $premiosPago = ApostaHelper::calcRetorno($apostasPagas);
-        $totalPago += array_sum($premiosPago);
-        $total += array_sum($premios);
-        $receber = ApostaHelper::receberDoCambista($apostas);
-        $recebido = ApostaHelper::receberDoCambista($apostasPagas);
-        return view('aposta.apostaCambista', compact('users', 'apostas', 'receber', 'premios', 'total', 'apostasPagas', 'premiosPago', 'recebido'));
-    }
     public function getJsonJogos()
     {
         $jogos = \App\Jogo::disponiveis();
