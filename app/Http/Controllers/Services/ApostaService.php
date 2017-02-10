@@ -230,6 +230,24 @@ class ApostaService extends Controller
             'possivel_premio' => number_format(ApostaHelper::calcularPremio($aposta), 2, ',', '.')]);
     }
 
+    public function relatorioGerente($codigo_gerente)
+    {
+        $gerente = User::buscarPorCodigoSeguranca($codigo_gerente)->first();
+        $resposta = ApostaHelper::verificarUsuario($gerente);          //Verifica usuário
+        if (!is_null($resposta)):                                   //Se houve erro
+            return response()->json($resposta, $resposta['erro']);  //Retorna erro
+        endif;
+        //dd($gerente->users()->count());
+        $ganhos = Array();
+        foreach ($gerente->users as $cambista):
+            $apostas = Aposta::recentes($cambista);                                   //Busca apostas recentes do usuário
+            $ganhos[] = ['nome_cambista' => $cambista->name] +
+                ['com_abertas' => ApostaHelper::calcularGanho($apostas)] +
+                ['sem_abertas' => ApostaHelper::calcularGanho(ApostaHelper::removerAbertas($apostas))];    //Formata dados de todas as apostas
+
+        endforeach;
+        return response()->json(['relatorio'=>$ganhos]);
+    }
 
     /** Método que muda o atributo ultimo_pagamento do usuario para o momento atual
      * @param $codigo_c codigo do Cambista , $codigo_a codigo de um Admin
@@ -260,23 +278,23 @@ class ApostaService extends Controller
         //
         if (!$apostas->isEmpty()):                          //Se relação de apostas não estiver vazio
             $acerto = new \App\Acerto();                    //Instancia acerto
-            $dados=ApostaHelper::calcularGanho($apostas);   //Busca dados de ganhos de apostas
+            $dados = ApostaHelper::calcularGanho($apostas);   //Busca dados de ganhos de apostas
             $acerto->cambista_id = $cambista->id;           //Passa id do cambista
             $acerto->gerente_id = $adm->id;                 //Passa id do gerente
-            $acerto->qtd_apostas=$dados['qtd_apostas'];     //Passa quantidade de apostas
-            $acerto->qtd_jogos=$dados['qtd_jogos'];         //Passa quantidade de jogos
+            $acerto->qtd_apostas = $dados['qtd_apostas'];     //Passa quantidade de apostas
+            $acerto->qtd_jogos = $dados['qtd_jogos'];         //Passa quantidade de jogos
             //Passa valor da comissão simples
-            $acerto->comissao_simples = str_replace(',','.',str_replace('.','',$dados['comissao_simples']));
+            $acerto->comissao_simples = str_replace(',', '.', str_replace('.', '', $dados['comissao_simples']));
             //Passa valor da comissão mediana
-            $acerto->comissao_mediana = str_replace(',','.',str_replace('.','',$dados['comissao_mediana']));
+            $acerto->comissao_mediana = str_replace(',', '.', str_replace('.', '', $dados['comissao_mediana']));
             //Passa valor da comissão máxima
-            $acerto->comissao_maxima = str_replace(',','.',str_replace('.','',$dados['comissao_maxima']));
+            $acerto->comissao_maxima = str_replace(',', '.', str_replace('.', '', $dados['comissao_maxima']));
             //Passa valor total apostado
-            $acerto->total_apostado = str_replace(',','.',str_replace('.','',$dados['total_apostado']));
+            $acerto->total_apostado = str_replace(',', '.', str_replace('.', '', $dados['total_apostado']));
             //Passa valor total de premiação
-            $acerto->total_premiacao = str_replace(',','.',str_replace('.','',$dados['total_premiacao']));
+            $acerto->total_premiacao = str_replace(',', '.', str_replace('.', '', $dados['total_premiacao']));
             //Passa valor liquido
-            $acerto->liquido = str_replace(',','.',str_replace('.','',$dados['liquido']));
+            $acerto->liquido = str_replace(',', '.', str_replace('.', '', $dados['liquido']));
             $acerto->save();                                //Salva acerto
         endif;
         //

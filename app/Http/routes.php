@@ -17,7 +17,7 @@ Route::group(['namespace' => 'Services'], function () {
     Route::get('/aposta/premiosApostas/{codigo_seguranca}', ['uses' => 'ApostaService@premiosApostas', 'as' => 'aposta.premiosApostas']);
     Route::get('/aposta/ultima/{codigo_seguranca}', ['uses' => 'ApostaService@ultima', 'as' => 'aposta.ultima']);
     Route::get('/aposta/consultar/{codigo}', ['uses' => 'ApostaService@consultar', 'as' => 'aposta.consultar']);
-
+    Route::get('/aposta/relatorioGerente/{codigo_gerente}', ['uses' => 'ApostaService@relatorioGerente', 'as' => 'aposta.relatorioGerente']);
     Route::get('/cambista/acerto/{codigo_c}/{codigo_a}', ['uses' => 'ApostaService@acerto', 'as' => 'aposta.acerto']);
     Route::post('/aposta/cambista', ['uses' => 'ApostaService@apostaCambista', 'as' => 'aposta.cambista']);
     Route::post('/aposta/apostar', ['uses' => 'ApostaService@apostar', 'as' => 'aposta.apostar']);
