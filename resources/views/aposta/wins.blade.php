@@ -5,7 +5,7 @@
     <div class="row">
 
         <div class="panel panel-default">
-           <ol class="breadcrumb panel-heading">
+         <ol class="breadcrumb panel-heading">
             <li class="active">Apostas Vencedoras</li>
         </ol>
         <div class="panel-body">
@@ -16,6 +16,7 @@
             <thead>
                 <tr>
                     <th>Cod</th>
+                    <th>Data</th>
                     <th>Cambista</th>
                     <th>Apostardor</th>
                     <th>Valor</th>
@@ -28,11 +29,12 @@
                 
                 @foreach($apostaWins as $key => $aposta)
                 <tr>
-                    <th>{{$aposta->codigo}}</th>
-                    <td>{{$aposta->user->name}}</td>
-                    <td>{{$aposta->nome_apostador}}</td>
-                    <td>{{$aposta->valor_aposta}}</td>
-                    <td>{{number_format($total[$key], 2, ',', '.')}}</td>                        
+                    <th class="ganhos">{{ $aposta->codigo }}</th>
+                    <td class="ganhos">{{date('d/m/Y - H:i', strtotime($aposta->created_at)) }}</td>
+                    <td class="ganhos">{{ $aposta->user->name}}</td>
+                    <td class="ganhos">{{ $aposta->nome_apostador}}</td>
+                    <td class="ganhos">{{ number_format($aposta->valor_aposta, 2, ',', '.')}}</td>
+                    <td class="ganhos">{{ number_format($total[$key], 2, ',', '.')}}</td>                  
                     <td>                        
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-{{$aposta->id}}">
                           Detalhe
@@ -50,21 +52,20 @@
                     <div class="modal-body">
                         @foreach ($aposta->jogo as $key => $jogo)
 
-                        <h4>{{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
-                        <h5>    Palpite..:{{$jogo->pivot->tpalpite}}......Valor..:{{$jogo->pivot->palpite}}
-                        </h5>
-
-                        @endforeach 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <h5>{{date('d/m/Y - H:i', strtotime($jogo->data))}} -- {{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
+                            <h5>    Palpite..: {{$jogo->pivot->tpalpite}}......Valor..: {{$jogo->pivot->palpite}}
+                            </h5>
+                            @endforeach 
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        @endforeach                                 
-    </tbody>
-</table>
+            @endforeach                                 
+        </tbody>
+    </table>
 </div>
 
 </div>

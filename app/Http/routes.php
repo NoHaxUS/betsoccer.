@@ -40,6 +40,8 @@ Route::group(['namespace' => 'Services'], function () {
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/apostaDel/{codigo}', ['uses' => 'ApostaController@apostaDel', 'as' => 'aposta.del']);
+Route::get('/apostaDelU', ['uses' => 'ApostaController@apostaDelU', 'as' => 'aposta.del']);
 
 Route::get('/password/reset', ['uses' => 'Auth\PasswordController@getEmail', 'as' => 'senha.recu']);
 
