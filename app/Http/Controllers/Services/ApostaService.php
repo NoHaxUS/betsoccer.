@@ -230,23 +230,25 @@ class ApostaService extends Controller
             'possivel_premio' => number_format(ApostaHelper::calcularPremio($aposta), 2, ',', '.')]);
     }
 
+    /** Método que retorna relatório de ganhos de cambista associado a gerente
+     * @param $codigo_gerente string codigo de segurança do gerente
+     * @return \Illuminate\Http\JsonResponse relatório com dados de aposta de cambistas associados a gerente
+     */
     public function relatorioGerente($codigo_gerente)
     {
-        $gerente = User::buscarPorCodigoSeguranca($codigo_gerente)->first();
-        $resposta = ApostaHelper::verificarUsuario($gerente);          //Verifica usuário
-        if (!is_null($resposta)):                                   //Se houve erro
-            return response()->json($resposta, $resposta['erro']);  //Retorna erro
+        $gerente = User::buscarPorCodigoSeguranca($codigo_gerente)->first();                            //Busca usuário pelo codigo
+        $resposta = ApostaHelper::verificarUsuario($gerente);                                           //Verifica usuário
+        if (!is_null($resposta)):                                                                       //Se houve erro
+            return response()->json($resposta, $resposta['erro']);                                      //Retorna erro
         endif;
-        //dd($gerente->users()->count());
-        $ganhos = Array();
-        foreach ($gerente->users as $cambista):
-            $apostas = Aposta::recentes($cambista);                                   //Busca apostas recentes do usuário
-            $ganhos[] = ['nome_cambista' => $cambista->name] +
-                ['com_abertas' => ApostaHelper::calcularGanho($apostas)] +
-                ['sem_abertas' => ApostaHelper::calcularGanho(ApostaHelper::removerAbertas($apostas))];    //Formata dados de todas as apostas
-
+        $relatorio = Array();                                                                           //Cria array para armazenar dados de relatório
+        foreach ($gerente->users as $cambista):                                                         //Percorre relação de cambistas ligados ao gerente
+            $apostas = Aposta::recentes($cambista);                                                     //Busca apostas recentes do cambista
+            $relatorio[] = ['nome_cambista' => $cambista->name] +                                       //Nome do cambista
+                ['com_abertas' => ApostaHelper::calcularGanho($apostas)] +                              //Dados de ganhos referentes a todas as apostas
+                ['sem_abertas' => ApostaHelper::calcularGanho(ApostaHelper::removerAbertas($apostas))]; //Dados referentes a ganhos de apostas fechadas
         endforeach;
-        return response()->json(['relatorio'=>$ganhos]);
+        return response()->json(['relatorio'=>$relatorio]);                                             //Retorna json com dados de relatório
     }
 
     /** Método que muda o atributo ultimo_pagamento do usuario para o momento atual
