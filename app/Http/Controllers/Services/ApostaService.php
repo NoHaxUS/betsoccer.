@@ -256,20 +256,23 @@ class ApostaService extends Controller
      * @return mixed array confirmação da alteração
      */
 
-    public function acerto($codigo_c, $codigo_a)
+    public function acerto($codigo_c, $codigo_gerente)
     {
         $cambista = \App\User::buscarPorCodigoSeguranca($codigo_c)->first();
         $resposta = ApostaHelper::verificarUsuario($cambista);                                       //Verifica restrição usuário
-        if (!is_null($resposta)) {                                                             //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);                            //Retorna json com restrição encontrada
+        if (!is_null($resposta)) {                                                                  //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);                                  //Retorna json com restrição encontrada
         }
-        $adm = \App\User::buscarPorCodigoSeguranca($codigo_a)->first();
-        $resposta = ApostaHelper::verificarUsuario($adm);                                            //Verifica restrição usuário
-        if (!is_null($resposta)) {                                                             //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);                            //Retorna json com restrição encontrada
+        if (!$cambista->hasRole('agente')) {                                                        //Se retornou restrição
+            return response()->json(['status' => 'Credenciais Insuficientes', 'erro' => 501], 501); //Retorna json com restrição encontrada
         }
-        if ($adm->role != "admin") {                                                           //Se retornou restrição
-            return response()->json(['status' => 'Credenciais Insuficientes', 'erro' => 501], 501);          //Retorna json com restrição encontrada
+        $gerente = \App\User::buscarPorCodigoSeguranca($codigo_gerente)->first();
+        $resposta = ApostaHelper::verificarUsuario($gerente);                                       //Verifica restrição usuário
+        if (!is_null($resposta)) {                                                                  //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);                                  //Retorna json com restrição encontrada
+        }
+        if (!$gerente->hasRole('gerente') || $cambista->users_id != $gerente->id) {                 //Se retornou restrição
+            return response()->json(['status' => 'Credenciais Insuficientes', 'erro' => 501], 501); //Retorna json com restrição encontrada
         }
         $apostas = Aposta::recentes($cambista);
         $apostas = ApostaHelper::removerAbertas($apostas);
@@ -282,7 +285,7 @@ class ApostaService extends Controller
             $acerto = new \App\Acerto();                    //Instancia acerto
             $dados = ApostaHelper::calcularGanho($apostas);   //Busca dados de ganhos de apostas
             $acerto->cambista_id = $cambista->id;           //Passa id do cambista
-            $acerto->gerente_id = $adm->id;                 //Passa id do gerente
+            $acerto->gerente_id = $gerente->id;                 //Passa id do gerente
             $acerto->qtd_apostas = $dados['qtd_apostas'];     //Passa quantidade de apostas
             $acerto->qtd_jogos = $dados['qtd_jogos'];         //Passa quantidade de jogos
             //Passa valor da comissão simples
