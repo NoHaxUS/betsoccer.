@@ -20,7 +20,6 @@
             <!-- Left Side Of Navbar -->
 
             @if (!Auth::guest())
-                @can('show', Auth::user())
                 <ul class="nav navbar-nav ">
 
                     @permission(['criar-time','consultar-time'])
@@ -113,7 +112,6 @@
                     <li><a href="{{ route('apostaJogo.resumoAposta') }}">Relatorios</a></li>
                     @endpermission
 
-                    @endcan
                     @permission('criar-aposta')
                     <li><a href="{{ route('aposta.index') }}">Apostar</a></li>
                     @endpermission
@@ -130,12 +128,9 @@
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                @can('show', Auth::user())
-                                <li><a href="{{ route('reg.get') }}">Registrar</a></li>
                                 @permission(['ativar-user','desativar-user'])
                                 <li><a href="{{ route('user.edit') }}">Editar Cambista</a></li>
-                                @endpermission
-                                @endcan
+                                @endpermission                            
                                 @permission(['criar-user','consultar-user'])
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

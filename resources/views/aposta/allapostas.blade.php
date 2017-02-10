@@ -104,8 +104,8 @@
 </div>
 <div role="tabpanel" class="tab-pane" id="pagas">
     <div class="table-responsive col-md-offset-1 col-md-10">
-     <h3>Total recebido dos cambistas : R$ {{$ganhosRecebidos["com_abertas"]["liquido"]}}</h3>
-     <table>
+       <h3>Total recebido dos cambistas : R$ {{$ganhosRecebidos["com_abertas"]["liquido"]}}</h3>
+       <table>
         <thead>
           <tr> 
             <th data-field="price">Qtd. Apostas</th>
@@ -135,63 +135,6 @@
 </tbody>
 </table>
 </div>  
-<div class="table-responsive col-md-offset-1 col-md-10 ">         
-    <table>
-        <thead>
-            <tr>
-                <th>Cod Aposta</th>
-                <th>Data</th>
-                <th>Valor Apostado</th>
-                <th>Apostador</th>
-                <th>Agente</th>
-                <th>Premiação Possível</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{ csrf_field() }}
-            @foreach ($apostasPagas as $key => $aposta)
-            <tr>
-                <td>{{ $aposta->codigo }}</td>
-                <td>{{date('d/m/Y - H:i', strtotime($aposta->created_at)) }}</td>
-                <td class="ganhos">R$ {{ number_format($aposta->valor_aposta, 2, ',', '.')}}</td>
-                <td>{{ $aposta->nome_apostador}}</td>
-                <td>{{ $aposta->user->name}}</td>
-                <td class="ganhos">R$ {{ number_format($premiosPago[$key], 2, ',', '.')}}</td>
-                <td>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-{{$aposta->id}}">
-                      Detalhe
-                  </button>
-
-              </td>
-          </tr>
-          <!-- Modal -->
-          <div class="modal fade" id="modal-{{$aposta->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Jogos</h4>
-                </div>
-                <div class="modal-body">
-                   @foreach ($aposta->jogo as $key => $jogo)
-
-                   <h5>{{date('d/m/Y - H:i', strtotime($jogo->data))}} -- {{$jogo->time[0]->descricao_time}} x {{$jogo->time[1]->descricao_time}}</h4>
-                    <h5>    Palpite..: {{$jogo->pivot->tpalpite}}......Valor..: {{$jogo->pivot->palpite}}
-                    </h5>
-
-                    @endforeach 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-</tbody>
-</table>
-</div>
 </div>
 <div role="tabpanel" class="tab-pane" id="ganhos">
     <div class="col-md-offset-1 col-md-3">

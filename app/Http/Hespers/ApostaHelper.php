@@ -15,10 +15,10 @@ class ApostaHelper
     {
         if (is_null($user)):                                    //Verificar se usuário existe
             return ['status' => 'Inexistente', 'erro' => 400];  //Retorna status de usuário inexistente
-        endif;
+            endif;
         if (!$user->ativo):                                     //Verificar se usuário não está ativo
             return ['status' => 'Inativo', 'erro' => 401];      //Retorna status de usuário inativo
-        endif;
+            endif;
         return null;                                            //Retorna null
     }
 
@@ -29,9 +29,9 @@ class ApostaHelper
     public static function verificarJogos($jogos)
     {
         if (count($jogos) < 2):                     //Verifica se quantidade de jogos é menor que 2
-            return ['status' => "Minimo 2 jogos",
+        return ['status' => "Minimo 2 jogos",
                 'erro' => 402];                 //Retorna mensagem e erro
-        endif;
+                endif;
         $jogos_invalidos = Array();                 //Cria array para armazenar jogos que não podem receber aposta
         foreach ($jogos as $valor):                 //Realiza interação em todos os jogos
             $jogo = \App\Jogo::find($valor);             //Busca jogo pelo id (valor)
@@ -39,8 +39,8 @@ class ApostaHelper
             if ($jogo == null || $jogo->data < Carbon::now()->addMinute(5)):
                 $jogos_invalidos[] = $jogo;         //Passou jogo para array
                 $jogos_invalidos['erro'] = 403;     //Passa código de erro para array
-            endif;
-        endforeach;
+                endif;
+                endforeach;
         return $jogos_invalidos;                    //retorna o array com jogos que não podem ser feita aposta
     }
 
@@ -55,8 +55,8 @@ class ApostaHelper
             $jogo = \App\Jogo::find($palpite['jogo_id']);   //Busca jogo pelo id
             if ($jogo->$palpite['tpalpite'] == 0):          //Verifica se valor do palpite no jogo é zero
                 $palpites_invalidos[] = $palpite;           //Passa palpite inválido para array
-            endif;
-        endforeach;
+                endif;
+                endforeach;
         return $palpites_invalidos;                     //Retorna array com palpites inválidos
     }
 
@@ -68,12 +68,12 @@ class ApostaHelper
     {
         $palpites = array();                                //Cria array para armazenar dados de palpites
         foreach ($jogos as $jogo):                          //Percorre coleção de jogos
-            $palpites[] = [
+        $palpites[] = [
                 'jogos_id' => $jogo->pivot->jogos_id,       //Passa id do jogo
                 'palpite' => $jogo->pivot->palpite,         //Passa valor para o palpite
                 'tpalpite' => $jogo->pivot->tpalpite        //Passa texto do palpite
-            ];
-        endforeach;
+                ];
+                endforeach;
         return $palpites;                                   //Retorna array com dados de palpites
     }
 
@@ -92,8 +92,8 @@ class ApostaHelper
             'ativa' => (boolean)$aposta->ativo,                                     //Se ativa
             'ganho' => number_format($ganho, 2, ',', '.'),                          //Ganho do cambista
             'jogos' => self::dadosJogos($aposta->jogo)                             //Relação de jogos
-        ];
-    }
+            ];
+        }
 
 
     /** Método que formata dados de jogos em array
@@ -110,7 +110,7 @@ class ApostaHelper
                     'r_casa' => $jogo->r_casa,      //Resultado de casa
                     'r_fora' => $jogo->r_fora],     //Resultado de fora
                 'data' => $jogo->data];             //Passa data
-        endforeach;
+                endforeach;
         return $lista;                              //Retorna lista com dados dos jogos
     }
 
@@ -151,24 +151,24 @@ class ApostaHelper
         $qtd_jogos = 0;                                                         //Cria variável para acumular quantidade de jogos
         foreach ($apostas as $aposta):                                          //Itera pela lista de apostas
             switch ($aposta->jogo()->count()) :                                 //Seleciona quantidade de jogos como parâmetro
-                case 2:
+            case 2:
                     //Cálcula ganho para aposta com dois jogos
-                    $ganho_simples += $aposta->valor_aposta * (config('constantes.porcentagem_simples') / 100);
-                    break;
-                case 3:
+            $ganho_simples += $aposta->valor_aposta * (config('constantes.porcentagem_simples') / 100);
+            break;
+            case 3:
                     //Cálcula ganho para aposta com três jogos
-                    $ganho_mediano += $aposta->valor_aposta * (config('constantes.porcentagem_mediana') / 100);
-                    break;
-                default:
+            $ganho_mediano += $aposta->valor_aposta * (config('constantes.porcentagem_mediana') / 100);
+            break;
+            default:
                     //Cálcula ganho para aposta com mais três jogos
-                    $ganho_maximo += $aposta->valor_aposta * (config('constantes.porcentagem_maxima') / 100);
-                    break;
+            $ganho_maximo += $aposta->valor_aposta * (config('constantes.porcentagem_maxima') / 100);
+            break;
             endswitch;
             if (self::apostasWins($aposta)):                                    //Verifica se aposta foi vencedora
                 $premiacao += self::calcularPremio($aposta);                    //soma a premiação
-            endif;
+                endif;
             $qtd_jogos += $aposta->jogo()->count();                             //Acrescenta quantidade de jogos a variável
-        endforeach;
+            endforeach;
         $ganho_total = $ganho_simples + $ganho_mediano + $ganho_maximo;           //Obtém o valor total da comissão somando as comissões de aposta simples, mediana e máxima
         $total_apostado = $apostas->sum('valor_aposta');                        //Soma total apostado
         $liquido = $total_apostado - $premiacao - $ganho_total;                 //Obtém o valor liquido
@@ -181,7 +181,7 @@ class ApostaHelper
             'total_apostado' => number_format($total_apostado, 2, ',', '.'),    //Total apostado
             'total_premiacao' => number_format($premiacao, 2, ',', '.'),        //Total de premiação
             'liquido' => number_format($liquido, 2, ',', '.')];                 //Valor líquido
-    }
+        }
 
     /** Método que calcula valor do prêmio de uma aposta vencedora
      * @param $aposta Aposta vencedora
@@ -191,10 +191,10 @@ class ApostaHelper
     {
         $premio = $aposta->valor_aposta;            //Passa valor da aposta para variável prêmio
         foreach ($aposta->jogo as $jogo):           //Percorre relação de jogos da aposta
-            if ($jogo->ativo):
+        if ($jogo->ativo):
                 $premio *= $jogo->pivot->palpite;   //Multiplica o valor do prêmio pelo do palpite
             endif;
-        endforeach;
+            endforeach;
         return $premio;                             //Retorna valor do prêmio
     }
 
@@ -208,9 +208,9 @@ class ApostaHelper
                 unset($time['created_at']);         //Remove campo created_at do time
                 unset($time['updated_at']);         //Remove campo updated_at do time
                 unset($time['pivot']);              //Remove dados de pivot do time
-            endforeach;
-        endforeach;
-    }
+                endforeach;
+                endforeach;
+            }
 
     /** Método que remove apostas em aberto da lista de apostas passada
      * @param $apostas \Illuminate\Support\Collection com relação de apostas
@@ -222,11 +222,11 @@ class ApostaHelper
         $apostas = $apostas->reject(function ($aposta) {
             foreach ($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
                 //Verifica se jogo está ativo e caso, positivo, ee resultado de casa ou de fora está nulo
-                if ($jogo->ativo && (is_null($jogo->r_casa) || is_null($jogo->r_fora))):
+            if ($jogo->ativo && (is_null($jogo->r_casa) || is_null($jogo->r_fora))):
                     return true;                        //Retorna verdadeiro
                 endif;
-            endforeach;
-        });
+                endforeach;
+            });
         return $apostas;                                //Retorna coleção de apostas sem as abertas
     }
 
@@ -238,13 +238,22 @@ class ApostaHelper
     {
         //Chama método para remoção de apostas, passando função para realizar essa tarefa
         $apostas = $apostas->reject(function ($aposta) {
-            foreach ($aposta->jogo as $jogo):            //Percorre relação de jogos da aposta
+            $c = count($aposta->jogo);
+            $i=0;
+            foreach ($aposta->jogo as $jogo):
+                if (!$jogo->ativo) {
+                    $c -=1;
+                }
+                 //Percorre relação de jogos da aposta
                 //Verifica se jogo está ativo e, caso esteja, se resultado de casa ou de fora está nulo
                 if ($jogo->ativo && (!is_null($jogo->r_casa) || !is_null($jogo->r_fora))):
-                    return true;                        //Retorna verdadeiro
+                    $i++;                        //Retorna verdadeiro
                 endif;
-            endforeach;
-        });
+                endforeach;
+                if ($c==$i) {
+                    return true;
+                }
+            });
         return $apostas;                                //Retorna coleção de apostas sem as abertas
     }
 
@@ -262,18 +271,18 @@ class ApostaHelper
         $apostas_vencedoras = Array();                                  //Cria array para armazenar lista de apostas vencedoras
         foreach ($apostas as $aposta):                                  //Itera pela lista de apostas
             switch ($aposta->jogo()->count()) :                         //Seleciona a quantidade de jogos como parâmetro
-                case 2:
+            case 2:
                     //Gera valor para cálculo de ganho para aposta com dois jogos
-                    $porcentagem = config('constantes.porcentagem_simples') / 100;
-                    break;
-                case 3:
+            $porcentagem = config('constantes.porcentagem_simples') / 100;
+            break;
+            case 3:
                     //Gera valor para cálculo de ganho para aposta com três jogos
-                    $porcentagem = config('constantes.porcentagem_mediana') / 100;
-                    break;
-                default:
+            $porcentagem = config('constantes.porcentagem_mediana') / 100;
+            break;
+            default:
                     //Gera valor para cálculo de ganho para aposta com mais três jogos
-                    $porcentagem = config('constantes.porcentagem_maxima') / 100;
-                    break;
+            $porcentagem = config('constantes.porcentagem_maxima') / 100;
+            break;
             endswitch;
             $ganho_aposta = $aposta->valor_aposta * $porcentagem;               //Calcula o ganho por cada aposta
             $premiacao_aposta = self::calcularPremio($aposta);                 //Calcula o possível prêmio
@@ -281,24 +290,24 @@ class ApostaHelper
             //Passa para array dados da aposta mais retorno possível
             $lista_apostas [] = $dados_aposta + ['retorno_possivel' => number_format($premiacao_aposta, 2, ',', '.')];
             if (self::apostasWins($aposta)):                                   //Se aposta for vencedora
-                $apostas_vencedoras[] = $dados_aposta
-                    + ['premio' => number_format($premiacao_aposta, 2, ',', '.'),
+            $apostas_vencedoras[] = $dados_aposta
+            + ['premio' => number_format($premiacao_aposta, 2, ',', '.'),
                         'paga' => $aposta->pago];                               //Passa dados de aposta mais premiação e informação se já pago
                 if ($aposta->pago):                                             //Verifica se aposta foi paga (o prêmio)
                     $premiacao_paga += $premiacao_aposta;                       //Soma valor a de premiações pagas
                 else:                                                           //Se não foi paga
                     $premiacao_nao_paga += $premiacao_aposta;                   //Soma valor a premiações não pagas
-                endif;
+                    endif;
                 $premiacao_total += $premiacao_aposta;                          //Acrescenta a premiação da aposta a premiação total
-            endif;
+                endif;
             $ganho_total += $ganho_aposta;                                      //Soma o ganho de cada aposta para formar o montante
-        endforeach;
-        return [
+            endforeach;
+            return [
             'apostas_vencedoras' => $apostas_vencedoras,                        //Relação de apostas vencedoras
             'total_premiacao' => number_format($premiacao_total, 2, ',', '.'),  //Total de premiação
             'apostas' => $lista_apostas,                                        //Lista de apostas
-        ];
-    }
+            ];
+        }
 
     /**
      * Método que verifica se uma aposta foi vencedora ou não pega a lista de jogos de uma aposta
