@@ -25,32 +25,32 @@ class ApostaService extends Controller
      */
     public function apostar(Request $request)
     {
-        if (is_null($request->codigo_seguranca)):                       //Se código de segurança é nulo
+        if (is_null($request->codigo_seguranca)):                                   //Se código de segurança é nulo
             return response()->json(
-                ['status' => 'codigo_seguranca_nao_informado'], 409);   //retorna json informando erro
+                ['status' => 'codigo_seguranca_nao_informado'], 409);               //retorna json informando erro
         endif;
-        //Busca usuário pelo código de segurança
-        $user = User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        $resposta = ApostaHelper::verificarUsuario($user);               //Verifica restrição usuário
-        if (!is_null($resposta)):                                        //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);       //Retorna json com restrição encontrada
+        $user = User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();//Busca usuário pelo código de segurança
+        $resposta = ApostaHelper::verificarUsuario($user);                          //Verifica restrição usuário
+        if (!is_null($resposta)):                                                   //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);                  //Retorna json com restrição encontrada
         endif;
-        $jogos_invalidos = ApostaHelper::verificarJogos($request->jogo);//Valida jogos
-        if (count($jogos_invalidos) > 0):                               //Verifica se quantidade de jogos inválidos é maior que zero
+        if(!$user->can('criar-aposta')):                                            //Se usuário não tem permissão de realizar aposta
+            return response()->json(['status' => 'Credenciais Insuficientes'], 501);//Retorna json informando
+        endif;
+        $jogos_invalidos = ApostaHelper::verificarJogos($request->jogo);            //Verifica jogos
+        if (count($jogos_invalidos) > 0):                                           //Verifica se quantidade de jogos inválidos é maior que zero
             return response()->json(
                 ['jogos_invalidos' => $jogos_invalidos],
-                $jogos_invalidos['erro']);                              //retorna json com array com todos os jogos inválidos
+                $jogos_invalidos['erro']);                                          //retorna json com array com todos os jogos inválidos
         endif;
-        $aposta = $this->registrarAposta($request->all(), $user);       //Registra aposta
-
-        //$aposta =  $this->realizarAposta($request);                   //Tentar realizar aposta
-        $dados_aposta = ApostaHelper::dadosAposta($aposta);             //Busca dados de aposta
-        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);      //Remove dados desnecessário de jogos
-        unset($dados_aposta['ganho']);                                  //Remove o indice ganho
+        $aposta = $this->registrarAposta($request->all(), $user);                   //Registra aposta
+        $dados_aposta = ApostaHelper::dadosAposta($aposta);                         //Busca dados de aposta
+        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);                  //Remove dados desnecessário de jogos
+        unset($dados_aposta['ganho']);                                              //Remove o indice ganho
         return response()->json([
-            'cambista' => $aposta->user->name,                           //Nome do cambista
-            'aposta' => $dados_aposta,                                  //Dados da aposta
-            'palpites' => ApostaHelper::dadosPalpites($aposta->jogo),   //Dados dos palpites
+            'cambista' => $aposta->user->name,                                      //Nome do cambista
+            'aposta' => $dados_aposta,                                              //Dados da aposta
+            'palpites' => ApostaHelper::dadosPalpites($aposta->jogo),               //Dados dos palpites
             //Valor do possível do prêmio
             'possivel_premio' => number_format(ApostaHelper::calcularPremio($aposta), 2, ',', '.')]);
     }
@@ -121,6 +121,9 @@ class ApostaService extends Controller
         if (!is_null($resposta)):                                             //Se retornou restrição
             return response()->json($resposta, $resposta['erro']);            //Retorna json com restrição encontrada
         endif;
+        if(!$user->can('consultar-aposta')):                                        //Se usuário não tem permissão para consultar aposta
+            return response()->json(['status' => 'Credenciais Insuficientes'], 501);//Retorna json informando
+        endif;
         $apostas = Aposta::recentes($user);                                   //Busca apostas recentes do usuário
         $dados['com_abertas'] = ApostaHelper::dadosGanhos($user, $apostas);    //Formata dados de todas as apostas
         //Formata dados de apostas sem as abertas
@@ -134,16 +137,18 @@ class ApostaService extends Controller
      */
     public function premiosApostas($codigo_seguranca)
     {
-        //Busca o usuário pelo código de segurança
-        $user = User::buscarPorCodigoSeguranca($codigo_seguranca)->first();
-        $resposta = ApostaHelper::verificarUsuario($user);              //Verifica restrição usuário
-        if (!is_null($resposta)):                                       //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);      //Retorna json com restrição encontrada
+        $user = User::buscarPorCodigoSeguranca($codigo_seguranca)->first();         //Busca o usuário pelo código de segurança
+        $resposta = ApostaHelper::verificarUsuario($user);                          //Verifica restrição usuário
+        if (!is_null($resposta)):                                                   //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);                  //Retorna json com restrição encontrada
+        endif;
+        if(!$user->can('consultar-aposta')):                                        //Se usuário não tem permissão para consultar aposta
+            return response()->json(['status' => 'Credenciais Insuficientes'], 501);//Retorna json informando
         endif;
         /*Busca as apostas recentes do usuário feitas pelo usuário, remove as que estão em aberto
         (jogos não concluídos e formata os dados de prêmios*/
         $resposta = ApostaHelper::dadosPremios($user, Aposta::recentes($user));
-        return response()->json($resposta);                             //Retorn json com respostas
+        return response()->json($resposta);                                         //Retorn json com respostas
     }
 
     /** Método que busca e retorna última aposta do cambista
@@ -152,23 +157,26 @@ class ApostaService extends Controller
      */
     public function ultima($codigo_seguranca)
     {
-        $user = User::buscarPorCodigoSeguranca($codigo_seguranca)->first(); //Busca o usuário pelo código de segurança
-        $resposta = ApostaHelper::verificarUsuario($user);                  //Verifica restrição usuário
-        if (!is_null($resposta)):                                           //Se retornou restrição
-            return response()->json($resposta, $resposta['erro']);          //Retorna json com restrição encontrada
+        $user = User::buscarPorCodigoSeguranca($codigo_seguranca)->first();         //Busca o usuário pelo código de segurança
+        $resposta = ApostaHelper::verificarUsuario($user);                          //Verifica restrição usuário
+        if (!is_null($resposta)):                                                   //Se retornou restrição
+            return response()->json($resposta, $resposta['erro']);                  //Retorna json com restrição encontrada
         endif;
-        $aposta = Aposta::recentes($user)->last();                         //Busca última aposta feita pelo usuário
-        if (is_null($aposta)):                                              //Se aposta for nula
-            return response()->json(['aposta' => 'inexistente'], 403);      //Retorna json informando
+        if(!$user->can('consultar-aposta')):                                        //Se usuário não tem permissão para consultar aposta
+            return response()->json(['status' => 'Credenciais Insuficientes'], 501);//Retorna json informando
         endif;
-        $dados_aposta = ApostaHelper::dadosAposta($aposta);                 //Busca dados de aposta
-        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);          //Remove dados desnecessário de jogos
-        unset($dados_aposta['ganho']);                                      //Remove o indice ganho
+        $aposta = Aposta::recentes($user)->last();                                  //Busca última aposta feita pelo usuário
+        if (is_null($aposta)):                                                      //Se aposta for nula
+            return response()->json(['aposta' => 'inexistente'], 403);              //Retorna json informando
+        endif;
+        $dados_aposta = ApostaHelper::dadosAposta($aposta);                         //Busca dados de aposta
+        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);                  //Remove dados desnecessário de jogos
+        unset($dados_aposta['ganho']);                                              //Remove o indice ganho
         //Retorna json com dados da última aposta feita pelo usuário
         return response()->json([
-            'cambista' => $user->name,                                  //Nome do cambista
-            'aposta' => $dados_aposta,                                  //Dados da aposta
-            'palpites' => ApostaHelper::dadosPalpites($aposta->jogo),          //Dados dos palpites
+            'cambista' => $user->name,                                              //Nome do cambista
+            'aposta' => $dados_aposta,                                              //Dados da aposta
+            'palpites' => ApostaHelper::dadosPalpites($aposta->jogo),               //Dados dos palpites
             //Valor do possível do prêmio
             'possivel_premio' => number_format(ApostaHelper::calcularPremio($aposta), 2, ',', '.')]);
     }
@@ -183,16 +191,16 @@ class ApostaService extends Controller
         if (count($aposta) == 0):                                               //Se não tiver retornado nenhuma aposta
             return response()->json(['status' => 'codigo_nao_encontrado'], 403);//Retorna json com informação de que não foi encontrado
         endif;
-        $dados_aposta = ApostaHelper::dadosAposta($aposta);                            //Cria array com dados da aposta
-        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);                     //Remove dados não utilizados de jogos
+        $dados_aposta = ApostaHelper::dadosAposta($aposta);                     //Cria array com dados da aposta
+        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);              //Remove dados não utilizados de jogos
         unset($dados_aposta['ganho']);                                          //Apaga indece do array
         $cambista = is_null($aposta->user) ? null : $aposta->user->name;        //Pega nome do cambista se não for nulo
         return response()->json([                                               //Retorna json
             'cambista' => $cambista,                                            //Cambista
             'aposta' => $dados_aposta,                                          //Dados da aposta
-            'palpites' => ApostaHelper::dadosPalpites($aposta->jogo),                  //Dados dos palpites
+            'palpites' => ApostaHelper::dadosPalpites($aposta->jogo),           //Dados dos palpites
             'possivel_premio' => number_format(ApostaHelper::calcularPremio($aposta), 2, ',', '.'),    //Prêmio possível
-            'vencedora' => ApostaHelper::apostasWins($aposta)]);                         //Informação se aposta vencedora
+            'vencedora' => ApostaHelper::apostasWins($aposta)]);                //Informação se aposta vencedora
     }
 
     /**Método que realiza validação de aposta
@@ -201,28 +209,28 @@ class ApostaService extends Controller
      */
     public function validar(Request $request)
     {
-        //Busca usuário pelo código de segurança
-        $user = User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();
-        $resposta = ApostaHelper::verificarUsuario($user);          //Verifica usuário
-        if (!is_null($resposta)):                                   //Se houve erro
-            return response()->json($resposta, $resposta['erro']);  //Retorna erro
+        $user = User::buscarPorCodigoSeguranca($request->codigo_seguranca)->first();    //Busca usuário pelo código de segurança
+        $resposta = ApostaHelper::verificarUsuario($user);                              //Verifica usuário
+        if (!is_null($resposta)):                                                       //Se houve erro
+            return response()->json($resposta, $resposta['erro']);                      //Retorna erro
         endif;
-        //Busca aposta pelo código
-        $aposta = Aposta::buscarPorAtributo('codigo', $request->codigo_aposta)->first();
-        if (is_null($aposta)):                                      //Se aposta for nula (não existe)
-            //Retorna json informando erro
-            return response()->json(['status' => 'codigo_nao_encontrado'], 403);
+        if(!$user->can('validar-aposta')):                                              //Se usuário não tem permissão para validar aposta
+            return response()->json(['status' => 'Credenciais Insuficientes'], 501);    //Retorna json informando
         endif;
-        if ($aposta->ativo):                                        //Se aposta já estiver ativa
-            //Retorna json informando erro
-            return response()->json(['status' => 'aposta_ja_ativa'], 406);
+        $aposta = Aposta::buscarPorAtributo('codigo', $request->codigo_aposta)->first();//Busca aposta pelo código
+        if (is_null($aposta)):                                                          //Se aposta for nula (não existe)
+            return response()->json(['status' => 'codigo_nao_encontrado'], 403);        //Retorna json informando erro
         endif;
-        $aposta->ativo = true;                                      //Altera atributo ativo para verdadeiro
-        $aposta->users_id = $user->id;                              //Passa id do cambista
-        $aposta->save();                                            //Salva alteração
-        $dados_aposta = ApostaHelper::dadosAposta($aposta);                //Formata dados da aposta
-        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);         //Remove dados dos jogos
-        unset($dados_aposta['ganho']);                              //Remove dados referentes a ganhos
+        if ($aposta->ativo):                                                            //Se aposta já estiver ativa
+            return response()->json(['status' => 'aposta_ja_ativa'], 406);              //Retorna json informando erro
+        endif;
+        $aposta->ativo = true;                                                          //Altera atributo ativo para verdadeiro
+        $aposta->users_id = $user->id;                                                  //Passa id do cambista
+        $aposta->save();                                                                //Salva alteração
+        $dados_aposta = ApostaHelper::dadosAposta($aposta);                             //Formata dados da aposta
+        ApostaHelper::removerDadosDeJogos($dados_aposta['jogos']);                      //Remove dados dos jogos
+        unset($dados_aposta['ganho']);                                                  //Remove dados referentes a ganhos
+        //Retorna json com dados da aposta
         return response()->json([
             'cambista' => $user->name,
             'aposta' => $dados_aposta,
@@ -240,6 +248,9 @@ class ApostaService extends Controller
         $resposta = ApostaHelper::verificarUsuario($gerente);                                           //Verifica usuário
         if (!is_null($resposta)):                                                                       //Se houve erro
             return response()->json($resposta, $resposta['erro']);                                      //Retorna erro
+        endif;
+        if (!$gerente->hasRole('gerente')) :                                                            //Se usuário não tiver role de gerente
+            return response()->json(['status' => 'Credenciais Insuficientes'], 501);                    //Retorna json informando
         endif;
         $relatorio = Array();                                                                           //Cria array para armazenar dados de relatório
         foreach ($gerente->users as $cambista):                                                         //Percorre relação de cambistas ligados ao gerente
@@ -283,11 +294,11 @@ class ApostaService extends Controller
         //
         if (!$apostas->isEmpty()):                          //Se relação de apostas não estiver vazio
             $acerto = new \App\Acerto();                    //Instancia acerto
-            $dados = ApostaHelper::calcularGanho($apostas);   //Busca dados de ganhos de apostas
+            $dados = ApostaHelper::calcularGanho($apostas); //Busca dados de ganhos de apostas
             $acerto->cambista_id = $cambista->id;           //Passa id do cambista
-            $acerto->gerente_id = $gerente->id;                 //Passa id do gerente
-            $acerto->qtd_apostas = $dados['qtd_apostas'];     //Passa quantidade de apostas
-            $acerto->qtd_jogos = $dados['qtd_jogos'];         //Passa quantidade de jogos
+            $acerto->gerente_id = $gerente->id;             //Passa id do gerente
+            $acerto->qtd_apostas = $dados['qtd_apostas'];   //Passa quantidade de apostas
+            $acerto->qtd_jogos = $dados['qtd_jogos'];       //Passa quantidade de jogos
             //Passa valor da comissão simples
             $acerto->comissao_simples = str_replace(',', '.', str_replace('.', '', $dados['comissao_simples']));
             //Passa valor da comissão mediana
